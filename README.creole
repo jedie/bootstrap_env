@@ -1,4 +1,57 @@
-bootstrap_env
-=============
+== bootstrap_env
 
-Experimental project to create a complete self contained virtualenv bootstrap file, see: https://github.com/pypa/packaging-problems/issues/55
+Experimental project to create a complete self contained virtualenv bootstrap file.
+See: https://github.com/pypa/packaging-problems/issues/55
+
+=== info
+
+Since {{{virtualenv}}} v1.10 you a virtualenv bootstrap file is not runnable without the pip and setuptools wheel files.
+There must be created a {{{virtualenv_support}}} with the wheels.
+
+e.g.:
+{{{
+/bootstrap.py
+/virtualenv_support/
+        pip-1.5.6-py2.py3-none-any.whl
+        setuptools-3.6-py2.py3-none-any.whl
+}}}
+
+With this project this is not needed. The current solution is to embed {{{get_pip.py}}} into the bootstrap file
+and call it after env creation.
+
+The included {{{example}}} will create a {{{boot_example.py}}} bootstrap file. Running this looks like:
+{{{
+~ $ python2 boot_example.py ~/testenv
+The additional example extend_parser() code is called.
+The additional example adjust_options() code is called.
+New python executable in /home/jens/testenv/bin/python2
+Also creating executable in /home/jens/testenv/bin/python
+call to install pip with: '/home/jens/testenv/bin/python /home/jens/workspace/bootstrap/boot_example.py --install-pip /home/jens/testenv'
+install pip from self contained 'get_pip.py'
+Downloading/unpacking pip
+  Downloading pip-1.5.6-py2.py3-none-any.whl (1.0MB): 1.0MB downloaded
+Downloading/unpacking setuptools
+  Downloading setuptools-6.0.2-py2.py3-none-any.whl (543kB): 543kB downloaded
+Installing collected packages: pip, setuptools
+Successfully installed pip setuptools
+Cleaning up...
+The additional example after_install() code is called.
+ ~ $
+}}}
+
+The {{{example}}} hook code stored separated files in [[https://github.com/jedie/bootstrap_env/blob/master/example/|/example/]] looks like this:
+{{{
+def extend_parser(parser):
+    # --- CUT here ---
+    sys.stdout.write("The additional example extend_parser() code is called.\n")
+}}}
+{{{
+def adjust_options(options, args):
+    # --- CUT here ---
+    sys.stdout.write("The additional example adjust_options() code is called.\n")
+}}}
+{{{
+def after_install(options, home_dir):
+    # --- CUT here ---
+    sys.stdout.write("The additional example after_install() code is called.\n")
+}}}
