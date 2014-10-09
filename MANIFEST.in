@@ -1,0 +1,5 @@
+include AUTHORS LICENSE MANIFEST.in README.creole
+recursive-exclude * *.py[co]
+recursive-include * *.creole
+recursive-include * *.cmd
+recursive-include * *.sh

@@ -1,5 +1,11 @@
 # coding: utf-8
 
+"""
+    :created: 2014 by JensDiemer.de
+    :copyleft: 2014 by the bootstrap_env team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
+
 from __future__ import absolute_import, print_function
 
 import hashlib

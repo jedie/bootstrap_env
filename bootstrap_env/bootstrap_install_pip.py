@@ -9,6 +9,10 @@
         Otherwise the last additional code will be not inserted!
 
     http://virtualenv.readthedocs.org/en/latest/virtualenv.html#creating-your-own-bootstrap-scripts
+
+    :created: 2014 by JensDiemer.de
+    :copyleft: 2014 by the bootstrap_env team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 import os
