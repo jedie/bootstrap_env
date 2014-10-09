@@ -57,7 +57,7 @@ def surround_code(code, info, indent=""):
     Mark the beginning and end of the code.
     So, it's easier to find it in the generated bootstrap file ;)
     """
-    comment_line="#" * 79
+    comment_line = "#" * 79
     return "\n".join([
         "%s%s" % (indent, comment_line),
         "%s## %r START" % (indent, info),
@@ -120,7 +120,7 @@ def get_pip(url=GET_PIP_URL, sha256=GET_PIP_SHA256):
     get_pip_content = "\n".join([line for line in get_pip_content.splitlines() if not line.startswith("#")])
 
     # print(get_pip_content)
-    get_pip_content=surround_code(get_pip_content, "get_pip.py")
+    get_pip_content = surround_code(get_pip_content, "get_pip.py")
     get_pip_content = "\n\n%s\n\n" % get_pip_content
     return get_pip_content
 
@@ -162,14 +162,36 @@ def merge_code(extend_parser_code, adjust_options_code, after_install_code):
     return code
 
 
-def generate_bootstrip(out_filename, add_extend_parser, add_adjust_options, add_after_install, cut_mark):
+def generate_bootstrip(out_filename,
+        add_extend_parser, add_adjust_options, add_after_install,
+        cut_mark, additional_code=""):
+    """
+    Generate the bootstrip:
+     - download "get-pip.py"
+     - read all source files
+     - all virtualenv.create_bootstrap_script()
+     - merge everything together
+
+    :param out_filename: Filepath for the generated bootstrip file
+    :param add_extend_parser: source file for extend_parser() additional
+    :param add_adjust_options: source file for adjust_options() additional
+    :param add_after_install: source file for after_install() additional
+    :param cut_mark: mark for start cutting the used code
+    :param additional_code: code string that will be also inserted
+    """
     print("Generate bootstrap file: %r..." % out_filename)
 
     extend_parser_code = get_code(add_extend_parser, cut_mark, indent="    ")
     adjust_options_code = get_code(add_adjust_options, cut_mark, indent="    ")
     after_install_code = get_code(add_after_install, cut_mark, indent="    ")
 
-    code = merge_code(extend_parser_code, adjust_options_code, after_install_code)
+    code = ""
+
+    code += merge_code(extend_parser_code, adjust_options_code, after_install_code)
+
+    if additional_code:
+        print("Add given 'additional_code'")
+        code += surround_code(additional_code, "additional_code")
 
     code += get_pip()
 
