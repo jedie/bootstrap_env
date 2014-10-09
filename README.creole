@@ -96,6 +96,8 @@ get-pip.py SHA256: 'd43dc33a5670d69dd14a9be1f2b2fa27ebf124ec1b212a47425331040f74
 
 To create you own bootstrap file, is easy. Just copy the example code and change it for your needs.
 
+Another example are the bootstrap usage in [[https://github.com/jedie/PyLucid/tree/django-cms/bootstrap|PyLucid django-cms branch]].
+
 == History
 
  * v0.2.0 - 09.10.2014 - add {{{prefix}}} and {{{suffix}}} argument to {{{generate_bootstrip()}}}
