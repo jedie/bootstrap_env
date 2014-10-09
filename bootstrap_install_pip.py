@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-    used in 'create_bootstrap' to include it in the generated 'bootrap.py' file
+    used in 'create_bootstrap' to include it in the generated 'bootstrap.py' file
 
     http://virtualenv.readthedocs.org/en/latest/virtualenv.html#creating-your-own-bootstrap-scripts
 """
@@ -10,9 +10,6 @@
 import os
 import subprocess
 import sys
-
-
-print("\nWARNING: %r is used and not injected statically!\n" % __file__)
 
 
 # --- CUT here ---
