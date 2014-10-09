@@ -16,8 +16,10 @@ e.g.:
         setuptools-3.6-py2.py3-none-any.whl
 }}}
 
-With this project this is not needed. The current solution is to embed {{{get_pip.py}}} into the bootstrap file
+With this project this is not needed. The current solution embed {{{get_pip.py}}} into the bootstrap file
 and call it after env creation.
+
+=== the example
 
 The included {{{example}}} will create a {{{boot_example.py}}} bootstrap file. Running this looks like:
 {{{
@@ -26,7 +28,7 @@ The additional example extend_parser() code is called.
 The additional example adjust_options() code is called.
 New python executable in /home/jens/testenv/bin/python2
 Also creating executable in /home/jens/testenv/bin/python
-call to install pip with: '/home/jens/testenv/bin/python /home/jens/workspace/bootstrap/boot_example.py --install-pip /home/jens/testenv'
+call to install pip with: '/home/jens/testenv/bin/python /path/to/bootstrap_env/boot_example.py --install-pip /home/jens/testenv'
 install pip from self contained 'get_pip.py'
 Downloading/unpacking pip
   Downloading pip-1.5.6-py2.py3-none-any.whl (1.0MB): 1.0MB downloaded
@@ -36,7 +38,6 @@ Installing collected packages: pip, setuptools
 Successfully installed pip setuptools
 Cleaning up...
 The additional example after_install() code is called.
- ~ $
 }}}
 
 The {{{example}}} hook code stored separated files in [[https://github.com/jedie/bootstrap_env/blob/master/example/|/example/]] looks like this:
@@ -55,3 +56,36 @@ def after_install(options, home_dir):
     # --- CUT here ---
     sys.stdout.write("The additional example after_install() code is called.\n")
 }}}
+
+
+Creating the example bootstrap file looks like this:
+{{{
+/path/to/bootstrap_env/ $ python2 example.py
+Generate bootstrap file: 'boot_example.py'...
+Reade code from: 'example/extend_parser.py'...
+Reade code from: 'example/adjust_options.py'...
+Reade code from: 'example/after_install.py'...
+Reade code from: '/path/to/bootstrap_env/bootstrap_env/bootstrap_install_pip.py'...
+Request: 'https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py'...
+get-pip.py SHA256: 'd43dc33a5670d69dd14a9be1f2b2fa27ebf124ec1b212a47425331040f742a9b', ok.
+'boot_example.py' written.
+}}}
+
+After the first call, the requested {{get-pip.py}} file will be cached into the default temp
+and reused from there. So it is fast to generate it again:
+{{{
+/path/to/bootstrap_env/ $ python2 example.py
+Generate bootstrap file: 'boot_example.py'...
+Reade code from: 'example/extend_parser.py'...
+Reade code from: 'example/adjust_options.py'...
+Reade code from: 'example/after_install.py'...
+Reade code from: '/path/to/bootstrap_env/bootstrap_env/bootstrap_install_pip.py'...
+Use '/tmp/get-pip.py'
+get-pip.py SHA256: 'd43dc33a5670d69dd14a9be1f2b2fa27ebf124ec1b212a47425331040f742a9b', ok.
+'boot_example.py' written.
+}}}
+
+
+=== usage
+
+To create you own bootstrap file, is easy. Just copy the example code and change it for your needs.

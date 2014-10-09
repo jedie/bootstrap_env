@@ -66,6 +66,7 @@ def get_code(filename, cut_mark, indent=""):
     """
     Read a UTF-8 file and return the content after cut_mark, surrounded with comments.
     """
+    print("Reade code from: %r..." % filename)
     with open(filename, "rb") as f:
         content = f.read()
 
@@ -98,6 +99,7 @@ def get_pip(url=GET_PIP_URL, sha256=GET_PIP_SHA256):
     # Check SHA256 hash:
     get_pip_sha = hashlib.sha256(get_pip_content).hexdigest()
     assert get_pip_sha == sha256, "Requested get-pip.py sha256 value is wrong! SHA256 is: %r" % get_pip_sha
+    print("get-pip.py SHA256: %r, ok." % get_pip_sha)
 
     get_pip_content = get_pip_content.decode("UTF-8")
 
@@ -155,6 +157,8 @@ def merge_code(extend_parser_code, adjust_options_code, after_install_code):
 
 
 def generate_bootstrip(out_filename, add_extend_parser, add_adjust_options, add_after_install, cut_mark):
+    print("Generate bootstrap file: %r..." % out_filename)
+
     extend_parser_code = get_code(add_extend_parser, cut_mark, indent="    ")
     adjust_options_code = get_code(add_adjust_options, cut_mark, indent="    ")
     after_install_code = get_code(add_after_install, cut_mark, indent="    ")
