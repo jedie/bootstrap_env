@@ -164,7 +164,7 @@ def merge_code(extend_parser_code, adjust_options_code, after_install_code):
 
 def generate_bootstrip(out_filename,
         add_extend_parser, add_adjust_options, add_after_install,
-        cut_mark, additional_code=""):
+        cut_mark, prefix=None, suffix=None):
     """
     Generate the bootstrip:
      - download "get-pip.py"
@@ -173,25 +173,33 @@ def generate_bootstrip(out_filename,
      - merge everything together
 
     :param out_filename: Filepath for the generated bootstrip file
+
     :param add_extend_parser: source file for extend_parser() additional
     :param add_adjust_options: source file for adjust_options() additional
     :param add_after_install: source file for after_install() additional
+
     :param cut_mark: mark for start cutting the used code
-    :param additional_code: code string that will be also inserted
+
+    :param prefix: Optional code that will be inserted before extend_parser() code part.
+    :param suffix: Optional code that will be inserted after after_install() code part.
     """
     print("Generate bootstrap file: %r..." % out_filename)
+
+    if prefix:
+        print("Add prefix code.")
+        code = surround_code(prefix, "prefix code")
+    else:
+        code = ""
 
     extend_parser_code = get_code(add_extend_parser, cut_mark, indent="    ")
     adjust_options_code = get_code(add_adjust_options, cut_mark, indent="    ")
     after_install_code = get_code(add_after_install, cut_mark, indent="    ")
 
-    code = ""
-
     code += merge_code(extend_parser_code, adjust_options_code, after_install_code)
 
-    if additional_code:
-        print("Add given 'additional_code'")
-        code += surround_code(additional_code, "additional_code")
+    if suffix:
+        print("Add suffix code.")
+        code += surround_code(suffix, "suffix code")
 
     code += get_pip()
 

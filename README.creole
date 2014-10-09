@@ -98,8 +98,8 @@ To create you own bootstrap file, is easy. Just copy the example code and change
 
 == History
 
-v0.2.0 - 09.10.2014 - add {{{additional code}}} argument to {{{generate_bootstrip()}}}
-v0.1.0 - 09.10.2014 - initial release
+ * v0.2.0 - 09.10.2014 - add {{{prefix}}} and {{{suffix}}} argument to {{{generate_bootstrip()}}}
+ * v0.1.0 - 09.10.2014 - initial release
 
 == Links:
 
