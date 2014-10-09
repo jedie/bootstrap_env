@@ -2,7 +2,11 @@
 # coding: utf-8
 
 """
-    used in 'create_bootstrap' to include it in the generated 'bootstrap.py' file
+    used in 'create_bootstrap' to include it in the generated 'bootstrap.py' file.
+
+    Important:
+        There must be at least one other def function after extend_parser(), adjust_options() and after_install()
+        Otherwise the last additional code will be not inserted!
 
     http://virtualenv.readthedocs.org/en/latest/virtualenv.html#creating-your-own-bootstrap-scripts
 """
@@ -14,24 +18,23 @@ import sys
 
 # --- CUT here ---
 
+INSTALL_PIP_OPTION="--install-pip"
+
 
 def extend_parser(parser):
-    sys.stdout.write("extend_parser called.\n")
     parser.add_option(
-        '--install-pip',
+        INSTALL_PIP_OPTION,
         dest='install_pip',
         help="Only for internal usage!"
     )
+    if INSTALL_PIP_OPTION in sys.argv:
+        return # Skip the additional code, if pip should be installed
+
 
 def adjust_options(options, args):
-    sys.stdout.write("adjust_options called.\n")
-
     # Importand, otherwise it failed with 'ImportError: No module named pip'
     # because the wheel files are not there
     options.no_setuptools=True
-
-    sys.stdout.write("    options: %r\n" % options)
-    sys.stdout.write("    args: %r\n" % args)
 
     if options.install_pip:
         print("install pip from self contained 'get_pip.py'")
@@ -39,6 +42,11 @@ def adjust_options(options, args):
         get_pip() # renamed main() from 'get_pip.py', it exists in the generated bootstrap file!
         print("pip is installed.")
         sys.exit(0)
+
+
+def after_install(options, home_dir):
+    install_pip(options, home_dir)
+
 
 def install_pip(options, home_dir):
     abs_home_dir = os.path.abspath(home_dir)
@@ -57,7 +65,3 @@ def install_pip(options, home_dir):
             "PATH": bin_dir + ":" + os.environ["PATH"],
         }
     )
-
-def after_install(options, home_dir):
-    install_pip(options, home_dir)
-    sys.stdout.write("after_install from %r\n" % home_dir)
