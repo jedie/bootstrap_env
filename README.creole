@@ -100,7 +100,8 @@ Another example are the bootstrap usage in [[https://github.com/jedie/PyLucid/tr
 
 == History
 
- * v0.2.0 - 09.10.2014 - add {{{prefix}}} and {{{suffix}}} argument to {{{generate_bootstrip()}}}
+ * v0.3.0 - 13.11.2014 - typo: rename all {{{bootstrip}}} to {{{bootstrap}}} ;)
+ * v0.2.0 - 09.10.2014 - add {{{prefix}}} and {{{suffix}}} argument to {{{generate_bootstrap()}}}
  * v0.1.0 - 09.10.2014 - initial release
 
 == Links:

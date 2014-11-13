@@ -162,17 +162,17 @@ def merge_code(extend_parser_code, adjust_options_code, after_install_code):
     return code
 
 
-def generate_bootstrip(out_filename,
+def generate_bootstrap(out_filename,
         add_extend_parser, add_adjust_options, add_after_install,
         cut_mark, prefix=None, suffix=None):
     """
-    Generate the bootstrip:
+    Generate the bootstrap:
      - download "get-pip.py"
      - read all source files
      - all virtualenv.create_bootstrap_script()
      - merge everything together
 
-    :param out_filename: Filepath for the generated bootstrip file
+    :param out_filename: Filepath for the generated bootstrap file
 
     :param add_extend_parser: source file for extend_parser() additional
     :param add_adjust_options: source file for adjust_options() additional
