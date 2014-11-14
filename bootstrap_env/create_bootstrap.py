@@ -128,9 +128,6 @@ def get_pip(url=GET_PIP_URL, sha256=GET_PIP_SHA256):
 def merge_code(extend_parser_code, adjust_options_code, after_install_code):
     """
     merge the INSTALL_PIP_FILENAME code with the given code parts.
-
-    FIXME: Will not insert a code part, if there is no other def function
-    after extend_parser(), adjust_options() and after_install() !
     """
     install_pip_code = get_code(INSTALL_PIP_FILENAME, INSTALL_PIP_MARK)
 
@@ -158,6 +155,15 @@ def merge_code(extend_parser_code, adjust_options_code, after_install_code):
                 in_after_install = True
 
         code += line
+
+    # FIXME: Add code block if no def function exist
+    #        after extend_parser(), adjust_options() and after_install() !
+    if in_extend_parser == True: # leave extend_parser():
+        code += extend_parser_code + "\n\n"
+    elif in_adjust_options == True: # leave adjust_options():
+        code += adjust_options_code + "\n\n"
+    elif in_after_install == True: # leave after_install():
+        code += after_install_code + "\n\n"
 
     return code
 
