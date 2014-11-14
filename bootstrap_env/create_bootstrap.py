@@ -29,6 +29,9 @@ except ImportError as err:
     print("(Origin error was: %s)" % err)
     sys.exit(-1)
 
+from bootstrap_env import __version__ as bootstrap_env_version
+
+
 GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py"
 GET_PIP_SHA256 = "d43dc33a5670d69dd14a9be1f2b2fa27ebf124ec1b212a47425331040f742a9b"
 
@@ -39,12 +42,15 @@ HEADER_CODE = '''\
 #!/usr/bin/env python
 
 """
-    WARNING: This file is generated with: '{generator}'
+    WARNING: This file is generated with: bootstrap_env v{bootstrap_env_version}
+    https://pypi.python.org/pypi/bootstrap_env/
+    script file: '{generator}'
     used '{virtualenv_file}' v{virtualenv_version}
     Python v{python_version}
 """
 
 '''.format(
+    bootstrap_env_version=bootstrap_env_version,
     generator=os.path.basename(__file__),
     virtualenv_file=virtualenv.__file__,
     virtualenv_version=virtualenv.virtualenv_version,

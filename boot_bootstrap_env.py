@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 """
-    WARNING: This file is generated with: 'create_bootstrap.py'
+    WARNING: This file is generated with: bootstrap_env v0.3.3
+    https://pypi.python.org/pypi/bootstrap_env/
+    script file: 'create_bootstrap.py'
     used '/home/jens/dwload_server_env/lib/python3.4/site-packages/virtualenv.py' v1.11.6
     Python v3.4.0 (default, Apr 11 2014, 13:05:18)  [GCC 4.8.2]
 """
