@@ -48,12 +48,14 @@ class EnvSubprocess(object):
             "env": {
                 "VIRTUAL_ENV": self.abs_home_dir,
                 "PATH": self.bin_dir + os.pathsep + os.environ["PATH"],
-
-                # Python3 will crash under windows without SYSTEMROOT, see:
-                # http://bugs.python.org/issue20614
-                "SYSTEMROOT": os.environ['SYSTEMROOT'],
             }
         }
+        try:
+            # Work-a-round for http://bugs.python.org/issue20614 :
+            #       Python3 will crash under windows without SYSTEMROOT
+            self.subprocess_defaults["env"]["SYSTEMROOT"] = os.environ['SYSTEMROOT']
+        except KeyError:
+            pass
 
     def _subprocess(self, cmd):
         print("call %r" % " ".join(cmd))

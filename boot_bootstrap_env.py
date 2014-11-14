@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-    WARNING: This file is generated with: bootstrap_env v0.3.3
+    WARNING: This file is generated with: bootstrap_env v0.3.4
     https://pypi.python.org/pypi/bootstrap_env/
     script file: 'create_bootstrap.py'
     used '/home/jens/dwload_server_env/lib/python3.4/site-packages/virtualenv.py' v1.11.6
@@ -1893,12 +1893,14 @@ class EnvSubprocess(object):
             "env": {
                 "VIRTUAL_ENV": self.abs_home_dir,
                 "PATH": self.bin_dir + os.pathsep + os.environ["PATH"],
-
-                # Python3 will crash under windows without SYSTEMROOT, see:
-                # http://bugs.python.org/issue20614
-                "SYSTEMROOT": os.environ['SYSTEMROOT'],
             }
         }
+        try:
+            # Work-a-round for http://bugs.python.org/issue20614 :
+            #       Python3 will crash under windows without SYSTEMROOT
+            self.subprocess_defaults["env"]["SYSTEMROOT"] = os.environ['SYSTEMROOT']
+        except KeyError:
+            pass
 
     def _subprocess(self, cmd):
         print("call %r" % " ".join(cmd))
