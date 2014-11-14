@@ -4,5 +4,6 @@
 import sys
 
 def extend_parser(parser):
+    # Note: Deprecated optparse modul is used :( Not argparse!
     # --- CUT here ---
     sys.stdout.write("The additional example extend_parser() code is called.\n")

@@ -15,12 +15,15 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+# imports not really needed and just for the editor warning ;)
 import os
 import subprocess
 import sys
 
+from bootstrap_env.create_bootstrap import get_pip
 
 # --- CUT here ---
+
 
 INSTALL_PIP_OPTION="--install-pip"
 
@@ -60,7 +63,7 @@ def install_pip(options, home_dir):
     bootstrap_file = os.path.abspath(sys.argv[0])
     assert os.path.isfile(bootstrap_file), "Path to self not found?!?! (%r not exists?!?!)" % bootstrap_file
 
-    cmd=[python_cmd, bootstrap_file, "--install-pip"] + sys.argv[1:]
+    cmd=[python_cmd, bootstrap_file, "--install-pip", abs_home_dir]
     print("call to install pip with: %r" % " ".join(cmd))
     subprocess.call(cmd,
         cwd=bin_dir,
