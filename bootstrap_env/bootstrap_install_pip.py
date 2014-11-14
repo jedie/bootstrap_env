@@ -28,6 +28,53 @@ from bootstrap_env.create_bootstrap import get_pip
 INSTALL_PIP_OPTION="--install-pip"
 
 
+class EnvSubprocess(object):
+    """
+    Use to install pip and useful also to install other packages in after_install.
+    """
+    def __init__(self, home_dir):
+        self.abs_home_dir = os.path.abspath(home_dir)
+
+        if sys.platform in ['win32','cygwin','win64']:
+            self.bin_dir = os.path.join(self.abs_home_dir, "Scripts")
+        else:
+            self.bin_dir = os.path.join(self.abs_home_dir, "bin")
+
+        self.python_cmd = os.path.join(self.bin_dir, "python")
+        self.pip_cmd = os.path.join(self.bin_dir, "pip")
+
+        self.subprocess_defaults = {
+            "cwd": self.bin_dir,
+            "env": {
+                "VIRTUAL_ENV": self.abs_home_dir,
+                "PATH": self.bin_dir + os.pathsep + os.environ["PATH"],
+
+                # Python3 will crash under windows without SYSTEMROOT, see:
+                # http://bugs.python.org/issue20614
+                "SYSTEMROOT": os.environ['SYSTEMROOT'],
+            }
+        }
+
+    def _subprocess(self, cmd):
+        print("call %r" % " ".join(cmd))
+        subprocess.call(cmd, **self.subprocess_defaults)
+
+    def call_env_python(self, cmd):
+        self._subprocess([self.python_cmd] + cmd)
+
+    def call_env_pip(self, cmd):
+        self._subprocess([self.pip_cmd] + cmd)
+
+
+def _install_pip(options, home_dir):
+    print("Install pip...")
+    bootstrap_file = os.path.abspath(sys.argv[0])
+    assert os.path.isfile(bootstrap_file), "Path to self not found?!?! (%r not exists?!?!)" % bootstrap_file
+
+    env_subprocess = EnvSubprocess(home_dir)
+    env_subprocess.call_env_python([bootstrap_file, "--install-pip", env_subprocess.abs_home_dir])
+
+
 def extend_parser(parser):
     parser.add_option(
         INSTALL_PIP_OPTION,
@@ -52,23 +99,4 @@ def adjust_options(options, args):
 
 
 def after_install(options, home_dir):
-    install_pip(options, home_dir)
-
-
-def install_pip(options, home_dir):
-    abs_home_dir = os.path.abspath(home_dir)
-    bin_dir = os.path.join(abs_home_dir, "bin")
-    python_cmd = os.path.join(bin_dir, "python")
-
-    bootstrap_file = os.path.abspath(sys.argv[0])
-    assert os.path.isfile(bootstrap_file), "Path to self not found?!?! (%r not exists?!?!)" % bootstrap_file
-
-    cmd=[python_cmd, bootstrap_file, "--install-pip", abs_home_dir]
-    print("call to install pip with: %r" % " ".join(cmd))
-    subprocess.call(cmd,
-        cwd=bin_dir,
-        env={
-            "VIRTUAL_ENV": home_dir,
-            "PATH": bin_dir + ":" + os.environ["PATH"],
-        }
-    )
+    _install_pip(options, home_dir)

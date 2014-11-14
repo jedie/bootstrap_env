@@ -19,6 +19,8 @@ e.g.:
 With this project this is not needed. The current solution embed {{{get_pip.py}}} into the bootstrap file
 and call it after env creation.
 
+There are also some helpers to parse pip requirement files and install packages after virtualenv creation. Look into "boot bootstrap_env" project below.
+
 
 === the example
 
@@ -94,7 +96,7 @@ get-pip.py SHA256: 'd43dc33a5670d69dd14a9be1f2b2fa27ebf124ec1b212a47425331040f74
 
 === usage
 
-To create you own bootstrap file, is easy. Just copy the example code and change it for your needs.
+To create you own bootstrap file, is easy. Just copy the {{{example}}} or {{{boot bootstrap_env}}} code and change it for your needs.
 
 Projects that use bootstrap_env are:
 * [[https://github.com/jedie/PyLucid/tree/django-cms/bootstrap|PyLucid django-cms branch]]
@@ -103,8 +105,39 @@ Projects that use bootstrap_env are:
 Missing project? Do you use it? Just send me a mail: {{{bootstrap_env AT jensdiemer DOT de}}} or use IRC/Jabber (see below)
 
 
+=== boot bootstrap_env
+
+To create a fresh virtualenv with {{{bootstrap_env}}} do the following:
+{{{
+# Download 'boot_bootstrap_env.py' from github:
+/home/FooBar$ wget https://raw.githubusercontent.com/jedie/bootstrap_env/master/boot_bootstrap_env.py
+
+# Create virtualenv and use read-only GIT:
+/home/FooBar$ python3 boot_bootstrap_env.py ~/bootstrap_env --install_type git_readonly
+}}}
+The created virtualenv is under {{{~/bootstrap_env/}}} ;)
+
+If you would like to use PyPi packages do this:
+{{{
+# Create virtualenv and use read-only GIT:
+/home/FooBar$ python3 boot_bootstrap_env.py ~/bootstrap_env --install_type pypi
+}}}
+
+The sourcecode of this is here: [[https://github.com/jedie/bootstrap_env/tree/master/boot_bootstrap_env|/boot_bootstrap_env/]]
+
+This also work under Windows.
+e.g:
+{{{
+C:\> C:\Python34\python.exe d:\downloads\boot_bootstrap_env.py --install_type=pypi d:\bootstrap_env
+}}}
+
+There is also a maybe helpful batch file: [[https://github.com/jedie/bootstrap_env/tree/master/boot_bootstrap_env.cmd|boot_bootstrap_env.cmd]]
+
+
+
 == History
 
+ * v0.3.2 - 14.11.2014 - Add 'boot bootstrap_env' and bugfixes for running under Windows.
  * v0.3.1 - 14.11.2014 - Bugfix for "error: no such option:" while pip install, if own optional options are used.
  * v0.3.0 - 13.11.2014 - typo: rename all {{{bootstrip}}} to {{{bootstrap}}} ;)
  * v0.2.0 - 09.10.2014 - add {{{prefix}}} and {{{suffix}}} argument to {{{generate_bootstrap()}}}
