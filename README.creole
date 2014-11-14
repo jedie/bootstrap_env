@@ -96,7 +96,12 @@ get-pip.py SHA256: 'd43dc33a5670d69dd14a9be1f2b2fa27ebf124ec1b212a47425331040f74
 
 To create you own bootstrap file, is easy. Just copy the example code and change it for your needs.
 
-Another example are the bootstrap usage in [[https://github.com/jedie/PyLucid/tree/django-cms/bootstrap|PyLucid django-cms branch]].
+Projects that use bootstrap_env are:
+* [[https://github.com/jedie/PyLucid/tree/django-cms/bootstrap|PyLucid django-cms branch]]
+* [[https://github.com/DWLOAD/DwLoadServer/tree/master/bootstrap|DwLoadServer]]
+
+Missing project? Do you use it? Just send me a mail: {{{bootstrap_env AT jensdiemer DOT de}}} or use IRC/Jabber (see below)
+
 
 == History
 
@@ -104,6 +109,7 @@ Another example are the bootstrap usage in [[https://github.com/jedie/PyLucid/tr
  * v0.3.0 - 13.11.2014 - typo: rename all {{{bootstrip}}} to {{{bootstrap}}} ;)
  * v0.2.0 - 09.10.2014 - add {{{prefix}}} and {{{suffix}}} argument to {{{generate_bootstrap()}}}
  * v0.1.0 - 09.10.2014 - initial release
+
 
 == Links:
 
@@ -120,6 +126,7 @@ Related pages:
  * https://packaging.python.org
  * https://virtualenv.pypa.io
  * https://pip.pypa.io
+
 
 == donation
 
