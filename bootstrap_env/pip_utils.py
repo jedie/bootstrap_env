@@ -6,7 +6,7 @@ import pprint
 import sys
 
 import pip
-
+from pip.download import PipSession
 
 def get_requirements(filepath, verbose=True):
     """
@@ -16,7 +16,7 @@ def get_requirements(filepath, verbose=True):
     :param verbose: print informations?
     :return: list if requirements lines
     """
-    requirements=pip.req.parse_requirements(filepath)
+    requirements=pip.req.parse_requirements(filepath, session=PipSession())
     entries = []
     for req in requirements:
         if req.editable:

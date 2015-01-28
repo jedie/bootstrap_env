@@ -123,8 +123,8 @@ def get_pip(url=GET_PIP_URL, sha256=GET_PIP_SHA256):
     # Rename main() to get_pip():
     get_pip_content = get_pip_content.replace("def main():", "def get_pip():")
 
-    # Remove all comment lines:
-    get_pip_content = "\n".join([line for line in get_pip_content.splitlines() if not line.startswith("#")])
+    # TODO: Remove comment lines
+    # Important: Since the usage of b85 encoding the '#' character will not be masked!
 
     # print(get_pip_content)
     get_pip_content = surround_code(get_pip_content, "get_pip.py")
