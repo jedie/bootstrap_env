@@ -137,6 +137,7 @@ There is also a maybe helpful batch file: [[https://github.com/jedie/bootstrap_e
 
 == History
 
+ * v0.3.5 - 28.01.2015 - Update SHA256 for {{{get-pip.py}}} v6.0.6
  * v0.3.4 - 14.11.2014 - Bugfix: if {{{os.environ['SYSTEMROOT']}}} not exists.
  * v0.3.3 - 14.11.2014 - Add version number into generated bootstrap file.
  * v0.3.2 - 14.11.2014 - Add 'boot bootstrap_env' and bugfixes for running under Windows.

@@ -32,8 +32,9 @@ except ImportError as err:
 from bootstrap_env import __version__ as bootstrap_env_version
 
 
+# Alternative url is: https://bootstrap.pypa.io/get-pip.py
 GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py"
-GET_PIP_SHA256 = "d43dc33a5670d69dd14a9be1f2b2fa27ebf124ec1b212a47425331040f742a9b"
+GET_PIP_SHA256 = "0831b76e518a92a82487250fd18973062aa427e9bfab59a3e84d32f8d25b1679"
 
 INSTALL_PIP_FILENAME = os.path.join(os.path.abspath(os.path.dirname(__file__)), "bootstrap_install_pip.py")
 INSTALL_PIP_MARK = "# --- CUT here ---"
@@ -110,7 +111,7 @@ def get_pip(url=GET_PIP_URL, sha256=GET_PIP_SHA256):
 
     # Check SHA256 hash:
     get_pip_sha = hashlib.sha256(get_pip_content).hexdigest()
-    assert get_pip_sha == sha256, "Requested get-pip.py sha256 value is wrong! SHA256 is: %r" % get_pip_sha
+    assert get_pip_sha == sha256, "Requested get-pip.py sha256 value is wrong! SHA256 is: %r (Maybe it was commit a new version?!?)" % get_pip_sha
     print("get-pip.py SHA256: %r, ok." % get_pip_sha)
 
     get_pip_content = get_pip_content.decode("UTF-8")
