@@ -134,9 +134,27 @@ C:\> C:\Python34\python.exe d:\downloads\boot_bootstrap_env.py --install_type=py
 There is also a maybe helpful batch file: [[https://github.com/jedie/bootstrap_env/tree/master/boot_bootstrap_env.cmd|boot_bootstrap_env.cmd]]
 
 
+=== Request get_pip.py notes
+
+The script file [[https://github.com/jedie/bootstrap_env/blob/master/bootstrap_env/create_bootstrap.py|bootstrap_env/create_bootstrap.py]] will request {{{get_pip.py}}} from [[https://github.com/pypa/pip/blob/develop/contrib/get-pip.py]]
+It verify the content via SHA256 hash. This hash is hardcoded in {{{create_bootstrap.py}}}
+You will get a warning if a newer {{{get_pip.py}}} was commited. Looks like this:
+{{{
+Request: 'https://raw.githubusercontent.com/pypa/pip/ee6b739fb6e81ddaee64dc5bb686f7ec78ce3d78/contrib/get-pip.py'...
+Request: 'https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py'...
+WARNING: 'get-pip.py' master changed! Maybe a new version was commited?
+Please check:
+	https://github.com/pypa/pip/commits/develop/contrib/get-pip.py
+And report here:
+	https://github.com/jedie/bootstrap_env/issues
+get-pip.py SHA256: '0831b76e518a92a82487250fd18973062aa427e9bfab59a3e84d32f8d25b1679', ok.
+'../boot_bootstrap_env.py' written.
+}}}
+
 
 == History
 
+ * v0.4.1 - 29.01.2015 - Update for pip 6.0.7 and pin requested url.
  * v0.4.0 - 28.01.2015 - Updates for pip 6.0.6 changes
  * v0.3.5 - 28.01.2015 - Update SHA256 for {{{get-pip.py}}} v6.0.6
  * v0.3.4 - 14.11.2014 - Bugfix: if {{{os.environ['SYSTEMROOT']}}} not exists.

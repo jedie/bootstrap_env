@@ -2,7 +2,7 @@
 
 """
     :created: 2014 by JensDiemer.de
-    :copyleft: 2014 by the bootstrap_env team, see AUTHORS for more details.
+    :copyleft: 2014-2015 by the bootstrap_env team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -33,8 +33,14 @@ from bootstrap_env import __version__ as bootstrap_env_version
 
 
 # Alternative url is: https://bootstrap.pypa.io/get-pip.py
-GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py"
-GET_PIP_SHA256 = "0831b76e518a92a82487250fd18973062aa427e9bfab59a3e84d32f8d25b1679"
+MASTER_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py"
+
+# 'get-pip.py' v6.0.7
+HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/cfd03c17cfcab063bc15b7a1e68a7a13e13cfde2/contrib/get-pip.py"
+GET_PIP_SHA256 = "df3ec67f1a95a0316f75cf8d8fb0586093334f3e33f336f2093a9713d75bc213"
+
+# Only for info message:
+HISTORY_PAGE = "https://github.com/pypa/pip/commits/develop/contrib/get-pip.py"
 
 INSTALL_PIP_FILENAME = os.path.join(os.path.abspath(os.path.dirname(__file__)), "bootstrap_install_pip.py")
 INSTALL_PIP_MARK = "# --- CUT here ---"
@@ -91,7 +97,7 @@ def get_code(filename, cut_mark, indent=""):
     return surround_code(content, filename, indent)
 
 
-def get_pip(url=GET_PIP_URL, sha256=GET_PIP_SHA256):
+def get_pip():
     """
     Request 'get_pip.py' from given url and return the modified content.
     The Requested content will be cached into the default temp directory.
@@ -102,16 +108,30 @@ def get_pip(url=GET_PIP_URL, sha256=GET_PIP_SHA256):
         with open(get_pip_temp, "rb") as f:
             get_pip_content = f.read()
     else:
-        print("Request: %r..." % url)
+        print("Request: %r..." % HASH_GET_PIP_URL)
         with open(get_pip_temp, "wb") as out_file:
             # Warning: HTTPS requests do not do any verification of the server's certificate.
-            f = urlopen(url)
+            f = urlopen(HASH_GET_PIP_URL)
             get_pip_content = f.read()
             out_file.write(get_pip_content)
 
+        # FIXME: How to easier check if there is a newer 'get-pip.py' version was commited???
+        # see also: http://www.python-forum.de/viewtopic.php?f=1&t=35572 (de)
+        print("Request: %r..." % MASTER_GET_PIP_URL)
+        f = urlopen(MASTER_GET_PIP_URL)
+        master_content = f.read()
+        if get_pip_content != master_content:
+            print("WARNING: 'get-pip.py' master changed! Maybe a new version was commited?")
+            print("Please check:")
+            print("\t%s" % HISTORY_PAGE)
+            print("And report here:")
+            print("\thttps://github.com/jedie/bootstrap_env/issues")
+        else:
+            print("Requested content of 'get-pip.py' is up-to-date, ok.")
+
     # Check SHA256 hash:
     get_pip_sha = hashlib.sha256(get_pip_content).hexdigest()
-    assert get_pip_sha == sha256, "Requested get-pip.py sha256 value is wrong! SHA256 is: %r (Maybe it was commit a new version?!?)" % get_pip_sha
+    assert get_pip_sha == GET_PIP_SHA256, "Requested get-pip.py sha256 value is wrong! SHA256 is: %r (Maybe it was commit a new version?!?)" % get_pip_sha
     print("get-pip.py SHA256: %r, ok." % get_pip_sha)
 
     get_pip_content = get_pip_content.decode("UTF-8")
