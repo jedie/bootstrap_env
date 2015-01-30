@@ -13,11 +13,11 @@ import os
 import sys
 import tempfile
 
-try:
-    # Python 3
+PY3 = sys.version_info[0] == 3
+
+if PY3:
     from urllib.request import urlopen
-except ImportError:
-    # Python 2
+else:
     from urllib2 import urlopen
 
 try:
