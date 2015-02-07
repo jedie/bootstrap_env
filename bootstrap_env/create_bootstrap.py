@@ -35,9 +35,9 @@ from bootstrap_env import __version__ as bootstrap_env_version
 # Alternative url is: https://bootstrap.pypa.io/get-pip.py
 MASTER_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py"
 
-# 'get-pip.py' v6.0.7
-HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/cfd03c17cfcab063bc15b7a1e68a7a13e13cfde2/contrib/get-pip.py"
-GET_PIP_SHA256 = "df3ec67f1a95a0316f75cf8d8fb0586093334f3e33f336f2093a9713d75bc213"
+# 'get-pip.py' v6.0.8
+HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/b9f2d5d5bb4c9dba8dbba3cc09a24fefb12fb38e/contrib/get-pip.py"
+GET_PIP_SHA256 = "8a02784f08572986d6d4538d5b4fa68030cf459df42b497382a4a5caac135e07"
 
 # Only for info message:
 HISTORY_PAGE = "https://github.com/pypa/pip/commits/develop/contrib/get-pip.py"
