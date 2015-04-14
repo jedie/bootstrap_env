@@ -6,7 +6,7 @@
     ~~~~~~~~~~~~~~~
 
     :created: 2014 by JensDiemer.de
-    :copyleft: 2014 by the bootstrap_env team, see AUTHORS for more details.
+    :copyleft: 2014-2015 by the bootstrap_env team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -17,6 +17,18 @@ import os
 import sys
 
 import bootstrap_env
+
+
+if "publish" in sys.argv:
+    import subprocess
+    args = [sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "upload"]
+    print("\nCall: %r\n" %  " ".join(args))
+    subprocess.call(args)
+
+    print("\nDon't forget to tag this version, e.g.:")
+    print("\tgit tag v%s" % bootstrap_env.__version__)
+    print("\tgit push --tags")
+    sys.exit()
 
 
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
