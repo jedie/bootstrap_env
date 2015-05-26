@@ -45,6 +45,15 @@ HISTORY_PAGE = "https://github.com/pypa/pip/commits/develop/contrib/get-pip.py"
 INSTALL_PIP_FILENAME = os.path.join(os.path.abspath(os.path.dirname(__file__)), "bootstrap_install_pip.py")
 INSTALL_PIP_MARK = "# --- CUT here ---"
 
+
+def cut_path(filepath):
+    filepath = os.path.normpath(filepath)
+    parts = filepath.split(os.sep)
+    parts = parts[4:]
+    filepath = "...%s%s" % (os.sep, os.sep.join(parts))
+    return filepath
+
+
 HEADER_CODE = '''\
 #!/usr/bin/env python
 
@@ -59,7 +68,7 @@ HEADER_CODE = '''\
 '''.format(
     bootstrap_env_version=bootstrap_env_version,
     generator=os.path.basename(__file__),
-    virtualenv_file=virtualenv.__file__,
+    virtualenv_file=cut_path(virtualenv.__file__),
     virtualenv_version=virtualenv.virtualenv_version,
     python_version=sys.version.replace("\n", " ")
 )
@@ -85,7 +94,10 @@ def get_code(filename, cut_mark, indent=""):
     """
     Read a UTF-8 file and return the content after cut_mark, surrounded with comments.
     """
-    print("Reade code from: %r..." % filename)
+    filename = os.path.abspath(os.path.normpath(filename))
+    cutted_filename = cut_path(filename)
+
+    print("Reade code from: %r..." % cutted_filename)
     with open(filename, "rb") as f:
         content = f.read()
 
@@ -94,7 +106,7 @@ def get_code(filename, cut_mark, indent=""):
     start_pos = content.index(cut_mark) + len(cut_mark)
     content = content[start_pos:]
 
-    return surround_code(content, filename, indent)
+    return surround_code(content, cutted_filename, indent)
 
 
 def get_pip():
