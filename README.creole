@@ -154,6 +154,7 @@ get-pip.py SHA256: '0831b76e518a92a82487250fd18973062aa427e9bfab59a3e84d32f8d25b
 
 == History
 
+ * v0.4.5 - 26.05.2015 - Update to pip 7.0.1
  * v0.4.4 - 14.04.2015 - Update to pip 6.1.1 (upload again as v0.4.4 with wheel, too.)
  * v0.4.2 - 07.02.2015 - Update to pip 6.0.8
  * v0.4.1 - 29.01.2015 - Update for pip 6.0.7 and pin requested url.

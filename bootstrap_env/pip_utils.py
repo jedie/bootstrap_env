@@ -21,7 +21,15 @@ def get_requirements(filepath, verbose=True):
     for req in requirements:
         if req.editable:
             # http://pip.readthedocs.org/en/latest/reference/pip_install.html#editable-installs
-            entry = "--editable=%s" % req.url
+
+            # 7.0.1 … 6.1.0
+            # https://github.com/pypa/pip/commit/e8e2566279879b7df04394edfcaa9c63c0ce9e67
+            try:
+                link = req.link # pip v7
+            except AttributeError:
+                link = req.url # pip v6
+
+            entry = "--editable=%s" % link
         else:
             # install as normal PyPi package
             entry = req.name
