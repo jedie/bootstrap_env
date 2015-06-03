@@ -38,7 +38,7 @@ if "publish" in sys.argv:
     subprocess.call(args)
 
     print("\nDon't forget to tag this version, e.g.:")
-    print("\tgit tag v%s" % VERSION_STRING)
+    print("\tgit tag v%s" % bootstrap_env.__version__)
     print("\tgit push --tags")
     sys.exit()
 
