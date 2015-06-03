@@ -28,7 +28,7 @@ if __name__ == '__main__':
     ])
 
     create_bootstrap.generate_bootstrap(
-        out_filename=os.path.join("..", "boot_bootstrap_env.py"),
+        out_filename=os.path.join(BASE_PATH, "..", "boot_bootstrap_env.py"),
         add_extend_parser=os.path.join(BASE_PATH, "sources", "extend_parser.py"),
         add_adjust_options=os.path.join(BASE_PATH, "sources", "adjust_options.py"),
         add_after_install=os.path.join(BASE_PATH, "sources", "after_install.py"),
