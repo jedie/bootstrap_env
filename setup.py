@@ -20,13 +20,25 @@ import bootstrap_env
 
 
 if "publish" in sys.argv:
+    try:
+        # Test if wheel is installed, otherwise the user will only see:
+        #   error: invalid command 'bdist_wheel'
+        import wheel
+    except ImportError as err:
+        print("\nError: %s" % err)
+        print("\nMaybe https://pypi.python.org/pypi/wheel is not installed or virtualenv not activated?!?")
+        print("e.g.:")
+        print("    ~/your/env/$ source bin/activate")
+        print("    ~/your/env/$ pip install wheel")
+        sys.exit(-1)
+
     import subprocess
     args = [sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "upload"]
     print("\nCall: %r\n" %  " ".join(args))
     subprocess.call(args)
 
     print("\nDon't forget to tag this version, e.g.:")
-    print("\tgit tag v%s" % bootstrap_env.__version__)
+    print("\tgit tag v%s" % VERSION_STRING)
     print("\tgit push --tags")
     sys.exit()
 
