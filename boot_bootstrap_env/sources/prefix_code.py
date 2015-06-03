@@ -2,10 +2,6 @@
 
 
 # imports not really needed and just for the editor warning ;)
-import os
-import sys
-import subprocess
-
 
 # Will be inserted in real bootstrap file ;)
 NORMAL_INSTALLATION = None # requirements from normal_installation.txt

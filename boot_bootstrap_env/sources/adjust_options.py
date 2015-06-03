@@ -2,7 +2,7 @@
 
 # imports not really needed and just for the editor warning ;)
 import sys
-from boot_dwload_server import INST_TYPES
+from .prefix_code import INST_TYPES
 
 
 def adjust_options(options, args):

@@ -2,7 +2,6 @@
 # coding: utf-8
 
 import os
-import pprint
 
 from bootstrap_env import create_bootstrap
 from bootstrap_env.pip_utils import requirements_definitions

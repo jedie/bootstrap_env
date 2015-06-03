@@ -2,12 +2,9 @@
 
 # imports not really needed and just for the editor warning ;)
 import sys
-import subprocess
 import os
-from bootstrap.source_prefix_code import (
-    INST_PYPI, INST_GIT, INST_DEV,
-    NORMAL_INSTALLATION,GIT_READONLY_INSTALLATION,DEVELOPER_INSTALLATION
-)
+
+from .prefix_code import INST_PYPI, INST_GIT, INST_DEV, NORMAL_INSTALLATION, GIT_READONLY_INSTALLATION, DEVELOPER_INSTALLATION
 from bootstrap_env.bootstrap_install_pip import EnvSubprocess
 
 
