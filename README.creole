@@ -24,79 +24,98 @@ There are also some helpers to parse pip requirement files and install packages 
 
 === the example
 
-The included {{{example}}} will create a {{{boot_example.py}}} bootstrap file. Running this looks like:
+There is a simple {{{example}}}.
+
+To test it, create first the bootstrap file by running {{{create_example.py}}} for it:
+e.g.:
 {{{
-~ $ python2 boot_example.py ~/testenv
-The additional example extend_parser() code is called.
-The additional example adjust_options() code is called.
-New python executable in /home/jens/testenv/bin/python2
-Also creating executable in /home/jens/testenv/bin/python
-call to install pip with: '/home/jens/testenv/bin/python /path/to/bootstrap_env/boot_example.py --install-pip /home/jens/testenv'
-install pip from self contained 'get_pip.py'
-Downloading/unpacking pip
-  Downloading pip-1.5.6-py2.py3-none-any.whl (1.0MB): 1.0MB downloaded
-Downloading/unpacking setuptools
-  Downloading setuptools-6.0.2-py2.py3-none-any.whl (543kB): 543kB downloaded
-Installing collected packages: pip, setuptools
-Successfully installed pip setuptools
-Cleaning up...
-The additional example after_install() code is called.
-}}}
+/path/to/bootstrap-env$ python example_bootstrap/create_example.py
 
+Generate bootstrap file: '/path/to/bootstrap-env/boot_example_env.py'...
 
-
-The {{{example}}} hook code stored separated files in [[https://github.com/jedie/bootstrap_env/blob/master/example/|example]] directory looks like this:
-{{{
-def extend_parser(parser):
-    # --- CUT here ---
-    sys.stdout.write("The additional example extend_parser() code is called.\n")
-}}}
-{{{
-def adjust_options(options, args):
-    # --- CUT here ---
-    sys.stdout.write("The additional example adjust_options() code is called.\n")
-}}}
-{{{
-def after_install(options, home_dir):
-    # --- CUT here ---
-    sys.stdout.write("The additional example after_install() code is called.\n")
-}}}
-
-
-
-Creating the example bootstrap file looks like this:
-{{{
-/path/to/bootstrap_env/ $ python2 example.py
-Generate bootstrap file: 'boot_example.py'...
-Reade code from: 'example/extend_parser.py'...
-Reade code from: 'example/adjust_options.py'...
-Reade code from: 'example/after_install.py'...
-Reade code from: '/path/to/bootstrap_env/bootstrap_env/bootstrap_install_pip.py'...
+Reade code from: '.../src/bootstrap-env/example_bootstrap/extend_parser.py'...
+Reade code from: '.../src/bootstrap-env/example_bootstrap/adjust_options.py'...
+Reade code from: '.../src/bootstrap-env/example_bootstrap/after_install.py'...
+Reade code from: '.../src/bootstrap-env/bootstrap_env/bootstrap_install_pip.py'...
+Request: 'https://raw.githubusercontent.com/pypa/pip/22baf0ca29325e848010c44a0fec0db64e8d1edb/contrib/get-pip.py'...
 Request: 'https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py'...
-get-pip.py SHA256: 'd43dc33a5670d69dd14a9be1f2b2fa27ebf124ec1b212a47425331040f742a9b', ok.
-'boot_example.py' written.
-}}}
+Requested content of 'get-pip.py' is up-to-date, ok.
+get-pip.py SHA256: '51ef604ed2852f6b57b675ebefc4b807cffd2300bfc885761365988d19d227ad', ok.
 
+'/path/to/bootstrap-env/boot_example_env.py' written.
+
+}}}
 
 
 After the first call, the requested {{{get-pip.py}}} file will be cached into the default temp
 and reused from there. So it is fast to generate it again:
 {{{
-/path/to/bootstrap_env/ $ python2 example.py
-Generate bootstrap file: 'boot_example.py'...
-Reade code from: 'example/extend_parser.py'...
-Reade code from: 'example/adjust_options.py'...
-Reade code from: 'example/after_install.py'...
-Reade code from: '/path/to/bootstrap_env/bootstrap_env/bootstrap_install_pip.py'...
+/path/to/bootstrap-env$ python example_bootstrap/create_example.py
+
+Generate bootstrap file: '/path/to/bootstrap-env/boot_example_env.py'...
+
+Reade code from: '.../src/bootstrap-env/example_bootstrap/extend_parser.py'...
+Reade code from: '.../src/bootstrap-env/example_bootstrap/adjust_options.py'...
+Reade code from: '.../src/bootstrap-env/example_bootstrap/after_install.py'...
+Reade code from: '.../src/bootstrap-env/bootstrap_env/bootstrap_install_pip.py'...
 Use '/tmp/get-pip.py'
-get-pip.py SHA256: 'd43dc33a5670d69dd14a9be1f2b2fa27ebf124ec1b212a47425331040f742a9b', ok.
-'boot_example.py' written.
+get-pip.py SHA256: '51ef604ed2852f6b57b675ebefc4b807cffd2300bfc885761365988d19d227ad', ok.
+
+'/path/to/bootstrap-env/boot_example_env.py' written.
+
 }}}
+
+
+ Running this looks like:
+{{{
+/path/to/bootstrap-env$ python boot_example_env.py ~/example_env
+
+The additional example extend_parser() code is called.
+The additional example adjust_options() code is called.
+
+Using real prefix '/usr'
+Path not in prefix '/home/jens/PyLucid_env/include/python3.4m' '/usr'
+New python executable in /home/jens/example_env/bin/python
+Install pip...
+call '/home/jens/example_env/bin/python /home/jens/PyLucid_env/src/bootstrap-env/boot_example_env.py --install-pip /home/jens/example_env'
+install pip from self contained 'get_pip.py'
+Collecting pip
+  Using cached pip-7.0.3-py2.py3-none-any.whl
+Collecting setuptools
+  Using cached setuptools-17.0-py2.py3-none-any.whl
+Collecting wheel
+  Using cached wheel-0.24.0-py2.py3-none-any.whl
+Installing collected packages: pip, setuptools, wheel
+Successfully installed pip-7.0.3 setuptools-17.0 wheel-0.24.0
+
+The additional example after_install() code is called.
+
+}}}
+
+
+
+The {{{example}}} hook code stored separated files in [[https://github.com/jedie/bootstrap_env/blob/master/example_bootstrap/|example_bootstrap]] directory looks like this:
+{{{
+def extend_parser(parser):
+    # --- CUT here ---
+    sys.stdout.write("\nThe additional example extend_parser() code is called.\n")
+}}}
+{{{
+def adjust_options(options, args):
+    # --- CUT here ---
+    sys.stdout.write("The additional example adjust_options() code is called.\n\n")
+}}}
+{{{
+def after_install(options, home_dir):
+    # --- CUT here ---
+    sys.stdout.write("\nThe additional example after_install() code is called.\n\n")
+}}}
+
 
 
 === usage
 
-To create you own bootstrap file, is easy. Just copy the {{{example}}} or {{{boot bootstrap_env}}} code and change it for your needs.
+To create you own bootstrap file, is easy. Just copy the {{{example_bootstrap}}} or {{{boot_bootstrap_env}}} code and change it for your needs.
 
 Projects that use bootstrap_env are:
 * [[https://github.com/jedie/PyLucid/tree/django-cms/bootstrap|PyLucid django-cms branch]]
@@ -154,6 +173,7 @@ get-pip.py SHA256: '0831b76e518a92a82487250fd18973062aa427e9bfab59a3e84d32f8d25b
 
 == History
 
+ * v0.5.0 - **not released, yet** - Add unittests, refactor example
  * v0.4.6 - 03.06.2015 - Update to pip 7.0.3
  * v0.4.5 - 26.05.2015 - Update to pip 7.0.1, cut filepath in generated boot file comments
  * v0.4.4 - 14.04.2015 - Update to pip 6.1.1 (upload again as v0.4.4 with wheel, too.)

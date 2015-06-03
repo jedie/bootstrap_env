@@ -228,7 +228,9 @@ def generate_bootstrap(out_filename,
     :param prefix: Optional code that will be inserted before extend_parser() code part.
     :param suffix: Optional code that will be inserted after after_install() code part.
     """
-    print("Generate bootstrap file: %r..." % out_filename)
+    out_filename = os.path.normpath(os.path.abspath(out_filename))
+
+    print("\nGenerate bootstrap file: %r...\n" % out_filename)
 
     if prefix:
         print("Add prefix code.")
@@ -261,4 +263,4 @@ def generate_bootstrap(out_filename,
     with open(out_filename, 'w') as f:
         f.write(code)
 
-    print("%r written." % out_filename)
+    print("\n%r written.\n" % out_filename)

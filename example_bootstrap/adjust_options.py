@@ -5,4 +5,4 @@ import sys
 
 def adjust_options(options, args):
     # --- CUT here ---
-    sys.stdout.write("The additional example adjust_options() code is called.\n")
+    sys.stdout.write("The additional example adjust_options() code is called.\n\n")
