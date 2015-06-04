@@ -97,7 +97,7 @@ def get_code(filename, cut_mark, indent=""):
     filename = os.path.abspath(os.path.normpath(filename))
     cutted_filename = cut_path(filename)
 
-    print("Reade code from: %r..." % cutted_filename)
+    print("Read code from: %r..." % cutted_filename)
     with open(filename, "rb") as f:
         content = f.read()
 
