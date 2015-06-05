@@ -5,6 +5,10 @@ See: [[https://github.com/pypa/packaging-problems/issues/55|packaging-problems i
 
 Fork and contribute! ;)
 
+Compatible Python Versions (see also [[https://github.com/jedie/bootstrap_env/blob/master/.travis.yml|.travis.yml]]):
+ * 2.7, 3.3, 3.4
+ * PyPy (Python v2 and v3)
+
 | {{https://travis-ci.org/jedie/bootstrap_env.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/bootstrap_env/|travis-ci.org/jedie/bootstrap_env]] |
 | {{https://coveralls.io/repos/jedie/bootstrap_env/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/bootstrap_env|coveralls.io/r/jedie/bootstrap_env]] |
 | {{https://landscape.io/github/jedie/bootstrap_env/master/landscape.svg|Status on landscape.io}} | [[https://landscape.io/github/jedie/bootstrap_env/master|landscape.io/github/jedie/bootstrap_env/master]] |
@@ -123,7 +127,7 @@ def after_install(options, home_dir):
 
 === usage
 
-To create you own bootstrap file, is easy. Just copy the {{{example_bootstrap}}} or {{{boot_bootstrap_env}}} code and change it for your needs.
+To create you own bootstrap file, is easy. Just copy the {{{example}}} or {{{boot_bootstrap_env}}} code and change it for your needs.
 
 Projects that use bootstrap_env are:
 * [[https://github.com/jedie/PyLucid/tree/django-cms/bootstrap|PyLucid django-cms branch]]
@@ -134,31 +138,30 @@ Missing project? Do you use it? Just send me a mail: {{{bootstrap_env AT jensdie
 
 === boot bootstrap_env
 
-To create a fresh virtualenv with {{{bootstrap_env}}} do the following:
+To create a fresh virtualenv with {{{boot.py}}} do the following:
 {{{
 # Download 'boot_bootstrap_env.py' from github:
 /home/FooBar$ wget https://raw.githubusercontent.com/jedie/bootstrap_env/master/bootstrap_env/boot.py
 
 # Create virtualenv and use read-only GIT:
-/home/FooBar$ python3 boot.py ~/bootstrap_env --install_type git_readonly
+/home/FooBar$ python3 boot.py ~/my_bootstrap_env --install_type git_readonly
 }}}
-The created virtualenv is under {{{~/bootstrap_env/}}} ;)
+The created virtualenv is under {{{~/my_bootstrap_env/}}} ;)
 
 If you would like to use PyPi packages do this:
 {{{
 # Create virtualenv and use read-only GIT:
-/home/FooBar$ python3 boot.py ~/bootstrap_env --install_type pypi
+/home/FooBar$ python3 boot.py ~/my_bootstrap_env --install_type pypi
 }}}
 
-The sourcecode of this is here: [[https://github.com/jedie/bootstrap_env/tree/master/boot_bootstrap_env|/boot_bootstrap_env/]]
+The {{{boot.py}}} will be created by {{{create_boot.py}}} this is stored here: [[https://github.com/jedie/bootstrap_env/tree/master/bootstrap_env/boot_bootstrap_env|/bootstrap_env/boot_bootstrap_env/]]
 
 This also work under Windows.
 e.g:
 {{{
-C:\> C:\Python34\python.exe d:\downloads\boot_bootstrap_env.py --install_type=pypi d:\bootstrap_env
+C:\> C:\Python34\python.exe d:\downloads\boot.py --install_type=pypi d:\my_bootstrap_env
 }}}
-
-There is also a maybe helpful batch file: [[https://github.com/jedie/bootstrap_env/tree/master/boot_bootstrap_env.cmd|boot_bootstrap_env.cmd]]
+There is also a maybe helpful batch file: [[https://github.com/jedie/bootstrap_env/tree/master/bootstrap_env/boot.cmd|bootstrap_env/boot.cmd]]
 
 
 === Request get_pip.py notes
@@ -210,7 +213,7 @@ if __name__ == '__main__':
 
 == History
 
- * v0.5.0 - **not released, yet** - Add unittests, refactor example
+ * v0.5.0 - 05.06.2015 - Add unittests, refactor sourcecode layout. (Please notice 'backward incompatible changes' above!)
  * v0.4.6 - 03.06.2015 - Update to pip 7.0.3
  * v0.4.5 - 26.05.2015 - Update to pip 7.0.1, cut filepath in generated boot file comments
  * v0.4.4 - 14.04.2015 - Update to pip 6.1.1 (upload again as v0.4.4 with wheel, too.)
