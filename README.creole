@@ -137,17 +137,17 @@ Missing project? Do you use it? Just send me a mail: {{{bootstrap_env AT jensdie
 To create a fresh virtualenv with {{{bootstrap_env}}} do the following:
 {{{
 # Download 'boot_bootstrap_env.py' from github:
-/home/FooBar$ wget https://raw.githubusercontent.com/jedie/bootstrap_env/master/boot_bootstrap_env.py
+/home/FooBar$ wget https://raw.githubusercontent.com/jedie/bootstrap_env/master/bootstrap_env/boot.py
 
 # Create virtualenv and use read-only GIT:
-/home/FooBar$ python3 boot_bootstrap_env.py ~/bootstrap_env --install_type git_readonly
+/home/FooBar$ python3 boot.py ~/bootstrap_env --install_type git_readonly
 }}}
 The created virtualenv is under {{{~/bootstrap_env/}}} ;)
 
 If you would like to use PyPi packages do this:
 {{{
 # Create virtualenv and use read-only GIT:
-/home/FooBar$ python3 boot_bootstrap_env.py ~/bootstrap_env --install_type pypi
+/home/FooBar$ python3 boot.py ~/bootstrap_env --install_type pypi
 }}}
 
 The sourcecode of this is here: [[https://github.com/jedie/bootstrap_env/tree/master/boot_bootstrap_env|/boot_bootstrap_env/]]
@@ -176,6 +176,35 @@ And report here:
 	https://github.com/jedie/bootstrap_env/issues
 get-pip.py SHA256: '0831b76e518a92a82487250fd18973062aa427e9bfab59a3e84d32f8d25b1679', ok.
 '../boot_bootstrap_env.py' written.
+}}}
+
+
+== backward incompatible changes
+
+=== v0.4 -> v0.5
+
+//bootstrap_env.**create_bootstrap**// was renamed to: //bootstrap_env.**generate_bootstrap**//
+
+The old API sill worked, but creates a //FutureWarning// message and will be removed in the future.
+
+e.g. new:
+{{{
+from bootstrap_env.generate_bootstrap import generate_bootstrap
+
+if __name__ == '__main__':
+    generate_bootstrap(
+        #...
+    )
+}}}
+
+old:
+{{{
+from bootstrap_env.create_bootstrap import generate_bootstrap
+
+if __name__ == '__main__':
+    generate_bootstrap(
+        #...
+    )
 }}}
 
 

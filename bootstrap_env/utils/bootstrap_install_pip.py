@@ -20,10 +20,9 @@ import os
 import subprocess
 import sys
 
-from bootstrap_env.create_bootstrap import get_pip
+from bootstrap_env.utils.get_pip import get_pip
 
 # --- CUT here ---
-
 
 INSTALL_PIP_OPTION="--install-pip"
 

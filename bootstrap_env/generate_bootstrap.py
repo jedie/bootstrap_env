@@ -8,17 +8,10 @@
 
 from __future__ import absolute_import, print_function
 
-import hashlib
 import os
 import sys
-import tempfile
 
-PY3 = sys.version_info[0] == 3
 
-if PY3:
-    from urllib.request import urlopen
-else:
-    from urllib2 import urlopen
 
 try:
     import virtualenv
@@ -29,30 +22,13 @@ except ImportError as err:
     print("(Origin error was: %s)" % err)
     sys.exit(-1)
 
+from bootstrap_env.utils.get_pip import get_pip
+from bootstrap_env.utils.sourcecode_utils import cut_path, surround_code, get_code, abs_py_path
 from bootstrap_env import __version__ as bootstrap_env_version
+from bootstrap_env.utils import bootstrap_install_pip
 
-
-# Alternative url is: https://bootstrap.pypa.io/get-pip.py
-MASTER_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py"
-
-# 'get-pip.py' v7.0.3
-HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/22baf0ca29325e848010c44a0fec0db64e8d1edb/contrib/get-pip.py"
-GET_PIP_SHA256 = "51ef604ed2852f6b57b675ebefc4b807cffd2300bfc885761365988d19d227ad"
-
-# Only for info message:
-HISTORY_PAGE = "https://github.com/pypa/pip/commits/develop/contrib/get-pip.py"
-
-INSTALL_PIP_FILENAME = os.path.join(os.path.abspath(os.path.dirname(__file__)), "bootstrap_install_pip.py")
+INSTALL_PIP_FILENAME = abs_py_path(bootstrap_install_pip) # bootstrap_install_pip.py
 INSTALL_PIP_MARK = "# --- CUT here ---"
-
-
-def cut_path(filepath):
-    filepath = os.path.normpath(filepath)
-    parts = filepath.split(os.sep)
-    parts = parts[4:]
-    filepath = "...%s%s" % (os.sep, os.sep.join(parts))
-    return filepath
-
 
 HEADER_CODE = '''\
 #!/usr/bin/env python
@@ -72,96 +48,6 @@ HEADER_CODE = '''\
     virtualenv_version=virtualenv.virtualenv_version,
     python_version=sys.version.replace("\n", " ")
 )
-
-
-def surround_code(code, info, indent=""):
-    """
-    Mark the beginning and end of the code.
-    So, it's easier to find it in the generated bootstrap file ;)
-    """
-    comment_line = "#" * 79
-    return "\n".join([
-        "%s%s" % (indent, comment_line),
-        "%s## %r START" % (indent, info),
-        code.strip("\n"),
-        "%s## %r END" % (indent, info),
-        "%s%s" % (indent, comment_line),
-        "", # add a new line at the end
-    ])
-
-
-def get_code(filename, cut_mark, indent=""):
-    """
-    Read a UTF-8 file and return the content after cut_mark, surrounded with comments.
-    """
-    filename = os.path.abspath(os.path.normpath(filename))
-    cutted_filename = cut_path(filename)
-
-    print("Read code from: %r..." % cutted_filename)
-    with open(filename, "rb") as f:
-        content = f.read()
-
-    content = content.decode("UTF-8")
-
-    start_pos = content.index(cut_mark) + len(cut_mark)
-    content = content[start_pos:]
-
-    return surround_code(content, cutted_filename, indent)
-
-
-def get_pip():
-    """
-    Request 'get_pip.py' from given url and return the modified content.
-    The Requested content will be cached into the default temp directory.
-    """
-    get_pip_temp = os.path.join(tempfile.gettempdir(), "get-pip.py")
-    if os.path.isfile(get_pip_temp):
-        print("Use %r" % get_pip_temp)
-        with open(get_pip_temp, "rb") as f:
-            get_pip_content = f.read()
-    else:
-        print("Request: %r..." % HASH_GET_PIP_URL)
-        with open(get_pip_temp, "wb") as out_file:
-            # Warning: HTTPS requests do not do any verification of the server's certificate.
-            f = urlopen(HASH_GET_PIP_URL)
-            get_pip_content = f.read()
-            out_file.write(get_pip_content)
-
-        # FIXME: How to easier check if there is a newer 'get-pip.py' version was commited???
-        # see also: http://www.python-forum.de/viewtopic.php?f=1&t=35572 (de)
-        print("Request: %r..." % MASTER_GET_PIP_URL)
-        f = urlopen(MASTER_GET_PIP_URL)
-        master_content = f.read()
-        if get_pip_content != master_content:
-            print("WARNING: 'get-pip.py' master changed! Maybe a new version was commited?")
-            print("Please check:")
-            print("\t%s" % HISTORY_PAGE)
-            print("And report here:")
-            print("\thttps://github.com/jedie/bootstrap_env/issues")
-        else:
-            print("Requested content of 'get-pip.py' is up-to-date, ok.")
-
-    # Check SHA256 hash:
-    get_pip_sha = hashlib.sha256(get_pip_content).hexdigest()
-    assert get_pip_sha == GET_PIP_SHA256, "Requested get-pip.py sha256 value is wrong! SHA256 is: %r (Maybe it was commit a new version?!?)" % get_pip_sha
-    print("get-pip.py SHA256: %r, ok." % get_pip_sha)
-
-    get_pip_content = get_pip_content.decode("UTF-8")
-
-    # Cut the "start" code:
-    split_index = get_pip_content.index('if __name__ == "__main__":')
-    get_pip_content = get_pip_content[:split_index]
-
-    # Rename main() to get_pip():
-    get_pip_content = get_pip_content.replace("def main():", "def get_pip():")
-
-    # TODO: Remove comment lines
-    # Important: Since the usage of b85 encoding the '#' character will not be masked!
-
-    # print(get_pip_content)
-    get_pip_content = surround_code(get_pip_content, "get_pip.py")
-    get_pip_content = "\n\n%s\n\n" % get_pip_content
-    return get_pip_content
 
 
 def merge_code(extend_parser_code, adjust_options_code, after_install_code):

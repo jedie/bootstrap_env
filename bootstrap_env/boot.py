@@ -3,7 +3,7 @@
 """
     WARNING: This file is generated with: bootstrap_env v0.4.6
     https://pypi.python.org/pypi/bootstrap_env/
-    script file: 'create_bootstrap.py'
+    script file: 'generate_bootstrap.py'
     used '.../lib/python3.4/site-packages/virtualenv.py' v13.0.3
     Python v3.4.0 (default, Apr 11 2014, 13:05:11)  [GCC 4.8.2]
 """
@@ -1874,27 +1874,31 @@ NORMAL_INSTALLATION = ['virtualenv', 'bootstrap-env']
 
 # requirements from git_readonly_installation.txt
 GIT_READONLY_INSTALLATION = ['virtualenv',
+ 'nose',
+ 'coveralls',
  'docutils',
  '--editable=git+https://github.com/jedie/bootstrap_env.git#egg=bootstrap_env']
 
 # requirements from developer_installation.txt
 DEVELOPER_INSTALLATION = ['virtualenv',
+ 'nose',
+ 'coveralls',
  'docutils',
  '--editable=git+git@github.com:jedie/bootstrap_env.git#egg=bootstrap_env']
 ###############################################################################
-## '.../src/bootstrap-env/boot_bootstrap_env/sources/prefix_code.py' START
+## '.../bootstrap_env/boot_bootstrap_env/sources/prefix_code.py' START
 # For choosing the installation type:
 INST_PYPI="pypi"
 INST_GIT="git_readonly"
 INST_DEV="dev"
 
 INST_TYPES=(INST_PYPI, INST_GIT, INST_DEV)
-## '.../src/bootstrap-env/boot_bootstrap_env/sources/prefix_code.py' END
+## '.../bootstrap_env/boot_bootstrap_env/sources/prefix_code.py' END
 ###############################################################################
 ## 'prefix code' END
 ###############################################################################
 ###############################################################################
-## '.../src/bootstrap-env/bootstrap_env/bootstrap_install_pip.py' START
+## '.../bootstrap-env/bootstrap_env/utils/bootstrap_install_pip.py' START
 INSTALL_PIP_OPTION="--install-pip"
 
 
@@ -1958,11 +1962,11 @@ def extend_parser(parser):
 
 
     ###############################################################################
-    ## '.../src/bootstrap-env/boot_bootstrap_env/sources/extend_parser.py' START
+    ## '.../bootstrap_env/boot_bootstrap_env/sources/extend_parser.py' START
     parser.add_option("--install_type", dest="install_type", choices=INST_TYPES,
         help="Install type: %s (See README!)" % ", ".join(INST_TYPES)
     )
-    ## '.../src/bootstrap-env/boot_bootstrap_env/sources/extend_parser.py' END
+    ## '.../bootstrap_env/boot_bootstrap_env/sources/extend_parser.py' END
     ###############################################################################
 
 
@@ -1980,23 +1984,23 @@ def adjust_options(options, args):
 
 
     ###############################################################################
-    ## '.../src/bootstrap-env/boot_bootstrap_env/sources/adjust_options.py' START
+    ## '.../bootstrap_env/boot_bootstrap_env/sources/adjust_options.py' START
     if options.install_type == None:
         sys.stderr.write("\n\nERROR:\nYou must add --install_type option (See README) !\n")
         sys.stderr.write("Available types: %s\n\n" % ", ".join(INST_TYPES))
         sys.exit(-1)
 
     sys.stdout.write("\nInstall type: %r\n" % options.install_type)
-    ## '.../src/bootstrap-env/boot_bootstrap_env/sources/adjust_options.py' END
+    ## '.../bootstrap_env/boot_bootstrap_env/sources/adjust_options.py' END
     ###############################################################################
 
 
 def after_install(options, home_dir):
     _install_pip(options, home_dir)
-## '.../src/bootstrap-env/bootstrap_env/bootstrap_install_pip.py' END
+## '.../bootstrap-env/bootstrap_env/utils/bootstrap_install_pip.py' END
 ###############################################################################
     ###############################################################################
-    ## '.../src/bootstrap-env/boot_bootstrap_env/sources/after_install.py' START
+    ## '.../bootstrap_env/boot_bootstrap_env/sources/after_install.py' START
     """
     called after virtualenv was created and pip/setuptools installed.
     Now we installed requirement libs/packages.
@@ -2019,7 +2023,7 @@ def after_install(options, home_dir):
         sys.stdout.write("\n\nInstall %r:\n" % requirement)
         env_subprocess.call_env_pip(["install", "--log=%s" % logfile, requirement])
         sys.stdout.write("\n")
-    ## '.../src/bootstrap-env/boot_bootstrap_env/sources/after_install.py' END
+    ## '.../bootstrap_env/boot_bootstrap_env/sources/after_install.py' END
     ###############################################################################
 
 

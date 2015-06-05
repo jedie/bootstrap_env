@@ -1,7 +1,7 @@
 # coding: utf-8
 
 # imports not really needed and just for the editor warning ;)
-from .prefix_code import INST_TYPES
+from bootstrap_env.boot_bootstrap_env.sources.prefix_code import INST_TYPES
 
 
 def extend_parser(parser):

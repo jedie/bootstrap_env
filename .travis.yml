@@ -1,0 +1,49 @@
+language: python
+
+python:
+    - "2.7"
+    - "3.3"
+    - "3.4"
+    - "pypy"
+    - "pypy3"
+
+virtualenv:
+    system_site_packages: false
+
+before_install:
+    - CHECKOUT_DIR=$(pwd)
+    - echo ${CHECKOUT_DIR}
+    - echo ${TRAVIS_BRANCH}
+    - echo ${TRAVIS_COMMIT}
+    - echo ${TRAVIS_REPO_SLUG}
+    - echo ${GIT_TARGET_EXTRA}
+    - echo ${GIT_SOURCE_EXTRA}
+    - echo ${TRAVIS_PYTHON_VERSION}
+    #- git clone --depth 1 git://github.com/${TRAVIS_REPO_SLUG}.git ~/bootstrap_env
+
+install:
+    - export BUILD_DIR=~/build_py${TRAVIS_PYTHON_VERSION}
+    - echo ${BUILD_DIR}
+    - cd ${CHECKOUT_DIR}
+    - echo $(pwd)
+    - which python
+    - python --version
+    - python bootstrap_env/boot.py ${BUILD_DIR} --install_type git_readonly
+
+script:
+    - cd ${BUILD_DIR}
+    - source bin/activate
+    - which python
+    - python --version
+    - pip install --upgrade pip
+    - pip install virtualenv nose coveralls
+    - cd src/bootstrap-env
+    - git checkout -qf ${TRAVIS_COMMIT}
+    - echo $(pwd)
+    - coverage run ./setup.py nosetests
+
+after_success:
+    coveralls
+
+notifications:
+    irc: "irc.freenode.org#pylucid"

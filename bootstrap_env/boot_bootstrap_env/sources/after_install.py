@@ -4,8 +4,8 @@
 import sys
 import os
 
-from .prefix_code import INST_PYPI, INST_GIT, INST_DEV, NORMAL_INSTALLATION, GIT_READONLY_INSTALLATION, DEVELOPER_INSTALLATION
-from bootstrap_env.bootstrap_install_pip import EnvSubprocess
+from bootstrap_env.boot_bootstrap_env.sources.prefix_code import INST_PYPI, INST_GIT, INST_DEV, NORMAL_INSTALLATION, GIT_READONLY_INSTALLATION, DEVELOPER_INSTALLATION
+from bootstrap_env.utils.bootstrap_install_pip import EnvSubprocess
 
 
 def after_install(options, home_dir):

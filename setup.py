@@ -33,14 +33,69 @@ if "publish" in sys.argv:
         sys.exit(-1)
 
     import subprocess
-    args = [sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "upload"]
-    print("\nCall: %r\n" %  " ".join(args))
-    subprocess.call(args)
 
-    print("\nDon't forget to tag this version, e.g.:")
-    print("\tgit tag v%s" % bootstrap_env.__version__)
-    print("\tgit push --tags")
-    sys.exit()
+    def call(*args):
+        print("\nCall: %r\n" %  " ".join(args))
+        try:
+            return subprocess.check_output(args, universal_newlines=True)
+        except subprocess.CalledProcessError as err:
+            print("\n***ERROR:")
+            print(err.output)
+            raise
+
+    # Check if we are on 'master' branch:
+    output = call("git", "branch", "--no-color")
+    if not "* master" in output:
+        print("\nNOTE: It seems you are not on 'master':")
+        print(output)
+        if input("\nPublish anyhow? (Y/N)").lower() not in ("y", "j"):
+            print("Bye.")
+            sys.exit(-1)
+
+    # publish only if git repro is clean:
+    output = call("git", "status", "--porcelain")
+    if output == "":
+        print("OK")
+    else:
+        print("\n***ERROR: git repro not clean:")
+        print(output)
+        sys.exit(-1)
+
+    # tag first (will raise a error of tag already exists)
+    call("git", "tag", "v%s" % bootstrap_env.__version__)
+
+    # build and upload to PyPi:
+    call(sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "upload")
+
+    # push
+    call("git", "push")
+    call("git", "push", "--tags")
+
+    sys.exit(0)
+
+
+if "test" in sys.argv or "nosetests" in sys.argv:
+    """
+    nose is a optional dependency, so test import.
+    Otherwise the user get only the error:
+        error: invalid command 'nosetests'
+    """
+    try:
+        import nose
+    except ImportError as err:
+        print("\nError: Can't import 'nose': %s" % err)
+        print("\nMaybe 'nose' is not installed or virtualenv not activated?!?")
+        print("e.g.:")
+        print("    ~/your/env/$ source bin/activate")
+        print("    ~/your/env/$ pip install nose")
+        print("    ~/your/env/$ ./setup.py nosetests\n")
+        sys.exit(-1)
+    else:
+        if "test" in sys.argv:
+            print("\nPlease use 'nosetests' instead of 'test' to cover all tests!\n")
+            print("e.g.:")
+            print("     $ ./setup.py nosetests\n")
+            sys.exit(-1)
 
 
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -70,6 +125,12 @@ setup(
     long_description=long_description,
     url="https://github.com/jedie/bootstrap_env",
     license="GPL v3+",
+    install_requires=[
+        "virtualenv",
+    ],
+    tests_require=[
+        "nose", # https://pypi.python.org/pypi/nose
+    ],
     classifiers=[
         # https://pypi.python.org/pypi?%3Aaction=list_classifiers
         "Development Status :: 3 - Alpha",

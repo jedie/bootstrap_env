@@ -2,7 +2,8 @@
 
 # imports not really needed and just for the editor warning ;)
 import sys
-from .prefix_code import INST_TYPES
+
+from bootstrap_env.boot_bootstrap_env.sources.prefix_code import INST_TYPES
 
 
 def adjust_options(options, args):

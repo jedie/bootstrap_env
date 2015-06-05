@@ -5,6 +5,9 @@
 # include the basic requirements
 -r basic_requirements.txt
 
+nose
+coveralls
+
 # For rest2html from python-creole in setup.py
 docutils
 
