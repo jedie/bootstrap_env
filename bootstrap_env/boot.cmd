@@ -9,7 +9,7 @@ if NOT exist %python% (
     exit 1
 )
 
-set boot_script=boot_bootstrap_env.py
+set boot_script=boot.py
 if NOT exist %boot_script% (
     echo ERROR: '%boot_script%' doesn't exists?!?
     pause
