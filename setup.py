@@ -34,7 +34,7 @@ if "publish" in sys.argv:
 
     import subprocess
 
-    def call(*args):
+    def verbose_check_output(*args):
         print("\nCall: %r\n" %  " ".join(args))
         try:
             return subprocess.check_output(args, universal_newlines=True)
@@ -43,9 +43,15 @@ if "publish" in sys.argv:
             print(err.output)
             raise
 
+    def verbose_check_call(*args):
+        print("\nCall: %r\n" %  " ".join(args))
+        subprocess.check_call(args, universal_newlines=True)
+
     # Check if we are on 'master' branch:
-    output = call("git", "branch", "--no-color")
-    if not "* master" in output:
+    output = verbose_check_output("git", "branch", "--no-color")
+    if "* master" in output:
+        print("OK")
+    else:
         print("\nNOTE: It seems you are not on 'master':")
         print(output)
         if input("\nPublish anyhow? (Y/N)").lower() not in ("y", "j"):
@@ -53,7 +59,7 @@ if "publish" in sys.argv:
             sys.exit(-1)
 
     # publish only if git repro is clean:
-    output = call("git", "status", "--porcelain")
+    output = verbose_check_output("git", "status", "--porcelain")
     if output == "":
         print("OK")
     else:
@@ -62,14 +68,14 @@ if "publish" in sys.argv:
         sys.exit(-1)
 
     # tag first (will raise a error of tag already exists)
-    call("git", "tag", "v%s" % bootstrap_env.__version__)
+    verbose_check_call("git", "tag", "v%s" % bootstrap_env.__version__)
 
     # build and upload to PyPi:
-    call(sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "upload")
+    verbose_check_call(sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "upload")
 
     # push
-    call("git", "push")
-    call("git", "push", "--tags")
+    verbose_check_call("git", "push")
+    verbose_check_call("git", "push", "--tags")
 
     sys.exit(0)
 
@@ -111,6 +117,7 @@ except ImportError as err:
     long_description = None
 else:
     long_description = get_long_description(PACKAGE_ROOT)
+    print("OK")
 
 
 setup(
