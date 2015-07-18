@@ -18,6 +18,25 @@ import sys
 
 from bootstrap_env import __version__
 
+PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
+# convert README.creole on-the-fly to ReSt, see also:
+# https://github.com/jedie/python-creole/wiki/Use-In-Setup/
+check_readme="publish" in sys.argv or "check" in sys.argv or "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv
+try:
+    from creole.setup_utils import get_long_description
+except ImportError as err:
+    if check_readme:
+        raise ImportError("%s - Please install python-creole >= v0.8 -  e.g.: pip install python-creole" % err)
+    long_description = None
+else:
+    if check_readme:
+        print("\nCheck creole2ReSt:")
+    long_description = get_long_description(PACKAGE_ROOT)
+    if check_readme:
+        print("OK")
+
 
 if "publish" in sys.argv:
     """
@@ -175,21 +194,6 @@ if "test" in sys.argv or "nosetests" in sys.argv:
             print("     $ ./setup.py nosetests\n")
             sys.exit(-1)
 
-
-PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-
-# convert creole to ReSt on-the-fly, see also:
-# https://code.google.com/p/python-creole/wiki/UseInSetup
-try:
-    from creole.setup_utils import get_long_description
-except ImportError as err:
-    if "check" in sys.argv or "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv:
-        raise ImportError("%s - Please install python-creole >= v0.8 -  e.g.: pip install python-creole" % err)
-    long_description = None
-else:
-    long_description = get_long_description(PACKAGE_ROOT)
-    print("OK")
 
 
 setup(
