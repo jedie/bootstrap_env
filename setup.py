@@ -31,6 +31,8 @@ if "publish" in sys.argv:
     The cli arguments will be pass to 'twine'. So this is possible:
      * Display 'twine' help page...: ./setup.py publish --help
      * use testpypi................: ./setup.py publish --repository=test
+
+    TODO: Look at: https://github.com/zestsoftware/zest.releaser
     """
     # Imports here, so it's easier to copy&paste this complete code block ;)
     import subprocess
@@ -100,14 +102,15 @@ if "publish" in sys.argv:
         print(output)
         sys.exit(-1)
 
-    print("\ngit tag version (will raise a error of tag already exists)")
-    verbose_check_call("git", "tag", "v%s" % __version__)
+    print("\ngit push to server (Will fail, if not up-to-date)")
+    verbose_check_call("git", "push")
 
     print("\nCleanup old builds:")
     def rmtree(path):
         path = os.path.abspath(path)
-        print("\tremove tree:", path)
-        shutil.rmtree(path)
+        if os.path.isdir(path):
+            print("\tremove tree:", path)
+            shutil.rmtree(path)
     rmtree("./dist")
     rmtree("./build")
 
@@ -123,6 +126,9 @@ if "publish" in sys.argv:
         log.write(output)
     print("Build output is in log file: %r" % log_filename)
 
+    print("\ngit tag version (will raise a error of tag already exists)")
+    verbose_check_call("git", "tag", "v%s" % __version__)
+
     print("\nUpload with twine:")
     twine_args = sys.argv[1:]
     twine_args.remove("publish")
@@ -131,8 +137,7 @@ if "publish" in sys.argv:
     from twine.commands.upload import main as twine_upload
     twine_upload(twine_args)
 
-    print("\ngit push to server")
-    verbose_check_call("git", "push")
+    print("\ngit push tag to server")
     verbose_check_call("git", "push", "--tags")
 
     sys.exit(0)
