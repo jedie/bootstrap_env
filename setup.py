@@ -102,7 +102,16 @@ if "publish" in sys.argv:
         print(output)
         sys.exit(-1)
 
-    print("\ngit push to server (Will fail, if not up-to-date)")
+    print("\ncheck if pull is needed")
+    verbose_check_call("git", "fetch", "--all")
+    call_info, output = verbose_check_output("git", "log", "HEAD..origin/master", "--oneline")
+    print("\t%s" % call_info)
+    if output == "":
+        print("OK")
+    else:
+        print("\n *** ERROR: git repro is not up-to-date:")
+        print(output)
+        sys.exit(-1)
     verbose_check_call("git", "push")
 
     print("\nCleanup old builds:")
