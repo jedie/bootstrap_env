@@ -213,9 +213,9 @@ if __name__ == '__main__':
 
 == History
 
- * v0.5.1 - 24.07.2015 - Made **add_extend_parser, add_adjust_options** and **add_after_install** optional in **generate_bootstrap()**
- * v0.5.1 - 18.07.2015 - Update to pip 7.1.0
- * v0.5.0 - 05.06.2015 - Add unittests, refactor sourcecode layout. (Please notice 'backward incompatible changes' above!)
+ * [[https://github.com/jedie/bootstrap_env/compare/v0.5.1...v0.5.2|v0.5.2]] - 24.07.2015 - Made **add_extend_parser, add_adjust_options** and **add_after_install** optional in **generate_bootstrap()**
+ * [[https://github.com/jedie/bootstrap_env/compare/v0.5.0...v0.5.1|v0.5.1]] - 18.07.2015 - Update to pip 7.1.0
+ * [[https://github.com/jedie/bootstrap_env/compare/v0.4.6...v0.5.0|v0.5.0]] - 05.06.2015 - Add unittests, refactor sourcecode layout. (Please notice 'backward incompatible changes' above!)
  * v0.4.6 - 03.06.2015 - Update to pip 7.0.3
  * v0.4.5 - 26.05.2015 - Update to pip 7.0.1, cut filepath in generated boot file comments
  * v0.4.4 - 14.04.2015 - Update to pip 6.1.1 (upload again as v0.4.4 with wheel, too.)
