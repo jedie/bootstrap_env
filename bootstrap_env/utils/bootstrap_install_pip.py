@@ -57,7 +57,7 @@ class EnvSubprocess(object):
             pass
 
     def _subprocess(self, cmd):
-        print("call %r" % " ".join(cmd))
+        print("\ncall %r" % " ".join(cmd))
         subprocess.call(cmd, **self.subprocess_defaults)
 
     def call_env_python(self, cmd):
@@ -68,7 +68,7 @@ class EnvSubprocess(object):
 
 
 def _install_pip(options, home_dir):
-    print("Install pip...")
+    print("\nInstall pip...")
     bootstrap_file = os.path.abspath(sys.argv[0])
     assert os.path.isfile(bootstrap_file), "Path to self not found?!?! (%r not exists?!?!)" % bootstrap_file
 
@@ -92,10 +92,10 @@ def adjust_options(options, args):
     options.no_setuptools=True
 
     if options.install_pip:
-        print("install pip from self contained 'get_pip.py'")
+        print("\ninstall pip from self contained 'get_pip.py'")
         sys.argv = [sys.argv[0]]
         get_pip() # renamed main() from 'get_pip.py', it exists in the generated bootstrap file!
-        print("pip is installed.")
+        print("\npip is installed.\n")
         sys.exit(0)
 
 
