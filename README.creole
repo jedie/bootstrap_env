@@ -9,7 +9,8 @@ Compatible Python Versions (see also [[https://github.com/jedie/bootstrap_env/bl
  * 2.7, 3.3, 3.4
  * PyPy (Python v2 and v3)
 
-| {{https://travis-ci.org/jedie/bootstrap_env.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/bootstrap_env/|travis-ci.org/jedie/bootstrap_env]] |
+| {{https://travis-ci.org/jedie/bootstrap_env.svg|Status on travis-ci.org}} | [[https://travis-ci.org/jedie/bootstrap_env/|travis-ci.org/jedie/bootstrap_env]] |
+| {{http://img.shields.io/appveyor/ci/jedie/bootstrap-env.svg?style=flat|Status on appveyor.com}} | [[https://ci.appveyor.com/project/jedie/bootstrap-env/|ci.appveyor.com/project/jedie/bootstrap-env]] |
 | {{https://coveralls.io/repos/jedie/bootstrap_env/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/bootstrap_env|coveralls.io/r/jedie/bootstrap_env]] |
 | {{https://landscape.io/github/jedie/bootstrap_env/master/landscape.svg|Status on landscape.io}} | [[https://landscape.io/github/jedie/bootstrap_env/master|landscape.io/github/jedie/bootstrap_env/master]] |
 | {{https://requires.io/github/jedie/bootstrap_env/requirements.svg|Requirements Status on requires.io}} | [[https://requires.io/github/jedie/bootstrap_env/requirements/|requires.io/github/jedie/bootstrap_env/requirements/]] |
