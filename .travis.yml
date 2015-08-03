@@ -6,6 +6,10 @@ python:
     - "3.4"
     - "pypy"
     - "pypy3"
+    
+os:
+    - osx
+    - linux
 
 virtualenv:
     system_site_packages: false
