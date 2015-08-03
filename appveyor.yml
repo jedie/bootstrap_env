@@ -23,16 +23,16 @@ init:
     - ps: "ls C:/Python*"
 
 # clone directory
-clone_folder: c:\bootstrap_env_clone
+clone_folder: c:/bootstrap_env_clone
 
 # set clone depth
 clone_depth: 5 # clone entire repository history if not defined
 
 install:
-    - "%PYTHON%/python.exe c:\bootstrap_env_clone\bootstrap_env\boot.py C:\bootstrap_%PYTHON%_env --install_type git_readonly"
-    - cd C:\bootstrap_%PYTHON%_env\
-    - call Scripts\activate.bat
-    - cd src\bootstrap-env
+    - "%PYTHON%/python.exe c:/bootstrap_env_clone/bootstrap_env/boot.py C:/bootstrap_%PYTHON%_env --install_type git_readonly"
+    - cd C:/bootstrap_%PYTHON%_env/
+    - call Scripts/activate.bat
+    - cd src/bootstrap-env
     - git checkout -qf %APPVEYOR_REPO_COMMIT%
 
 test_script:
