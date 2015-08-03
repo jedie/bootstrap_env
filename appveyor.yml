@@ -5,8 +5,8 @@
 version: "{build}"
 
 # blacklist
-except:
-    - gh-pages
+#except:
+#  - gh-pages
 
 build: false
 
