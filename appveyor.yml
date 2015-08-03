@@ -31,7 +31,6 @@ clone_depth: 5 # clone entire repository history if not defined
 
 install:
     - set ENV_DIR=C:/bootstrap_env
-    - echo "boot into: %ENV_DIR%..."
     - "%PYTHON%/python.exe c:/bootstrap_env_clone/bootstrap_env/boot.py %ENV_DIR% --install_type git_readonly"
     - cd %ENV_DIR%
     - call Scripts/activate.bat
