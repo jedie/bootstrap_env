@@ -57,10 +57,13 @@ def surround_code(code, info, indent=""):
     ])
 
 
-def get_code(filename, cut_mark, indent=""):
+def get_code(filename, cut_mark=None, indent=""):
     """
     Read a UTF-8 file and return the content after cut_mark, surrounded with comments.
     """
+    if filename is None:
+        return ""
+
     filename = os.path.abspath(os.path.normpath(filename))
     cutted_filename = cut_path(filename)
 
@@ -74,19 +77,20 @@ def get_code(filename, cut_mark, indent=""):
             content = f.read()
     # content = content.decode("UTF-8")
 
-    try:
-        start_pos = content.index(cut_mark) + len(cut_mark)
-    except ValueError as err:
-        msg = (
-            "Error: cut mark %r not found in %r: %s\n"
-            " -------------- [begin file content] -------------- \n"
-            "%s\n"
-            " --------------- [end file content] --------------- \n"
-        ) % (
-            cut_mark, filename, err, content
-        )
-        raise ValueError(msg)
+    if cut_mark is not None:
+        try:
+            start_pos = content.index(cut_mark) + len(cut_mark)
+        except ValueError as err:
+            msg = (
+                "Error: cut mark %r not found in %r: %s\n"
+                " -------------- [begin file content] -------------- \n"
+                "%s\n"
+                " --------------- [end file content] --------------- \n"
+            ) % (
+                cut_mark, filename, err, content
+            )
+            raise ValueError(msg)
 
-    content = content[start_pos:]
+        content = content[start_pos:]
 
     return surround_code(content, cutted_filename, indent)

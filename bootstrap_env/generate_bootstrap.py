@@ -94,8 +94,8 @@ def merge_code(extend_parser_code, adjust_options_code, after_install_code):
 
 
 def generate_bootstrap(out_filename,
-        add_extend_parser, add_adjust_options, add_after_install,
-        cut_mark, prefix=None, suffix=None):
+        add_extend_parser=None, add_adjust_options=None, add_after_install=None,
+        cut_mark="# --- CUT here ---", prefix=None, suffix=None):
     """
     Generate the bootstrap:
      - download "get-pip.py"
