@@ -17,6 +17,7 @@ import sys
 import tempfile
 
 from bootstrap_env.tests.utils.base_unittest import BaseExampleTestCase, TempDir, StdoutStderrBuffer
+from bootstrap_env.tests.utils.utils import get_new_exe_messages
 from bootstrap_env.utils import bootstrap_install_pip
 from bootstrap_env.utils.get_pip import GET_PIP_SHA256, get_pip_tempfile
 from bootstrap_env.example import extend_parser, adjust_options, after_install
@@ -57,19 +58,27 @@ class TestGenerateBoot(BaseExampleTestCase):
 
         output = buffer.get_output()
         # print(output)
-        self.assertIn("requirements from 'normal_installation.txt':", output)
-        self.assertIn("requirements from 'git_readonly_installation.txt':", output)
-        self.assertIn("requirements from 'developer_installation.txt':", output)
 
-        self.assertIn("boot_bootstrap_env/sources/prefix_code.py", output)
-        self.assertIn("boot_bootstrap_env/sources/extend_parser.py", output)
-        self.assertIn("boot_bootstrap_env/sources/adjust_options.py", output)
-        self.assertIn("boot_bootstrap_env/sources/after_install.py", output)
-        self.assertIn("bootstrap_env/utils/bootstrap_install_pip.py", output)
+        self.assert_content(
+            content=output,
+            must_contain=(
+                "requirements from 'normal_installation.txt':",
+                "requirements from 'git_readonly_installation.txt':",
+                "requirements from 'developer_installation.txt':",
 
-        self.assertIn("Use '%s'" % get_pip_tempfile(), output)
-        self.assertIn("get-pip.py SHA256: '%s', ok." % GET_PIP_SHA256, output)
-        self.assertIn("'%s' written." % BOOT_FILEPATH, output)
+                "boot_bootstrap_env","sources",
+                "prefix_code.py", "extend_parser.py", "adjust_options.py", "after_install.py",
+                "bootstrap_env","utils","bootstrap_install_pip.py",
+
+                "Use %r" % get_pip_tempfile(),
+                "get-pip.py SHA256: '%s', ok." % GET_PIP_SHA256,
+                "%r written." % BOOT_FILEPATH,
+            ),
+            must_not_contain=(
+                "Error", "Traceback"
+            )
+        )
+        self.assertTrue(output.count("Read code from:"), 5)
 
         self.assert_is_file(BOOT_FILEPATH)
 
@@ -79,9 +88,17 @@ class TestGenerateBoot(BaseExampleTestCase):
             popen_args=[sys.executable, BOOT_FILEPATH, "--help"],
             verbose=False
         )
-        self.assertIn("Usage: boot.py [OPTIONS] DEST_DIR", stdout)
-        self.assertIn("--install_type=INSTALL_TYPE", stdout)
-        self.assertIn("Install type: pypi, git_readonly, dev (See README!)", stdout)
+        self.assert_content(
+            content=stdout,
+            must_contain=(
+                "Usage: boot.py [OPTIONS] DEST_DIR",
+                "--install_type=INSTALL_TYPE",
+                "Install type: pypi, git_readonly, dev (See README!)",
+            ),
+            must_not_contain=(
+                "Error", "Traceback"
+            )
+        )
         self.assertEqual(retcode, 0)
 
 
@@ -144,47 +161,36 @@ class TestBoot(BaseExampleTestCase):
             # print("-"*79)
             # print(output)
             # print("="*79)
-            self.assertIn("Install type: 'git_readonly'", output)
+            must_contain = (
+                "Install type: 'git_readonly'",
+            )
 
-            if self.IS_PYPY:
-                # *** pypy2 e.g.:
-                # Using real prefix '/opt/python/pypy-2.5.0'
-                # Path not in prefix '/home/travis/build_pypypy/include' '/opt/python/pypy-2.5.0'
-                # New pypy executable in /tmp/bootstrap_env_test_Jwxr5P/bin/python
-                # Also creating executable in /tmp/bootstrap_env_test_Jwxr5P/bin/pypy
-                # Install pip...
-
-                # *** pypy3 e.g.:
-                # Using real prefix '/opt/python/pypy3-2.4.0'
-                # Path not in prefix '/home/travis/build_pypypy3/include' '/opt/python/pypy3-2.4.0'
-                # New pypy executable in /tmp/bootstrap_env_test_rv1rl3/bin/python
-                # Also creating executable in /tmp/bootstrap_env_test_rv1rl3/bin/pypy
-                # Install pip...
-                self.assertIn("New pypy executable in %s/bin/python" % tempfolder, output)
-                self.assertIn("Also creating executable in %s/bin/pypy" % tempfolder, output)
-            else:
-                # *** python2 e.g.:
-                # Using real prefix '/opt/python/2.7.9'
-                # New python executable in /tmp/bootstrap_env_test_51rIfq/bin/python
-                # Install pip...
-
-                # *** python3 e.g.:
-                # Using real prefix '/opt/python/3.4.2'
-                # New python executable in /tmp/bootstrap_env_test__8cfcmhq/bin/python
-                # Install pip...
-                self.assertIn("New python executable in %s/bin/python" % tempfolder, output)
-
-            # FIXME:
-            # self.assertIn("Cloning https://github.com/jedie/bootstrap_env.git", output)
-            # self.assertIn("Successfully installed bootstrap-env", output)
-
+            must_contain += tuple(
+                get_new_exe_messages(base_path=tempfolder)
+            )
+            self.assert_content(
+                content=output,
+                must_contain=must_contain,
+                must_not_contain=(
+                    "Error", "Traceback",
+                )
+            )
             self.assertEqual(return_code, None) # no sys.exit()
 
             # TODO: Test the created environment!
 
             with open(os.path.join(tempfolder, "install.log"), "r") as f:
                 log_content = f.read()
-                self.assertIn("Successfully installed bootstrap-env", log_content)
+                self.assert_content(
+                    content=log_content,
+                    must_contain=(
+                        "Cloning https://github.com/jedie/bootstrap_env.git",
+                        "Successfully installed bootstrap-env",
+                    ),
+                    must_not_contain=(
+                        "Error", "Traceback",
+                    )
+                )
 
         # cleaned?
         self.assert_not_is_dir(tempfolder)

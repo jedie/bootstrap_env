@@ -29,10 +29,10 @@ class TestGetPip(BaseUnittestCase):
             self.set_get_pip_output()
 
         msg = """
-            Use '%s'
+            Use %r
             get-pip.py SHA256: '%s', ok.
         """ % (
-            self.get_pip_temp,
+            os.path.normpath(self.get_pip_temp), # linux/windows path representation.
             GET_PIP_SHA256
         )
         self.assertEqual_dedent(self.PIP_FROM_TEMP, msg)

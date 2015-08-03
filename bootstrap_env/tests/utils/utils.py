@@ -12,6 +12,7 @@
 from __future__ import print_function, absolute_import
 
 import difflib
+import os
 import textwrap
 import unittest
 
@@ -19,6 +20,8 @@ import unittest
 ## error output format:
 # =1 -> via repr()
 # =2 -> raw
+import sys
+
 VERBOSE = 1
 #VERBOSE = 2
 
@@ -147,6 +150,51 @@ class MarkupTest(unittest.TestCase):
             AssertionError, self.assertEqual, "foo", "bar"
         )
 
+
+def get_new_exe_messages(base_path):
+    messages = []
+
+    if sys.platform.startswith('win'):
+        python_path = os.path.join(base_path, "Scripts", "python.exe")
+    else:
+        python_path = os.path.join(base_path, "bin", "python")
+
+    if hasattr(sys, 'pypy_version_info'):
+        # *** pypy2 e.g.:
+        # Using real prefix '/opt/python/pypy-2.5.0'
+        # Path not in prefix '/home/travis/build_pypypy/include' '/opt/python/pypy-2.5.0'
+        # New pypy executable in /tmp/bootstrap_env_test_Jwxr5P/bin/python
+        # Also creating executable in /tmp/bootstrap_env_test_Jwxr5P/bin/pypy
+        # Install pip...
+
+        # *** pypy3 e.g.:
+        # Using real prefix '/opt/python/pypy3-2.4.0'
+        # Path not in prefix '/home/travis/build_pypypy3/include' '/opt/python/pypy3-2.4.0'
+        # New pypy executable in /tmp/bootstrap_env_test_rv1rl3/bin/python
+        # Also creating executable in /tmp/bootstrap_env_test_rv1rl3/bin/pypy
+        # Install pip...
+
+        messages.append("New pypy executable in %s" % python_path)
+
+        if sys.platform.startswith('win'):
+            pypy_path = os.path.join(base_path, "Scripts", "pypy.exe")
+        else:
+            pypy_path = os.path.join(base_path, "bin", "pypy")
+
+        messages.append("Also creating executable in %s" % pypy_path)
+    else:
+        # *** python2 e.g.:
+        # Using real prefix '/opt/python/2.7.9'
+        # New python executable in /tmp/bootstrap_env_test_51rIfq/bin/python
+        # Install pip...
+
+        # *** python3 e.g.:
+        # Using real prefix '/opt/python/3.4.2'
+        # New python executable in /tmp/bootstrap_env_test__8cfcmhq/bin/python
+        # Install pip...
+        messages.append("New python executable in %s" % python_path)
+
+    return messages
 
 
 if __name__ == '__main__':

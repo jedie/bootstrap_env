@@ -17,8 +17,15 @@ import shutil
 import sys
 import tempfile
 import textwrap
+import traceback
 import unittest
-from contextlib import contextmanager
+import time
+
+try:
+    WindowsError = WindowsError
+except NameError:
+    class WindowsError(Exception):
+        pass
 
 PY3 = sys.version_info[0] == 3
 
@@ -75,8 +82,22 @@ class TempDir():
     def __enter__(self):
         return self.tempfolder
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        shutil.rmtree(self.tempfolder)
+    def _rm_tree_temp(self, try_count=3, wait=0.5):
+        try:
+            shutil.rmtree(self.tempfolder)
+        except (WindowsError, PermissionError) as err:
+            # Will raise PermissionError on Windows. Why?!?
+            print("Error: Can't cleanup temp files: %s" % err, file=sys.stderr)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            traceback.print_tb(exc_traceback, limit=1, file=sys.stderr)
+            if try_count>0:
+                print("Wait %s..." % wait)
+                time.sleep(wait)
+                print("Try again...")
+                self._rm_tree_temp(try_count=try_count-1, wait=(wait*2))
+
+    def __exit__(self, *args, **kwargs):
+        self._rm_tree_temp()
 
 
 
@@ -148,6 +169,33 @@ class BaseUnittestCase(unittest.TestCase, SubprocessMixin):
                 " -----------------------------------\n"
             ) % (err, first, second)
             raise AssertionError(msg)
+
+    def assert_content(self, content, must_contain=None, must_not_contain=None):
+        if must_contain:
+            for part in must_contain:
+                if part not in content:
+                    msg = (
+                        "'must_contain' item not found:\n"
+                        " ------------------ [ follow part ... ] -------------------\n"
+                        "%s\n"
+                        " --------- [ ... **not found** in follow content ] --------\n"
+                        "%s\n"
+                        " ----------------------------------------------------------\n"
+                    ) % (part, content)
+                    raise AssertionError(msg)
+        if must_not_contain:
+            for part in must_not_contain:
+                if part in content:
+                    msg = (
+                        "'must_not_contain' item found, but should not exist:\n"
+                        " ------------------- [ follow part ... ] ------------------\n"
+                        "%s\n"
+                        " ----------- [ ... **found** in follow content ] ----------\n"
+                        "%s\n"
+                        " ----------------------------------------------------------\n"
+                    ) % (part, content)
+                    raise AssertionError(msg)
+
 
     def assert_is_dir(self, path):
         self.assertTrue(os.path.isdir(path), "Directory %r doesn't exists!" % path)
