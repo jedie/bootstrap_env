@@ -3,3 +3,5 @@
 
 # https://pypi.python.org/pypi/virtualenv/
 virtualenv
+
+pip

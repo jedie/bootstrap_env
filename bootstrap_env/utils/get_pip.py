@@ -25,9 +25,9 @@ from bootstrap_env.utils.sourcecode_utils import surround_code
 # Alternative url is: https://bootstrap.pypa.io/get-pip.py
 MASTER_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py"
 
-# 'get-pip.py' v7.1.0
-HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/5d927de5cdc7c05b1afbdd78ae0d1b127c04d9d0/contrib/get-pip.py"
-GET_PIP_SHA256 = "0d156a0ab947f847a0facb832985433d9fc7d5480be86af24c31716670d65116"
+# 'get-pip.py' v7.1.2
+HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/3dfa1f9a55d25587e9e97a27d8c87943e4b6aa54/contrib/get-pip.py"
+GET_PIP_SHA256 = "d1f66b3848abc6fd1aeda3bb7461101f6a909c3b08efa3ecc1f561712269469c"
 
 # Only for info message:
 HISTORY_PAGE = "https://github.com/pypa/pip/commits/develop/contrib/get-pip.py"
