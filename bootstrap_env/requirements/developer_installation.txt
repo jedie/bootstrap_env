@@ -8,8 +8,14 @@
 nose
 coveralls
 
+python-creole
+
 # For rest2html from python-creole in setup.py
 docutils
+
+wheel
+
+twine
 
 # clone own projects with git push access
 #----------------------------------------
