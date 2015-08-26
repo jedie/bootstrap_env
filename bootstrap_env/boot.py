@@ -3,9 +3,9 @@
 """
     WARNING: This file is generated with: bootstrap_env v0.5.3
     https://pypi.python.org/pypi/bootstrap_env/
-    script file: 'generate_bootstrap.pyc'
-    used '.../local/lib/python2.7/site-packages/virtualenv.pyc' v13.1.2
-    Python v2.7.6 (default, Jun 22 2015, 17:58:13)  [GCC 4.8.2]
+    script file: 'generate_bootstrap.py'
+    used '.../local/lib/python3.4/site-packages/virtualenv.py' v13.1.2
+    Python v3.4.0 (default, Apr 11 2014, 13:05:18)  [GCC 4.8.2]
 """
 
 __version__ = "13.1.2"
@@ -1885,22 +1885,25 @@ DEVELOPER_INSTALLATION = ['virtualenv',
  'pip',
  'nose',
  'coveralls',
+ 'python-creole',
  'docutils',
+ 'wheel',
+ 'twine',
  '--editable=git+git@github.com:jedie/bootstrap_env.git#egg=bootstrap_env']
 ###############################################################################
-## '.../bootstrap_env/bootstrap_env/boot_bootstrap_env/sources/prefix_code.py' START
+## '.../bootstrap-env/bootstrap_env/boot_bootstrap_env/sources/prefix_code.py' START
 # For choosing the installation type:
 INST_PYPI="pypi"
 INST_GIT="git_readonly"
 INST_DEV="dev"
 
 INST_TYPES=(INST_PYPI, INST_GIT, INST_DEV)
-## '.../bootstrap_env/bootstrap_env/boot_bootstrap_env/sources/prefix_code.py' END
+## '.../bootstrap-env/bootstrap_env/boot_bootstrap_env/sources/prefix_code.py' END
 ###############################################################################
 ## 'prefix code' END
 ###############################################################################
 ###############################################################################
-## '.../workspace/bootstrap_env/bootstrap_env/utils/bootstrap_install_pip.py' START
+## '.../workspace/bootstrap-env/bootstrap_env/utils/bootstrap_install_pip.py' START
 INSTALL_PIP_OPTION="--install-pip"
 
 
@@ -1911,13 +1914,9 @@ class EnvSubprocess(object):
     def __init__(self, home_dir):
         self.abs_home_dir = os.path.abspath(home_dir)
 
-        if sys.platform in ['win32','cygwin','win64']:
-            self.bin_dir = os.path.join(self.abs_home_dir, "Scripts")
-        else:
-            self.bin_dir = os.path.join(self.abs_home_dir, "bin")
-
-        self.python_cmd = os.path.join(self.bin_dir, "python")
-        self.pip_cmd = os.path.join(self.bin_dir, "pip")
+        self.bin_dir = self._get_bin_dir()
+        self.python_cmd = self._get_python_cmd()
+        self.pip_cmd = None # Will be set on first call
 
         self.subprocess_defaults = {
             "cwd": self.bin_dir,
@@ -1933,6 +1932,45 @@ class EnvSubprocess(object):
         except KeyError:
             pass
 
+    def _get_bin_dir(self):
+        """
+        Normaly we have a ...env/bin/ dir.
+        But under Windows we have ...env/Scripts/
+        But not PyPy2 under Windows, see:
+        https://bitbucket.org/pypy/pypy/issues/2125/tcl-doesnt-work-inside-a-virtualenv-on#comment-21247266
+
+        So just try to test via os.path.isdir()
+        """
+        for subdir in ("bin", "Scripts"):
+            bin_dir = os.path.join(self.abs_home_dir, subdir)
+            if os.path.isdir(bin_dir):
+                print("bin dir: %r" % bin_dir)
+                return bin_dir
+        raise RuntimeError("Can't find 'bin/Scripts' dir in: %r" % self.abs_home_dir)
+
+    def _get_python_cmd(self):
+        """
+        return the python executable in the virtualenv.
+        Try first sys.executable but use fallbacks.
+        """
+        file_names = ["pypy.exe", "python.exe", "python"]
+        executable = sys.executable
+        if executable is not None:
+            executable = os.path.split(executable)[1]
+            file_names.insert(0, executable)
+
+        return self._get_bin_file(*file_names)
+
+    def _get_bin_file(self, *file_names):
+        for file_name in file_names:
+            file_path = os.path.join(self.bin_dir, file_name)
+            if os.path.isfile(file_path):
+                print("Use: %r" % file_path)
+                return file_path
+        raise RuntimeError(
+            "Can't find file in %r. Tested file names are: %r" % (self.bin_dir, file_names)
+        )
+
     def _subprocess(self, cmd):
         print("\ncall %r" % " ".join(cmd))
         subprocess.call(cmd, **self.subprocess_defaults)
@@ -1941,6 +1979,8 @@ class EnvSubprocess(object):
         self._subprocess([self.python_cmd] + cmd)
 
     def call_env_pip(self, cmd):
+        if self.pip_cmd is None:
+            self.pip_cmd = self._get_bin_file("pip.exe", "pip")
         self._subprocess([self.pip_cmd] + cmd)
 
 
@@ -1964,11 +2004,11 @@ def extend_parser(parser):
 
 
     ###############################################################################
-    ## '.../bootstrap_env/bootstrap_env/boot_bootstrap_env/sources/extend_parser.py' START
+    ## '.../bootstrap-env/bootstrap_env/boot_bootstrap_env/sources/extend_parser.py' START
     parser.add_option("--install_type", dest="install_type", choices=INST_TYPES,
         help="Install type: %s (See README!)" % ", ".join(INST_TYPES)
     )
-    ## '.../bootstrap_env/bootstrap_env/boot_bootstrap_env/sources/extend_parser.py' END
+    ## '.../bootstrap-env/bootstrap_env/boot_bootstrap_env/sources/extend_parser.py' END
     ###############################################################################
 
 
@@ -1986,23 +2026,23 @@ def adjust_options(options, args):
 
 
     ###############################################################################
-    ## '.../bootstrap_env/bootstrap_env/boot_bootstrap_env/sources/adjust_options.py' START
+    ## '.../bootstrap-env/bootstrap_env/boot_bootstrap_env/sources/adjust_options.py' START
     if options.install_type == None:
         sys.stderr.write("\n\nERROR:\nYou must add --install_type option (See README) !\n")
         sys.stderr.write("Available types: %s\n\n" % ", ".join(INST_TYPES))
         sys.exit(-1)
 
     sys.stdout.write("\nInstall type: %r\n" % options.install_type)
-    ## '.../bootstrap_env/bootstrap_env/boot_bootstrap_env/sources/adjust_options.py' END
+    ## '.../bootstrap-env/bootstrap_env/boot_bootstrap_env/sources/adjust_options.py' END
     ###############################################################################
 
 
 def after_install(options, home_dir):
     _install_pip(options, home_dir)
-## '.../workspace/bootstrap_env/bootstrap_env/utils/bootstrap_install_pip.py' END
+## '.../workspace/bootstrap-env/bootstrap_env/utils/bootstrap_install_pip.py' END
 ###############################################################################
     ###############################################################################
-    ## '.../bootstrap_env/bootstrap_env/boot_bootstrap_env/sources/after_install.py' START
+    ## '.../bootstrap-env/bootstrap_env/boot_bootstrap_env/sources/after_install.py' START
     """
     called after virtualenv was created and pip/setuptools installed.
     Now we installed requirement libs/packages.
@@ -2025,7 +2065,7 @@ def after_install(options, home_dir):
         sys.stdout.write("\n\nInstall %r:\n" % requirement)
         env_subprocess.call_env_pip(["install", "--log=%s" % logfile, requirement])
         sys.stdout.write("\n")
-    ## '.../bootstrap_env/bootstrap_env/boot_bootstrap_env/sources/after_install.py' END
+    ## '.../bootstrap-env/bootstrap_env/boot_bootstrap_env/sources/after_install.py' END
     ###############################################################################
 
 
