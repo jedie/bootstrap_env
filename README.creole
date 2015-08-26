@@ -9,7 +9,7 @@ Compatible Python Versions (see also [[https://github.com/jedie/bootstrap_env/bl
  * 2.7, 3.3, 3.4
  * PyPy (Python v2 and v3)
 
-| {{https://travis-ci.org/jedie/bootstrap_env.svg|Status on travis-ci.org}} | [[https://travis-ci.org/jedie/bootstrap_env/|travis-ci.org/jedie/bootstrap_env]] |
+| {{https://travis-ci.org/jedie/bootstrap_env.svg?branch=master|Status on travis-ci.org}} | [[https://travis-ci.org/jedie/bootstrap_env/|travis-ci.org/jedie/bootstrap_env]] |
 | {{http://img.shields.io/appveyor/ci/jedie/bootstrap-env.svg?style=flat|Status on appveyor.com}} | [[https://ci.appveyor.com/project/jedie/bootstrap-env/|ci.appveyor.com/project/jedie/bootstrap-env]] |
 | {{https://coveralls.io/repos/jedie/bootstrap_env/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/bootstrap_env|coveralls.io/r/jedie/bootstrap_env]] |
 | {{https://landscape.io/github/jedie/bootstrap_env/master/landscape.svg|Status on landscape.io}} | [[https://landscape.io/github/jedie/bootstrap_env/master|landscape.io/github/jedie/bootstrap_env/master]] |
@@ -214,6 +214,8 @@ if __name__ == '__main__':
 
 == History
 
+ * [[https://github.com/jedie/bootstrap_env/compare/v0.5.3...v0.5.4|v0.5.4]] - 26.07.2015:
+ ** Bugfix for [[https://bitbucket.org/pypy/pypy/issues/2125/tcl-doesnt-work-inside-a-virtualenv-on#comment-21247266|PyPy2 under Windows]] by a more flexible solution to find 'bin' and executeables.
  * [[https://github.com/jedie/bootstrap_env/compare/v0.5.2...v0.5.3|v0.5.3]] - 24.07.2015 - update to pip 7.1.2
  * [[https://github.com/jedie/bootstrap_env/compare/v0.5.1...v0.5.2|v0.5.2]] - 24.07.2015 - Made **add_extend_parser, add_adjust_options** and **add_after_install** optional in **generate_bootstrap()**
  * [[https://github.com/jedie/bootstrap_env/compare/v0.5.0...v0.5.1|v0.5.1]] - 18.07.2015 - Update to pip 7.1.0

@@ -14,7 +14,7 @@ from __future__ import print_function, absolute_import
 import warnings
 
 
-__version__="0.5.3"
+__version__="0.5.4"
 
 
 # Old API e.g.: bootstrap_env.create_bootstrap.generate_bootstrap()
