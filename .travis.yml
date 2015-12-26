@@ -9,7 +9,9 @@ python:
     - "pypy3"
     
 os:
-    - osx
+    # Python builds are not available on the OSX environment.
+    # see: https://docs.travis-ci.com/user/languages/python
+    #- osx 
     - linux
 
 virtualenv:
