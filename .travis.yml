@@ -19,6 +19,7 @@ virtualenv:
     system_site_packages: false
 
 before_install:
+    - pip install --upgrade pip
     - pip freeze
     - CHECKOUT_DIR=$(pwd)
     - echo ${CHECKOUT_DIR}
@@ -44,7 +45,6 @@ script:
     - source bin/activate
     - which python
     - python --version
-    - pip install --upgrade pip
     - pip install virtualenv nose coveralls
     - pip freeze
     - cd src/bootstrap-env
