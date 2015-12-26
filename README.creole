@@ -189,8 +189,6 @@ get-pip.py SHA256: '0831b76e518a92a82487250fd18973062aa427e9bfab59a3e84d32f8d25b
 
 //bootstrap_env.**create_bootstrap**// was renamed to: //bootstrap_env.**generate_bootstrap**//
 
-The old API sill worked, but creates a //FutureWarning// message and will be removed in the future.
-
 e.g. new:
 {{{
 from bootstrap_env.generate_bootstrap import generate_bootstrap
@@ -214,6 +212,8 @@ if __name__ == '__main__':
 
 == History
 
+ * [[https://github.com/jedie/bootstrap_env/compare/v0.5.4...v0.6.0|v0.6.0]] - 26.12.2015:
+ ** Remove old v0.4 API warnings
  * [[https://github.com/jedie/bootstrap_env/compare/v0.5.3...v0.5.4|v0.5.4]] - 26.07.2015:
  ** Bugfix for [[https://bitbucket.org/pypy/pypy/issues/2125/tcl-doesnt-work-inside-a-virtualenv-on#comment-21247266|PyPy2 under Windows]] by a more flexible solution to find 'bin' and executeables.
  * [[https://github.com/jedie/bootstrap_env/compare/v0.5.2...v0.5.3|v0.5.3]] - 24.07.2015 - update to pip 7.1.2
