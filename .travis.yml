@@ -1,5 +1,4 @@
 language: python
-sudo: false
 
 python:
     - "2.7"
@@ -7,17 +6,20 @@ python:
     - "3.4"
     - "pypy"
     - "pypy3"
-    
+
+sudo: false
+
 os:
     # Python builds are not available on the OSX environment.
     # see: https://docs.travis-ci.com/user/languages/python
-    #- osx 
+    #- osx
     - linux
 
 virtualenv:
     system_site_packages: false
 
 before_install:
+    - pip freeze
     - CHECKOUT_DIR=$(pwd)
     - echo ${CHECKOUT_DIR}
     - echo ${TRAVIS_BRANCH}
@@ -44,13 +46,14 @@ script:
     - python --version
     - pip install --upgrade pip
     - pip install virtualenv nose coveralls
+    - pip freeze
     - cd src/bootstrap-env
     - git checkout -qf ${TRAVIS_COMMIT}
     - echo $(pwd)
-    - coverage run ./setup.py nosetests
+    - coverage run --parallel-mode ./setup.py nosetests
+    - coverage combine
 
-after_success:
-    coveralls
+after_success: coveralls
 
 notifications:
     irc: "irc.freenode.org#pylucid"
