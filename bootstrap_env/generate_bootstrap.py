@@ -138,7 +138,7 @@ def generate_bootstrap(out_filename,
 
     code = virtualenv.create_bootstrap_script(code)
 
-    start_pos = code.index("__version__ = ")
+    start_pos = code.index("import ")
     code = HEADER_CODE + code[start_pos:]
 
     for func_name in ("get_pip", "extend_parser", "adjust_options", "after_install"):

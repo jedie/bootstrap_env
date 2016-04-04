@@ -2,7 +2,7 @@
 
 """
     :created: 2014 by JensDiemer.de
-    :copyleft: 2014-2015 by the bootstrap_env team, see AUTHORS for more details.
+    :copyleft: 2014-2016 by the bootstrap_env team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -22,15 +22,17 @@ else:
 from bootstrap_env.utils.sourcecode_utils import surround_code
 
 
-# Alternative url is: https://bootstrap.pypa.io/get-pip.py
-MASTER_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py"
+# Alternative url:
+#MASTER_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/get-pip/master/get-pip.py"
+# Official url:
+MASTER_GET_PIP_URL = "https://bootstrap.pypa.io/get-pip.py"
 
 # 'get-pip.py' v7.1.2
-HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/pip/3dfa1f9a55d25587e9e97a27d8c87943e4b6aa54/contrib/get-pip.py"
-GET_PIP_SHA256 = "d1f66b3848abc6fd1aeda3bb7461101f6a909c3b08efa3ecc1f561712269469c"
+HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/get-pip/8481822bfacd435888cab6a0103fb041a2634bfb/get-pip.py"
+GET_PIP_SHA256 = "f982ad4fc7baa8a6b03d000df349ac9c27d8a695f12d955225e9c25ff1897934"
 
 # Only for info message:
-HISTORY_PAGE = "https://github.com/pypa/pip/commits/develop/contrib/get-pip.py"
+HISTORY_PAGE = "https://github.com/pypa/get-pip/commits/master/get-pip.py"
 
 
 def get_pip_tempfile():

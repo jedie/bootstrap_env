@@ -212,6 +212,8 @@ if __name__ == '__main__':
 
 == History
 
+ * [[https://github.com/jedie/bootstrap_env/compare/v0.6.0...v0.6.1|v0.6.1]] - 04.04.2016:
+ ** Update to [[https://github.com/pypa/get-pip/commit/8481822bfacd435888cab6a0103fb041a2634bfb|get-pip from 5.Mar.2016]]
  * [[https://github.com/jedie/bootstrap_env/compare/v0.5.4...v0.6.0|v0.6.0]] - 26.12.2015:
  ** Remove old v0.4 API warnings
  * [[https://github.com/jedie/bootstrap_env/compare/v0.5.3...v0.5.4|v0.5.4]] - 26.07.2015:
