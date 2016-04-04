@@ -1950,6 +1950,8 @@ def adjust_options(options, args):
     # Importand, otherwise it failed with 'ImportError: No module named pip'
     # because the wheel files are not there
     options.no_setuptools=True
+    options.no_pip=True
+    options.no_wheel=True
 
     if options.install_pip:
         print("\ninstall pip from self contained 'get_pip.py'")
