@@ -171,14 +171,15 @@ The script file [[https://github.com/jedie/bootstrap_env/blob/master/bootstrap_e
 It verify the content via SHA256 hash. This hash is hardcoded in {{{create_bootstrap.py}}}
 You will get a warning if a newer {{{get_pip.py}}} was commited. Looks like this:
 {{{
-Request: 'https://raw.githubusercontent.com/pypa/pip/ee6b739fb6e81ddaee64dc5bb686f7ec78ce3d78/contrib/get-pip.py'...
-Request: 'https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py'...
+Request: 'https://raw.githubusercontent.com/pypa/get-pip/8481822bfacd435888cab6a0103fb041a2634bfb/get-pip.py'...
+Request: 'https://bootstrap.pypa.io/get-pip.py'...
 WARNING: 'get-pip.py' master changed! Maybe a new version was commited?
 Please check:
-	https://github.com/pypa/pip/commits/develop/contrib/get-pip.py
+	https://github.com/pypa/get-pip/commits/master/get-pip.py
 And report here:
 	https://github.com/jedie/bootstrap_env/issues
-get-pip.py SHA256: '0831b76e518a92a82487250fd18973062aa427e9bfab59a3e84d32f8d25b1679', ok.
+get-pip.py SHA256: 'f982ad4fc7baa8a6b03d000df349ac9c27d8a695f12d955225e9c25ff1897934', ok.
+
 '../boot_bootstrap_env.py' written.
 }}}
 
