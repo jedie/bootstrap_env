@@ -1,4 +1,4 @@
 # Specify exact version number,
 # so we get a mail from requires.io if pip was updated ;)
-pip==7.1.2
-virtualenv==13.1.2
+pip==8.1.2
+virtualenv==15.0.2
