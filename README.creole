@@ -6,7 +6,7 @@ See: [[https://github.com/pypa/packaging-problems/issues/55|packaging-problems i
 Fork and contribute! ;)
 
 Compatible Python Versions (see also [[https://github.com/jedie/bootstrap_env/blob/master/.travis.yml|.travis.yml]]):
- * 2.7, 3.3, 3.4
+ * 2.7, 3.4, 3.5
  * PyPy (Python v2 and v3)
 
 | {{https://travis-ci.org/jedie/bootstrap_env.svg?branch=master|Status on travis-ci.org}} | [[https://travis-ci.org/jedie/bootstrap_env/|travis-ci.org/jedie/bootstrap_env]] |
