@@ -11,6 +11,10 @@ version: "{build}"
 build: false
 
 environment:
+    global:
+      COVERALLS_SERVICE_NAME: AppVeyor
+      COVERALLS_REPO_TOKEN:
+        secure: NtVDkuJYChPKhQpSQUlKEKg5aVyzeI8no
     matrix:
         - PYTHON: "C:/Python27/python.exe"
         - PYTHON: "C:/Python35/python.exe"
@@ -39,5 +43,8 @@ install:
 
 test_script:
     - coverage run ./setup.py nosetests
+
+on_success:
     - coverage combine
+    - coverage report
     - coveralls
