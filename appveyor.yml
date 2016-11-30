@@ -12,14 +12,14 @@ build: false
 
 environment:
     matrix:
-        - PYTHON: "C:/Python27"
-        - PYTHON: "C:/Python34"
+        - PYTHON: "C:/Python27/python.exe"
+        - PYTHON: "C:/Python34/python.exe"
 
 platform:
     - AnyCPU
 
 init:
-    - echo %PYTHON%
+    - "%PYTHON% --version"
     - ps: "ls C:/Python*"
     - set
 
@@ -30,13 +30,13 @@ clone_folder: c:/bootstrap_env_clone
 clone_depth: 5 # clone entire repository history if not defined
 
 install:
-    - set ENV_DIR=C:/bootstrap_env
-    - "%PYTHON%/python.exe c:/bootstrap_env_clone/bootstrap_env/boot.py %ENV_DIR% --install_type git_readonly"
-    - cd %ENV_DIR%
-    - call Scripts/activate.bat
-    - cd src/bootstrap-env
-    - git checkout -qf %APPVEYOR_REPO_COMMIT%
+    - cd %APPVEYOR_BUILD_FOLDER% # c:/bootstrap_env_clone
+    - "pip install --upgrade pip"
+    - "pip install ."
+    - "pip install virtualenv nose coveralls"
+    - "pip freeze"
 
 test_script:
     - coverage run ./setup.py nosetests
+    - coverage combine
     - coveralls
