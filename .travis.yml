@@ -10,9 +10,8 @@ python:
     # https://docs.travis-ci.com/user/languages/python/#PyPy-Support
     - "pypy" # PyPy2 2.5.0 - Python 2.7.8
     #- "pypy-5.4" # PyPy2 5.4.0 - Python 2.7.10
+    # https://github.com/travis-ci/travis-ci/issues/6727
     #- "pypy3" # PyPy3 2.4.0 - Python 3.2.5 - v3.2.x is not supported by get-pip !
-    - "pypy3.3-v5.5.0-alpha"
-
 
 sudo: false
 
