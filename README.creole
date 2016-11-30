@@ -186,6 +186,13 @@ get-pip.py SHA256: 'f982ad4fc7baa8a6b03d000df349ac9c27d8a695f12d955225e9c25ff189
 
 == backward incompatible changes
 
+=== v0.6.3 -> v0.6.4
+
+get-pip doesn't support Python 3.2. So bootstrap_env v0.6.4 will not work with Python 3.2
+There exist a separate get-pip version for Python 3.2, here: https://github.com/pypa/get-pip/tree/master/3.2
+
+So currently pypy3 is not supported until they update to Python 3.3 ;)
+
 === v0.4 -> v0.5
 
 //bootstrap_env.**create_bootstrap**// was renamed to: //bootstrap_env.**generate_bootstrap**//
@@ -214,6 +221,7 @@ if __name__ == '__main__':
 == History
 
  * [[https://github.com/jedie/bootstrap_env/compare/v0.6.3...v0.6.4|v0.6.4]] - 30.Nov.2016:
+ ** Note: This pip version doesn't support pypy3. See notes above
  ** Update to [[https://github.com/pypa/get-pip/commit/430ba37776ae2ad89f794c7a43b90dc23bac334c|get-pip v9.0.1]]
  * [[https://github.com/jedie/bootstrap_env/compare/v0.6.2...v0.6.3|v0.6.3]] - 12.Sep.2016:
  ** update for virtualenv v15.0.3
