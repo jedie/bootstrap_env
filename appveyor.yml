@@ -13,7 +13,7 @@ build: false
 environment:
     matrix:
         - PYTHON: "C:/Python27/python.exe"
-        - PYTHON: "C:/Python34/python.exe"
+        - PYTHON: "C:/Python35/python.exe"
 
 platform:
     - AnyCPU
@@ -21,7 +21,7 @@ platform:
 init:
     - "%PYTHON% --version"
     - ps: "ls C:/Python*"
-    - set
+#    - set
 
 # clone directory
 clone_folder: c:/bootstrap_env_clone
@@ -32,6 +32,7 @@ clone_depth: 5 # clone entire repository history if not defined
 install:
     - cd %APPVEYOR_BUILD_FOLDER% # c:/bootstrap_env_clone
     - "pip install --upgrade pip"
+    - "pip --version"
     - "pip install ."
     - "pip install virtualenv nose coveralls"
     - "pip freeze"
