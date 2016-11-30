@@ -213,6 +213,8 @@ if __name__ == '__main__':
 
 == History
 
+ * [[https://github.com/jedie/bootstrap_env/compare/v0.6.3...v0.6.4|v0.6.4]] - 30.Nov.2016:
+ ** Update to [[https://github.com/pypa/get-pip/commit/430ba37776ae2ad89f794c7a43b90dc23bac334c|get-pip v9.0.1]]
  * [[https://github.com/jedie/bootstrap_env/compare/v0.6.2...v0.6.3|v0.6.3]] - 12.Sep.2016:
  ** update for virtualenv v15.0.3
  * [[https://github.com/jedie/bootstrap_env/compare/v0.6.1...v0.6.2|v0.6.2]] - 20.07.2016:

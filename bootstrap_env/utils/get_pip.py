@@ -29,8 +29,8 @@ MASTER_GET_PIP_URL = "https://bootstrap.pypa.io/get-pip.py"
 
 # 'get-pip.py' v8.1.2
 # check: https://github.com/pypa/get-pip/commits/master/get-pip.py
-HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/get-pip/9b75908cb655a450b725e66e645765cac52ac228/get-pip.py"
-GET_PIP_SHA256 = "6a3da07567ece9ef3dd7cc7620f396a11b8256e1807815549d8c061650ed268e"
+HASH_GET_PIP_URL = "https://raw.githubusercontent.com/pypa/get-pip/430ba37776ae2ad89f794c7a43b90dc23bac334c/get-pip.py"
+GET_PIP_SHA256 = "19dae841a150c86e2a09d475b5eb0602861f2a5b7761ec268049a662dbd2bd0c"
 
 # Only for info message:
 HISTORY_PAGE = "https://github.com/pypa/get-pip/commits/master/get-pip.py"
