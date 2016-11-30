@@ -56,8 +56,9 @@ script:
     - cd src/bootstrap-env
     - git checkout -qf ${TRAVIS_COMMIT}
     - echo $(pwd)
-    - coverage run --parallel-mode ./setup.py nosetests
+    - coverage run --source=bootstrap_env --parallel-mode ./setup.py nosetests
     - coverage combine
+    - coverage report
 
 after_success: coveralls
 

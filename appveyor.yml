@@ -11,10 +11,6 @@ version: "{build}"
 build: false
 
 environment:
-    global:
-      COVERALLS_SERVICE_NAME: AppVeyor
-      COVERALLS_REPO_TOKEN:
-        secure: NtVDkuJYChPKhQpSQUlKEKg5aVyzeI8no
     matrix:
         - PYTHON: "C:/Python27/python.exe"
         - PYTHON: "C:/Python35/python.exe"
@@ -38,13 +34,21 @@ install:
     - "pip install --upgrade pip"
     - "pip --version"
     - "pip install ."
-    - "pip install virtualenv nose coveralls"
+
+#    - "pip install virtualenv nose coveralls"
+    - "pip install virtualenv nose"
+
+    # Use a newer Version than v1.1 from PyPi, see:
+    # https://github.com/coagulant/coveralls-python/pull/97
+    - "pip install https://github.com/coagulant/coveralls-python/archive/master.zip"
+
     - "pip freeze"
 
 test_script:
-    - coverage run ./setup.py nosetests
+    - coverage run --source=bootstrap_env ./setup.py nosetests
 
-on_success:
-    - coverage combine
+after_test:
+#    - ps: "ls .coverage"
     - coverage report
+    - set COVERALLS_REPO_TOKEN=NtVDkuJYChPKhQpSQUlKEKg5aVyzeI8no
     - coveralls
