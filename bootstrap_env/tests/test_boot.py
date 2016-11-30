@@ -149,7 +149,7 @@ class TestBoot(BaseExampleTestCase):
 
         return_code = None
         with TempDir(prefix="bootstrap_test_boot_git_readonly_") as tempfolder:
-            sys.argv += ["--install_type=git_readonly", tempfolder]
+            sys.argv += ["--install_type=pypi", tempfolder]
 
             with StdoutStderrBuffer() as buffer:
                 try:
@@ -162,7 +162,7 @@ class TestBoot(BaseExampleTestCase):
             # print(output)
             # print("="*79)
             must_contain = (
-                "Install type: 'git_readonly'",
+                "Install type: 'pypi'",
             )
 
             must_contain += tuple(
@@ -181,10 +181,12 @@ class TestBoot(BaseExampleTestCase):
 
             with open(os.path.join(tempfolder, "install.log"), "r") as f:
                 log_content = f.read()
+                print("-" * 79)
+                print(log_content)
+                print("-" * 79)
                 self.assert_content(
                     content=log_content,
                     must_contain=(
-                        "Cloning https://github.com/jedie/bootstrap_env.git",
                         "Successfully installed bootstrap-env",
                     ),
                     must_not_contain=(
