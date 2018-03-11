@@ -48,7 +48,7 @@ install:
   - source bin/activate
 
   - mkdir -p ~/Bootstrap-Env/src/bootstrap-env
-  - cp -Rfv ${TRAVIS_BUILD_DIR} ~/Bootstrap-Env/src/bootstrap-env
+  - cp -Rfv ${TRAVIS_BUILD_DIR}/* ~/Bootstrap-Env/src/bootstrap-env
 
   - cd ~/Bootstrap-Env/src/bootstrap-env
   - pip install -e .
