@@ -18,6 +18,8 @@ import sys
 import time
 from pathlib import Path
 
+from pkg_resources import safe_name
+
 from bootstrap_env.boot_bootstrap_env import (PACKAGE_NAME, ROOT_PATH, Cmd2,
                                               VerboseSubprocess, __version__)
 
@@ -56,7 +58,13 @@ class Requirements:
     }
     def __init__(self):
         self.src_path = Path(sys.prefix, "src")
-        src_bootstrap_env_path = Path(self.src_path, PACKAGE_NAME)
+
+        # pip install -e will change the package name via pkg_resources.safe_name
+        # e.g.: "foo_bar" -> "foo-bar"
+        package_dir_name = safe_name(PACKAGE_NAME)
+
+        src_bootstrap_env_path = Path(self.src_path, package_dir_name)
+
         if src_bootstrap_env_path.is_dir():
             print("bootstrap_env is installed as editable here: %s" % src_bootstrap_env_path)
             self.install_mode=self.DEVELOPER_INSTALL
