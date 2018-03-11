@@ -70,7 +70,7 @@ class TestPyLucidAdmin(unittest.TestCase):
         bootstrap_env_src_path = Path(req.src_path, "bootstrap-env")
         print("bootstrap_env_src_path: %r" % bootstrap_env_src_path)
 
-        self.assertTrue(bootstrap_env_src_path.is_dir())
+        self.assertTrue(bootstrap_env_src_path.is_dir(), "Directory not exists: %s" % bootstrap_env_src_path)
         self.assertTrue(str(bootstrap_env_src_path).endswith("/src/bootstrap-env"))
 
         git_path = Path(bootstrap_env_src_path, ".git")
