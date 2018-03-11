@@ -108,7 +108,7 @@ class AdminShell(Cmd2):
         try:
             import pytest
         except ImportError as err:
-            print("ERROR: Can't import pytest: %s (pytest not installed, in normal installation!)")
+            print("ERROR: Can't import pytest: %s (pytest not installed, in normal installation!)" % err)
         else:
             root_path = str(ROOT_PATH)
             print("chdir %r" % root_path)
