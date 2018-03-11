@@ -76,7 +76,7 @@ class TestPyLucidAdmin(unittest.TestCase):
         git_path = Path(bootstrap_env_src_path, ".git")
         print("git_path: %r" % git_path)
 
-        self.assertTrue(git_path.is_dir())
+        self.assertTrue(git_path.is_dir(), "Directory not exists: %s" % git_path)
 
         # Needed while developing with github write access url ;)
         output = VerboseSubprocess(
