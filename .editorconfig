@@ -30,7 +30,7 @@ multi_line_output = 5
 known_external=pytest
 
 import_heading_firstparty=Bootstrap-Env
-known_first_party=bootstrap_env
+known_first_party=bootstrap_env,bootstrap_env_tests
 
 default_section=THIRDPARTY
 sections=FUTURE,STDLIB,EXTERNAL,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
