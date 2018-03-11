@@ -249,6 +249,7 @@ setup(
     author=get_authors(),
     author_email="bootstrap_env@jensdiemer.de",
     maintainer="Jens Diemer",
+    maintainer_email="bootstrap_env@jensdiemer.de",
     url="https://github.com/jedie/bootstrap_env",
 
     packages=find_packages(),
