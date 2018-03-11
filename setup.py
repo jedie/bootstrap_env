@@ -251,7 +251,7 @@ setup(
     maintainer="Jens Diemer",
     maintainer_email="bootstrap_env@jensdiemer.de",
     url="https://github.com/jedie/bootstrap_env",
-
+    python_requires='>=3.5',
     packages=find_packages(),
     include_package_data=True, # include package data under version control
 
