@@ -23,10 +23,8 @@
     :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
     :license: GNU General Public License v3 or later (GPLv3+), see LICENSE for more details.
 """
-import re
-import sys  # isort:skip
 
-import time
+import sys  # isort:skip
 
 if sys.version_info < (3, 5):  # isort:skip
     print("\nERROR: Python 3.5 or greater is required!")
@@ -36,7 +34,9 @@ if sys.version_info < (3, 5):  # isort:skip
 import cmd
 import logging
 import os
+import re
 import subprocess
+import time
 import traceback
 from pathlib import Path
 

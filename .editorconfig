@@ -1,0 +1,36 @@
+# http://editorconfig.org
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+charset = utf-8
+end_of_line = lf
+
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
+
+[{Makefile,**.mk}]
+indent_style = tab
+
+[LICENSE]
+insert_final_newline = false
+
+[*.py]
+# Configuring isort
+# https://github.com/timothycrosley/isort/wiki/isort-Settings
+atomic = true
+line_length = 120
+# 5 - Hanging Grid Grouped
+multi_line_output = 5
+
+known_external=pytest
+
+import_heading_firstparty=Bootstrap-Env
+known_first_party=bootstrap_env
+
+default_section=THIRDPARTY
+sections=FUTURE,STDLIB,EXTERNAL,THIRDPARTY,FIRSTPARTY,LOCALFOLDER

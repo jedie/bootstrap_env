@@ -20,9 +20,10 @@ from pathlib import Path
 
 from pkg_resources import safe_name
 
-from bootstrap_env.boot_bootstrap_env import (PACKAGE_NAME, ROOT_PATH, Cmd2,
-                                              VerboseSubprocess, __version__,
-                                              in_virtualenv)
+# Bootstrap-Env
+from bootstrap_env.boot_bootstrap_env import (
+    PACKAGE_NAME, ROOT_PATH, Cmd2, VerboseSubprocess, __version__, in_virtualenv
+)
 
 log = logging.getLogger(__name__)
 
