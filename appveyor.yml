@@ -12,8 +12,11 @@ build: false
 
 environment:
     matrix:
-        - PYTHON: "C:/Python27/python.exe"
-        - PYTHON: "C:/Python35/python.exe"
+        - PYTHON: "C:/Python36/python.exe"
+          BOOT_MODE: boot
+
+        - PYTHON: "C:/Python36/python.exe"
+          BOOT_MODE: boot_developer
 
 platform:
     - AnyCPU
@@ -30,22 +33,17 @@ clone_folder: c:/bootstrap_env_clone
 clone_depth: 5 # clone entire repository history if not defined
 
 install:
+    - echo %BOOT_MODE%
+
     - cd %APPVEYOR_BUILD_FOLDER% # c:/bootstrap_env_clone
-    - "pip install --upgrade pip"
-    - "pip --version"
-    - "pip install ."
 
-#    - "pip install virtualenv nose coveralls"
-    - "pip install virtualenv nose"
-
-    # Use a newer Version than v1.1 from PyPi, see:
-    # https://github.com/coagulant/coveralls-python/pull/97
-    - "pip install https://github.com/coagulant/coveralls-python/archive/master.zip"
-
-    - "pip freeze"
+    - ps: "ls"
+    - bootstrap_env/boot_bootstrap_env.py $BOOT_MODE c:/Bootstrap-Env
 
 test_script:
-    - coverage run --source=bootstrap_env ./setup.py nosetests
+    - cd c:/Bootstrap-Env/bin/
+    - ps: "ls"
+    - bootstrap_env_admin.py pytest
 
 after_test:
 #    - ps: "ls .coverage"
