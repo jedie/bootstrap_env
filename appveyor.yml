@@ -22,7 +22,6 @@ platform:
     - AnyCPU
 
 init:
-    - "%PYTHON% --version"
     - ps: "ls C:/Python*"
 #    - set
 
@@ -38,12 +37,13 @@ install:
     - cd %APPVEYOR_BUILD_FOLDER% # c:/bootstrap_env_clone
 
     - ps: "ls"
-    - bootstrap_env/boot_bootstrap_env.py $BOOT_MODE c:/Bootstrap-Env
+    - "%PYTHON% --version"
+    - %PYTHON% bootstrap_env/boot_bootstrap_env.py $BOOT_MODE c:/Bootstrap-Env
 
 test_script:
     - cd c:/Bootstrap-Env/bin/
     - ps: "ls"
-    - bootstrap_env_admin.py pytest
+    - %PYTHON% bootstrap_env_admin.py pytest
 
 after_test:
 #    - ps: "ls .coverage"
