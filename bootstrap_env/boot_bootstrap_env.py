@@ -219,12 +219,12 @@ class VerboseSubprocess:
         self.kwargs["timeout"] = timeout
         self.kwargs["universal_newlines"] = universal_newlines
         self.kwargs["stderr"] = stderr
+        self.kwargs["bufsize"] = -1
 
         self.args_str = " ".join([str(x) for x in self.popenargs])
 
         env = self.kwargs.get("env", os.environ.copy())
         env["PYTHONUNBUFFERED"]="1" # If a python script called ;)
-        env["bufsize"] = 1
 
         self.env_updates = env_updates
         if self.env_updates is not None:
