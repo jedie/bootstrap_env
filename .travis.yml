@@ -47,8 +47,8 @@ install:
   - ls -la bin
   - source bin/activate
 
-  - cp -Rfv ${TRAVIS_BUILD_DIR} ~/Bootstrap-Env/src/bootstrap_env
-  - cd ~/Bootstrap-Env/src/bootstrap_env
+  - cp -Rfv ${TRAVIS_BUILD_DIR} ~/Bootstrap-Env/src/bootstrap-env
+  - cd ~/Bootstrap-Env/src/bootstrap-env
   - pip install -e .
   - pip install -r bootstrap_env/requirements/test_requirements.txt
 
