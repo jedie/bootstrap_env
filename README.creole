@@ -1,12 +1,13 @@
 == bootstrap_env
 
 Experimental project to create a complete self contained virtualenv bootstrap file.
+
 See: [[https://github.com/pypa/packaging-problems/issues/55|packaging-problems issues 55]]
 
 Fork and contribute! ;)
 
 Compatible Python Versions (see also [[https://github.com/jedie/bootstrap_env/blob/master/.travis.yml|.travis.yml]]):
- * 2.7, 3.4, 3.5
+ * 3.5, 3.6
  * PyPy (Python v2 and v3)
 
 | {{https://travis-ci.org/jedie/bootstrap_env.svg?branch=master|Status on travis-ci.org}} | [[https://travis-ci.org/jedie/bootstrap_env/|travis-ci.org/jedie/bootstrap_env]] |
@@ -16,257 +17,83 @@ Compatible Python Versions (see also [[https://github.com/jedie/bootstrap_env/bl
 | {{https://requires.io/github/jedie/bootstrap_env/requirements.svg|Requirements Status on requires.io}} | [[https://requires.io/github/jedie/bootstrap_env/requirements/|requires.io/github/jedie/bootstrap_env/requirements/]] |
 
 
-=== info
+=== status
 
-Since {{{virtualenv}}} v1.10 you a virtualenv bootstrap file is not runnable without the pip and setuptools wheel files.
-There must be created a {{{virtualenv_support}}} with the wheels.
-
-e.g.:
-{{{
-/bootstrap.py
-/virtualenv_support/
-        pip-1.5.6-py2.py3-none-any.whl
-        setuptools-3.6-py2.py3-none-any.whl
-}}}
-
-With this project this is not needed. The current solution embed {{{get_pip.py}}} into the bootstrap file
-and call it after env creation.
-
-There are also some helpers to parse pip requirement files and install packages after virtualenv creation. Look into "boot bootstrap_env" project below.
-
-
-=== the example
-
-There is a simple {{{example}}}.
-
-To test it, create first the bootstrap file by running {{{create_example.py}}} for it:
-e.g.:
-{{{
-/path/to/bootstrap-env$ python example_bootstrap/create_example.py
-
-Generate bootstrap file: '/path/to/bootstrap-env/boot_example_env.py'...
-
-Read code from: '.../src/bootstrap-env/example_bootstrap/extend_parser.py'...
-Read code from: '.../src/bootstrap-env/example_bootstrap/adjust_options.py'...
-Read code from: '.../src/bootstrap-env/example_bootstrap/after_install.py'...
-Read code from: '.../src/bootstrap-env/bootstrap_env/bootstrap_install_pip.py'...
-Request: 'https://raw.githubusercontent.com/pypa/pip/22baf0ca29325e848010c44a0fec0db64e8d1edb/contrib/get-pip.py'...
-Request: 'https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py'...
-Requested content of 'get-pip.py' is up-to-date, ok.
-get-pip.py SHA256: '51ef604ed2852f6b57b675ebefc4b807cffd2300bfc885761365988d19d227ad', ok.
-
-'/path/to/bootstrap-env/boot_example_env.py' written.
-
-}}}
-
-
-After the first call, the requested {{{get-pip.py}}} file will be cached into the default temp
-and reused from there. So it is fast to generate it again:
-{{{
-/path/to/bootstrap-env$ python example_bootstrap/create_example.py
-
-Generate bootstrap file: '/path/to/bootstrap-env/boot_example_env.py'...
-
-Read code from: '.../src/bootstrap-env/example_bootstrap/extend_parser.py'...
-Read code from: '.../src/bootstrap-env/example_bootstrap/adjust_options.py'...
-Read code from: '.../src/bootstrap-env/example_bootstrap/after_install.py'...
-Read code from: '.../src/bootstrap-env/bootstrap_env/bootstrap_install_pip.py'...
-Use '/tmp/get-pip.py'
-get-pip.py SHA256: '51ef604ed2852f6b57b675ebefc4b807cffd2300bfc885761365988d19d227ad', ok.
-
-'/path/to/bootstrap-env/boot_example_env.py' written.
-
-}}}
-
-
- Running this looks like:
-{{{
-/path/to/bootstrap-env$ python boot_example_env.py ~/example_env
-
-The additional example extend_parser() code is called.
-The additional example adjust_options() code is called.
-
-Using real prefix '/usr'
-Path not in prefix '/home/jens/PyLucid_env/include/python3.4m' '/usr'
-New python executable in /home/jens/example_env/bin/python
-Install pip...
-call '/home/jens/example_env/bin/python /home/jens/PyLucid_env/src/bootstrap-env/boot_example_env.py --install-pip /home/jens/example_env'
-install pip from self contained 'get_pip.py'
-Collecting pip
-  Using cached pip-7.0.3-py2.py3-none-any.whl
-Collecting setuptools
-  Using cached setuptools-17.0-py2.py3-none-any.whl
-Collecting wheel
-  Using cached wheel-0.24.0-py2.py3-none-any.whl
-Installing collected packages: pip, setuptools, wheel
-Successfully installed pip-7.0.3 setuptools-17.0 wheel-0.24.0
-
-The additional example after_install() code is called.
-
-}}}
-
-
-
-The {{{example}}} hook code stored separated files in [[https://github.com/jedie/bootstrap_env/blob/master/example_bootstrap/|example_bootstrap]] directory looks like this:
-{{{
-def extend_parser(parser):
-    # --- CUT here ---
-    sys.stdout.write("\nThe additional example extend_parser() code is called.\n")
-}}}
-{{{
-def adjust_options(options, args):
-    # --- CUT here ---
-    sys.stdout.write("The additional example adjust_options() code is called.\n\n")
-}}}
-{{{
-def after_install(options, home_dir):
-    # --- CUT here ---
-    sys.stdout.write("\nThe additional example after_install() code is called.\n\n")
-}}}
-
-
-
-=== usage
-
-To create you own bootstrap file, is easy. Just copy the {{{example}}} or {{{boot_bootstrap_env}}} code and change it for your needs.
-
-Projects that use bootstrap_env are:
-* [[https://github.com/jedie/PyLucid/tree/django-cms/bootstrap|PyLucid django-cms branch]]
-* [[https://github.com/DWLOAD/DwLoadServer/tree/master/bootstrap|DwLoadServer]]
-
-Missing project? Do you use it? Just send me a mail: {{{bootstrap_env AT jensdiemer DOT de}}} or use IRC/Jabber (see below)
+v1.0 is a rewrite and not useable, yet!
 
 
 === boot bootstrap_env
 
-To create a fresh virtualenv with {{{boot.py}}} do the following:
 {{{
-# Download 'boot_bootstrap_env.py' from github:
-/home/FooBar$ wget https://raw.githubusercontent.com/jedie/bootstrap_env/master/bootstrap_env/boot.py
+# Download bootstrap file from github:
+/home/FooBar$ wget https://github.com/jedie/bootstrap_env/raw/master/bootstrap_env/boot_bootstrap_env.py
 
-# Create virtualenv and use read-only GIT:
-/home/FooBar$ python3 boot.py ~/my_bootstrap_env --install_type git_readonly
-}}}
-The created virtualenv is under {{{~/my_bootstrap_env/}}} ;)
-
-If you would like to use PyPi packages do this:
-{{{
-# Create virtualenv and use read-only GIT:
-/home/FooBar$ python3 boot.py ~/my_bootstrap_env --install_type pypi
-}}}
-
-The {{{boot.py}}} will be created by {{{create_boot.py}}} this is stored here: [[https://github.com/jedie/bootstrap_env/tree/master/bootstrap_env/boot_bootstrap_env|/bootstrap_env/boot_bootstrap_env/]]
-
-This also work under Windows.
-e.g:
-{{{
-C:\> C:\Python34\python.exe d:\downloads\boot.py --install_type=pypi d:\my_bootstrap_env
-}}}
-There is also a maybe helpful batch file: [[https://github.com/jedie/bootstrap_env/tree/master/bootstrap_env/boot.cmd|bootstrap_env/boot.cmd]]
-
-
-=== Request get_pip.py notes
-
-The script file [[https://github.com/jedie/bootstrap_env/blob/master/bootstrap_env/create_bootstrap.py|bootstrap_env/create_bootstrap.py]] will request {{{get_pip.py}}} from [[https://github.com/pypa/pip/blob/develop/contrib/get-pip.py]]
-It verify the content via SHA256 hash. This hash is hardcoded in {{{create_bootstrap.py}}}
-You will get a warning if a newer {{{get_pip.py}}} was commited. Looks like this:
-{{{
-Request: 'https://raw.githubusercontent.com/pypa/get-pip/8481822bfacd435888cab6a0103fb041a2634bfb/get-pip.py'...
-Request: 'https://bootstrap.pypa.io/get-pip.py'...
-WARNING: 'get-pip.py' master changed! Maybe a new version was commited?
-Please check:
-	https://github.com/pypa/get-pip/commits/master/get-pip.py
-And report here:
-	https://github.com/jedie/bootstrap_env/issues
-get-pip.py SHA256: 'f982ad4fc7baa8a6b03d000df349ac9c27d8a695f12d955225e9c25ff1897934', ok.
-
-'../boot_bootstrap_env.py' written.
+# Create virtualenv with all needed packages:
+/home/FooBar$ python3 boot_bootstrap_env.py boot ~/Bootstrap-env
 }}}
 
 
 == backward incompatible changes
 
-=== v0.6.3 -> v0.6.4
+=== v0.6.4 -> v1.0.0
 
-get-pip and virtualenv drop support for Python 3.2. So bootstrap_env v0.6.4 will not work with Python 3.2
-Note: There exist a separate get-pip version for Python 3.2, here: https://github.com/pypa/get-pip/tree/master/3.2
+tbd
 
-=== v0.4 -> v0.5
 
-//bootstrap_env.**create_bootstrap**// was renamed to: //bootstrap_env.**generate_bootstrap**//
+== Compatible Matrix
 
-e.g. new:
-{{{
-from bootstrap_env.generate_bootstrap import generate_bootstrap
+|= bootstrap_env |= Python
+| >=v1.0         | 3.5, 3.6, PyPy3
+| <=v0.6         | 2.7, 3.4, 3.5, PyPy (Python v2 and v3)
 
-if __name__ == '__main__':
-    generate_bootstrap(
-        #...
-    )
-}}}
+See also combinations in:
 
-old:
-{{{
-from bootstrap_env.create_bootstrap import generate_bootstrap
-
-if __name__ == '__main__':
-    generate_bootstrap(
-        #...
-    )
-}}}
+* [[https://github.com/jedie/bootstrap_env/blob/master/.travis.yml|.travis.yml]]
+* [[https://github.com/jedie/bootstrap_env/blob/master/tox.ini|tox.ini]] (TODO)
+* [[https://github.com/jedie/bootstrap_env/blob/master/appveyor.yml|appveyor.yml]]
 
 
 == History
 
- * [[https://github.com/jedie/bootstrap_env/compare/v0.6.3...v0.6.4|v0.6.4]] - 30.Nov.2016:
- ** Note: This pip version doesn't support pypy3. See notes above
- ** Update to [[https://github.com/pypa/get-pip/commit/430ba37776ae2ad89f794c7a43b90dc23bac334c|get-pip v9.0.1]]
- * [[https://github.com/jedie/bootstrap_env/compare/v0.6.2...v0.6.3|v0.6.3]] - 12.Sep.2016:
- ** update for virtualenv v15.0.3
- * [[https://github.com/jedie/bootstrap_env/compare/v0.6.1...v0.6.2|v0.6.2]] - 20.07.2016:
- ** Update to [[https://github.com/pypa/get-pip/commit/9b75908cb655a450b725e66e645765cac52ac228|get-pip v8.1.2]]
- * [[https://github.com/jedie/bootstrap_env/compare/v0.6.0...v0.6.1|v0.6.1]] - 04.04.2016:
- ** Update to [[https://github.com/pypa/get-pip/commit/8481822bfacd435888cab6a0103fb041a2634bfb|get-pip from 5.Mar.2016]]
- * [[https://github.com/jedie/bootstrap_env/compare/v0.5.4...v0.6.0|v0.6.0]] - 26.12.2015:
- ** Remove old v0.4 API warnings
- * [[https://github.com/jedie/bootstrap_env/compare/v0.5.3...v0.5.4|v0.5.4]] - 26.07.2015:
- ** Bugfix for [[https://bitbucket.org/pypy/pypy/issues/2125/tcl-doesnt-work-inside-a-virtualenv-on#comment-21247266|PyPy2 under Windows]] by a more flexible solution to find 'bin' and executeables.
- * [[https://github.com/jedie/bootstrap_env/compare/v0.5.2...v0.5.3|v0.5.3]] - 24.07.2015 - update to pip 7.1.2
- * [[https://github.com/jedie/bootstrap_env/compare/v0.5.1...v0.5.2|v0.5.2]] - 24.07.2015 - Made **add_extend_parser, add_adjust_options** and **add_after_install** optional in **generate_bootstrap()**
- * [[https://github.com/jedie/bootstrap_env/compare/v0.5.0...v0.5.1|v0.5.1]] - 18.07.2015 - Update to pip 7.1.0
- * [[https://github.com/jedie/bootstrap_env/compare/v0.4.6...v0.5.0|v0.5.0]] - 05.06.2015 - Add unittests, refactor sourcecode layout. (Please notice 'backward incompatible changes' above!)
- * v0.4.6 - 03.06.2015 - Update to pip 7.0.3
- * v0.4.5 - 26.05.2015 - Update to pip 7.0.1, cut filepath in generated boot file comments
- * v0.4.4 - 14.04.2015 - Update to pip 6.1.1 (upload again as v0.4.4 with wheel, too.)
- * v0.4.2 - 07.02.2015 - Update to pip 6.0.8
- * v0.4.1 - 29.01.2015 - Update for pip 6.0.7 and pin requested url.
- * v0.4.0 - 28.01.2015 - Updates for pip 6.0.6 changes
- * v0.3.5 - 28.01.2015 - Update SHA256 for {{{get-pip.py}}} v6.0.6
- * v0.3.4 - 14.11.2014 - Bugfix: if {{{os.environ['SYSTEMROOT']}}} not exists.
- * v0.3.3 - 14.11.2014 - Add version number into generated bootstrap file.
- * v0.3.2 - 14.11.2014 - Add 'boot bootstrap_env' and bugfixes for running under Windows.
- * v0.3.1 - 14.11.2014 - Bugfix for "error: no such option:" while pip install, if own optional options are used.
- * v0.3.0 - 13.11.2014 - typo: rename all {{{bootstrip}}} to {{{bootstrap}}} ;)
- * v0.2.0 - 09.10.2014 - add {{{prefix}}} and {{{suffix}}} argument to {{{generate_bootstrap()}}}
- * v0.1.0 - 09.10.2014 - initial release
+* [[https://github.com/jedie/PyLucid/compare/v0.6.4...master|compare v0.6.4...master]] **dev**
+** rewrite based on "PyLucid v3 boot" sources (by Jens Diemer)
+* [[https://github.com/jedie/bootstrap_env/compare/v0.6.3...v0.6.4|v0.6.4]] - 30.Nov.2016:
+** Note: This pip version doesn't support pypy3. See notes above
+** Update to [[https://github.com/pypa/get-pip/commit/430ba37776ae2ad89f794c7a43b90dc23bac334c|get-pip v9.0.1]]
+* [[https://github.com/jedie/bootstrap_env/compare/v0.6.2...v0.6.3|v0.6.3]] - 12.Sep.2016:
+** update for virtualenv v15.0.3
+* [[https://github.com/jedie/bootstrap_env/compare/v0.6.1...v0.6.2|v0.6.2]] - 20.07.2016:
+** Update to [[https://github.com/pypa/get-pip/commit/9b75908cb655a450b725e66e645765cac52ac228|get-pip v8.1.2]]
+* [[https://github.com/jedie/bootstrap_env/compare/v0.6.0...v0.6.1|v0.6.1]] - 04.04.2016:
+** Update to [[https://github.com/pypa/get-pip/commit/8481822bfacd435888cab6a0103fb041a2634bfb|get-pip from 5.Mar.2016]]
+* [[https://github.com/jedie/bootstrap_env/compare/v0.5.4...v0.6.0|v0.6.0]] - 26.12.2015:
+** Remove old v0.4 API warnings
+* [[https://github.com/jedie/bootstrap_env/compare/v0.5.3...v0.5.4|v0.5.4]] - 26.07.2015:
+** Bugfix for [[https://bitbucket.org/pypy/pypy/issues/2125/tcl-doesnt-work-inside-a-virtualenv-on#comment-21247266|PyPy2 under Windows]] by a more flexible solution to find 'bin' and executeables.
+* [[https://github.com/jedie/bootstrap_env/compare/v0.5.2...v0.5.3|v0.5.3]] - 24.07.2015 - update to pip 7.1.2
+* [[https://github.com/jedie/bootstrap_env/compare/v0.5.1...v0.5.2|v0.5.2]] - 24.07.2015 - Made **add_extend_parser, add_adjust_options** and **add_after_install** optional in **generate_bootstrap()**
+* [[https://github.com/jedie/bootstrap_env/compare/v0.5.0...v0.5.1|v0.5.1]] - 18.07.2015 - Update to pip 7.1.0
+* [[https://github.com/jedie/bootstrap_env/compare/v0.4.6...v0.5.0|v0.5.0]] - 05.06.2015 - Add unittests, refactor sourcecode layout. (Please notice 'backward incompatible changes' above!)
+* v0.4.6 - 03.06.2015 - Update to pip 7.0.3
+* v0.4.5 - 26.05.2015 - Update to pip 7.0.1, cut filepath in generated boot file comments
+* v0.4.4 - 14.04.2015 - Update to pip 6.1.1 (upload again as v0.4.4 with wheel, too.)
+* v0.4.2 - 07.02.2015 - Update to pip 6.0.8
+* v0.4.1 - 29.01.2015 - Update for pip 6.0.7 and pin requested url.
+* v0.4.0 - 28.01.2015 - Updates for pip 6.0.6 changes
+* v0.3.5 - 28.01.2015 - Update SHA256 for {{{get-pip.py}}} v6.0.6
+* v0.3.4 - 14.11.2014 - Bugfix: if {{{os.environ['SYSTEMROOT']}}} not exists.
+* v0.3.3 - 14.11.2014 - Add version number into generated bootstrap file.
+* v0.3.2 - 14.11.2014 - Add 'boot bootstrap_env' and bugfixes for running under Windows.
+* v0.3.1 - 14.11.2014 - Bugfix for "error: no such option:" while pip install, if own optional options are used.
+* v0.3.0 - 13.11.2014 - typo: rename all {{{bootstrip}}} to {{{bootstrap}}} ;)
+* v0.2.0 - 09.10.2014 - add {{{prefix}}} and {{{suffix}}} argument to {{{generate_bootstrap()}}}
+* v0.1.0 - 09.10.2014 - initial release
 
 
 == Links:
 
-| Forum               | [[http://forum.pylucid.org/]]
-| IRC                 | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
-| Jabber              | pylucid@conference.jabber.org
 | PyPi                | [[https://pypi.python.org/pypi/bootstrap_env/]]
 | Github              | [[https://github.com/jedie/bootstrap_env]]
-
-Simmilar projects are:
- * https://pypi.python.org/pypi/bootstrapper/
-
-Related pages:
- * https://packaging.python.org
- * https://virtualenv.pypa.io
- * https://pip.pypa.io
-
 
 == donation
 
