@@ -59,7 +59,15 @@ __version__ = "0.1.0"
 log = logging.getLogger(__name__)
 
 
-PACKAGE_NAME="bootstrap_env"  # PyPi package name
+PACKAGE_NAME="bootstrap_env" # PyPi package name
+
+# admin shell console script entry point name ('setup.py
+# (used to call 'upgrade_requirements' after virtualenv creation)
+# It's the 'scripts' keyword argument in project 'setup.py'
+# see:
+# https://python-packaging.readthedocs.io/en/latest/command-line-scripts.html#the-scripts-keyword-argument
+#
+ADMIN_FILE_NAME="bootstrap_env_admin.py" # File under .../<project>/foobar_admin.py
 
 # Note:
 #   on 'master' branch: '--pre' flag must not be set: So the last release on PyPi will be installed.
@@ -71,13 +79,11 @@ NORMAL_INSTALL=[
     PACKAGE_NAME
 ]
 
-SELF_FILE_PATH=Path(__file__).resolve()                               # .../src/pylucid/pylucid/pylucid_admin.py
-BOOT_FILE_PATH=Path(SELF_FILE_PATH, "..", "pylucid_boot.py").resolve() # .../src/pylucid/pylucid/pylucid_boot.py
-ROOT_PATH=Path(SELF_FILE_PATH, "..", "..").resolve()                  # .../src/pylucid/
-OWN_FILE_NAME=SELF_FILE_PATH.name                                      # pylucid_admin.py
+SELF_FILE_PATH=Path(__file__).resolve()               # .../src/bootstrap-env/bootstrap_env/boot_bootstrap_env.py
+ROOT_PATH=Path(SELF_FILE_PATH, "..", "..").resolve()  # .../src/bootstrap_env/
+OWN_FILE_NAME=SELF_FILE_PATH.name                     # boot_bootstrap_env.py
 
 print("SELF_FILE_PATH: %s" % SELF_FILE_PATH)
-print("BOOT_FILE_PATH: %s" % BOOT_FILE_PATH)
 print("ROOT_PATH: %s" % ROOT_PATH)
 print("OWN_FILE_NAME: %s" % OWN_FILE_NAME)
 
@@ -216,11 +222,15 @@ class VerboseSubprocess:
 
         self.args_str = " ".join([str(x) for x in self.popenargs])
 
+        env = self.kwargs.get("env", os.environ.copy())
+        env["PYTHONUNBUFFERED"]="1" # If a python script called ;)
+        env["bufsize"] = 1
+
         self.env_updates = env_updates
         if self.env_updates is not None:
-            env=os.environ.copy()
             env.update(env_updates)
-            self.kwargs["env"] = env
+
+        self.kwargs["env"] = env
 
     def print_call_info(self):
         print("")
@@ -301,15 +311,9 @@ class VerboseSubprocess:
 
         orig_timeout = self.kwargs.pop("timeout")
 
-        env = self.kwargs.get("env", {})
-        env["PYTHONUNBUFFERED"]="1" # If a python script called ;)
-
         self.kwargs.update({
             "stdout":subprocess.PIPE,
             "stderr":subprocess.STDOUT,
-            "bufsize":1,
-            "universal_newlines":True,
-            "env": env,
         })
 
         proc=subprocess.Popen(self.popenargs, **self.kwargs)
@@ -516,50 +520,6 @@ class Cmd2(cmd.Cmd):
         return stop
 
 
-class Requirements:
-    DEVELOPER_INSTALL="developer"
-    NORMAL_INSTALL="normal"
-    REQUIREMENTS = {
-        DEVELOPER_INSTALL: "developer_installation.txt",
-        NORMAL_INSTALL: "normal_installation.txt",
-    }
-    def __init__(self):
-        self.src_path = Path(sys.prefix, "src")
-        src_pylucid_path = Path(self.src_path, "pylucid")
-        if src_pylucid_path.is_dir():
-            print("PyLucid is installed as editable here: %s" % src_pylucid_path)
-            self.install_mode=self.DEVELOPER_INSTALL
-        else:
-            print("PyLucid is installed as packages here: %s" % ROOT_PATH)
-            self.install_mode=self.NORMAL_INSTALL
-
-    @property
-    def normal_mode(self):
-        return self.install_mode == self.NORMAL_INSTALL
-
-    def get_requirement_path(self):
-        """
-        :return: Path(.../pylucid/requirements/)
-        """
-        requirement_path = Path(ROOT_PATH, "pylucid", "requirements").resolve()
-        if not requirement_path.is_dir():
-            raise RuntimeError("Requirements directory not found here: %s" % requirement_path)
-        return requirement_path
-
-    def get_requirement_file_path(self):
-        """
-        :return: Path(.../pylucid/requirements/<mode>_installation.txt)
-        """
-        requirement_path = self.get_requirement_path()
-        filename = self.REQUIREMENTS[self.install_mode]
-
-        requirement_file_path = Path(requirement_path, filename).resolve()
-        if not requirement_file_path.is_file():
-            raise RuntimeError("Requirements file not found here: %s" % requirement_file_path)
-
-        return requirement_file_path
-
-
 class bootstrap_envEnvBuilder(venv.EnvBuilder):
     verbose = True
 
@@ -622,22 +582,18 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
             *self.requirements
         )
 
-        # Check if ".../bin/bootstrap_env_admin" exists
-        bootstrap_env_admin_path = Path(context.bin_path, "bootstrap_env_admin")
+        # Check if ".../bin/bootstrap_env_admin.py" exists
+        bootstrap_env_admin_path = Path(context.bin_path, ADMIN_FILE_NAME)
         if not bootstrap_env_admin_path.is_file():
-            print("ERROR: bootstrap_env_admin not found here: '%s'" % bootstrap_env_admin_path)
+            print("ERROR: admin script not found here: '%s'" % bootstrap_env_admin_path)
             VerboseSubprocess("ls", "-la", str(context.bin_path)).verbose_call()
             sys.exit(-1)
 
-        # Install all requirements by call 'bootstrap_env_admin update_env' from installed bootstrap_env
-        call_new_python("bootstrap_env_admin", "update_env", timeout=240)  # extended timeout for slow Travis ;)
+        # Install all requirements
+        call_new_python(ADMIN_FILE_NAME, "update_env", timeout=240)  # extended timeout for slow Travis ;)
 
 
 class BootBootstrapEnvShell(Cmd2):
-
-    #_________________________________________________________________________
-    # Normal user commands:
-
     def _resolve_path(self, path):
         return Path(path).expanduser().resolve()
 
@@ -718,211 +674,7 @@ class BootBootstrapEnvShell(Cmd2):
         (used the requirements/developer_installation.txt)
         """
         self._boot(destination, requirements=DEVELOPER_INSTALL)
-
     complete_boot_developer = complete_boot
-    def do_pytest(self, arg):
-        """
-        Run tests via pytest
-        """
-        try:
-            import pytest
-        except ImportError as err:
-            print("ERROR: Can't import pytest: %s (pytest not installed, in normal installation!)")
-        else:
-            root_path = str(ROOT_PATH)
-            print("chdir %r" % root_path)
-            os.chdir(root_path)
-
-            args = sys.argv[2:]
-            print("Call Pytest with args: %s" % repr(args))
-            exit_code = pytest.main(args=args)
-            sys.exit(exit_code)
-
-    def do_pip_freeze(self, arg):
-        """
-        Just run 'pip freeze'
-        """
-        return_code = VerboseSubprocess("pip3", "freeze").verbose_call(check=False)
-
-    def do_update_env(self, arg):
-        """
-        Update all packages in virtualenv.
-
-        Direct start with:
-            $ pylucid_admin update_env
-
-        (Call this command only in a activated virtualenv.)
-        """
-        if not in_virtualenv():
-            self.stdout.write("\nERROR: Only allowed in activated virtualenv!\n\n")
-            return
-
-        pip3_path = Path(sys.prefix, "bin", "pip3")
-        if not pip3_path.is_file():
-            print("ERROR: pip not found here: '%s'" % pip3_path)
-            return
-
-        print("pip found here: '%s'" % pip3_path)
-        pip3_path = str(pip3_path)
-
-        return_code = VerboseSubprocess(
-            pip3_path, "install", "--upgrade", "pip"
-        ).verbose_call(check=False)
-
-        req = Requirements()
-
-        # Update the requirements files by...
-        if req.normal_mode:
-            # ... update 'pylucid' PyPi package
-            return_code = VerboseSubprocess(
-                pip3_path, "install", "--upgrade", PACKAGE_NAME
-            ).verbose_call(check=False)
-        else:
-            # ... git pull pylucid sources
-            return_code = VerboseSubprocess(
-                "git", "pull", "origin",
-                cwd=ROOT_PATH
-            ).verbose_call(check=False)
-
-            return_code = VerboseSubprocess(
-                pip3_path, "install", "--editable", ".",
-                cwd=ROOT_PATH
-            ).verbose_call(check=False)
-
-        requirement_file_path = str(req.get_requirement_file_path())
-
-        # Update with requirements files:
-        self.stdout.write("Use: '%s'\n" % requirement_file_path)
-        return_code = VerboseSubprocess(
-            "pip3", "install",
-            "--exists-action", "b", # action when a path already exists: (b)ackup
-            "--upgrade",
-            "--requirement", requirement_file_path,
-            timeout=120  # extended timeout for slow Travis ;)
-        ).verbose_call(check=False)
-
-        if not req.normal_mode:
-            # Run pip-sync only in developer mode
-            return_code = VerboseSubprocess(
-                "pip-sync", requirement_file_path,
-                cwd=ROOT_PATH
-            ).verbose_call(check=False)
-
-            # 'reinstall' pylucid editable, because it's not in 'requirement_file_path':
-            return_code = VerboseSubprocess(
-                pip3_path, "install", "--editable", ".",
-                cwd=ROOT_PATH
-            ).verbose_call(check=False)
-
-        self.stdout.write("Please restart %s\n" % self.own_filename)
-        sys.exit(0)
-
-    #_________________________________________________________________________
-    # Developer commands:
-
-    def do_upgrade_requirements(self, arg):
-        """
-        1. Convert via 'pip-compile' *.in requirements files to *.txt
-        2. Append 'piprot' informations to *.txt requirements.
-
-        Direct start with:
-            $ pylucid_admin upgrade_requirements
-        """
-        assert BOOT_FILE_PATH.is_file(), "Bootfile not found here: %s" % BOOT_FILE_PATH
-
-        req = Requirements()
-        requirements_path = req.get_requirement_path()
-
-        for requirement_in in requirements_path.glob("*.in"):
-            requirement_in = Path(requirement_in).name
-
-            if requirement_in.startswith("basic_"):
-                continue
-
-            requirement_out = requirement_in.replace(".in", ".txt")
-
-            self.stdout.write("_"*79 + "\n")
-
-            # We run pip-compile in ./requirements/ and add only the filenames as arguments
-            # So pip-compile add no path to comments ;)
-
-            return_code = VerboseSubprocess(
-                "pip-compile", "--verbose", "--upgrade", "-o", requirement_out, requirement_in,
-                cwd=requirements_path
-            ).verbose_call(check=True)
-
-            if not requirement_in.startswith("test_"):
-                req_out = Path(requirements_path, requirement_out)
-                with req_out.open("r") as f:
-                    requirement_out_content = f.read()
-
-            self.stdout.write("_"*79 + "\n")
-            output = [
-                "\n#\n# list of out of date packages made with piprot:\n#\n"
-            ]
-
-            s = VerboseSubprocess("piprot", "--outdated", requirement_out, cwd=requirements_path)
-            for line in s.iter_output(check=True):
-                print(line, flush=True)
-                output.append("# %s" % line)
-
-            self.stdout.write("\nUpdate file %r\n" % requirement_out)
-            filepath = Path(requirements_path, requirement_out).resolve()
-            assert filepath.is_file(), "File not exists: %r" % filepath
-            with open(filepath, "a") as f:
-                f.writelines(output)
-
-    def do_change_editable_address(self, arg):
-        """
-        Replace git remote url from github read-only 'https' to 'git@'
-        e.g.:
-
-        OLD: https://github.com/jedie/PyLucid.git
-        NEW: git@github.com:jedie/PyLucid.git
-
-        **This is only developer with github write access ;)**
-
-        git remote set-url origin https://github.com/jedie/python-creole.git
-
-        Direct start with:
-            $ pylucid_admin change_editable_address
-        """
-        req = Requirements()
-        if req.normal_mode:
-            print("ERROR: Only available in 'developer' mode!")
-            return
-
-        src_path = req.src_path  # Path instance pointed to 'src' directory
-        for p in src_path.iterdir():
-            if not p.is_dir():
-                continue
-
-            if str(p).endswith(".bak"):
-                continue
-
-            print("\n")
-            print("*"*79)
-            print("Change: %s..." % p)
-
-            try:
-                output = VerboseSubprocess(
-                    "git", "remote", "-v",
-                    cwd=str(p),
-                ).verbose_output(check=False)
-            except subprocess.CalledProcessError:
-                print("Skip.")
-                continue
-
-            (name, url) = re.findall("(\w+?)\s+([^\s]*?)\s+", output)[0]
-            print("Change %r url: %r" % (name, url))
-
-            new_url=url.replace("https://github.com/", "git@github.com:")
-            if new_url == url:
-                print("ERROR: url not changed!")
-                continue
-
-            VerboseSubprocess("git", "remote", "set-url", name, new_url, cwd=str(p)).verbose_call(check=False)
-            VerboseSubprocess("git", "remote", "-v", cwd=str(p)).verbose_call(check=False)
 
 
 def main():

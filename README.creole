@@ -33,6 +33,17 @@ v1.0 is a rewrite and not useable, yet!
 }}}
 
 
+== how it works
+
+=== bootstrap a project
+
+Bootstrap works in this way:
+
+* create virtualenv
+* pip install <project>
+* <project>_admin update_env
+
+
 == backward incompatible changes
 
 === v0.6.4 -> v1.0.0
@@ -92,7 +103,7 @@ See also combinations in:
 
 == Links:
 
-| PyPi                | [[https://pypi.python.org/pypi/bootstrap_env/]]
+| PyPi                | [[https://pypi.org/project/bootstrap_env/]]
 | Github              | [[https://github.com/jedie/bootstrap_env]]
 
 == donation
