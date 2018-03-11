@@ -6,12 +6,14 @@
 """
 
 
+import os
 import subprocess
 import unittest
 from pathlib import Path
 
+# Bootstrap-Env
+from bootstrap_env import bootstrap_env_admin
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
-
 from bootstrap_env.bootstrap_env_admin import Requirements
 
 
@@ -19,6 +21,14 @@ class TestPyLucidAdmin(unittest.TestCase):
     """
     Tests for bootstrap_env/bootstrap_env_admin.py
     """
+    def test_executable(self):
+        file_path = Path(bootstrap_env_admin.__file__).resolve()
+        self.assertTrue(file_path.is_file())
+        self.assertTrue(
+            os.access(str(file_path), os.X_OK),
+            "File '%s' not executeable!" % file_path
+        )
+
     def bootstrap_env_admin_run(self, *args):
         args = ("bootstrap_env_admin.py", ) + args
         try:

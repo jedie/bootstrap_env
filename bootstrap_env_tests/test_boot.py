@@ -6,10 +6,13 @@
 """
 
 
+import os
 import subprocess
 import unittest
 from pathlib import Path
 
+# Bootstrap-Env
+from bootstrap_env import boot_bootstrap_env
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
 from bootstrap_env_tests.utils import IsolatedFilesystem
 
@@ -22,6 +25,14 @@ class TestPyLucidBoot(unittest.TestCase):
         No need to test is here again ;)
         Unfortunately, however, the coverage for bootstrapping are missing.
     """
+    def test_executable(self):
+        file_path = Path(boot_bootstrap_env.__file__).resolve()
+        self.assertTrue(file_path.is_file())
+        self.assertTrue(
+            os.access(str(file_path), os.X_OK),
+            "File '%s' not executeable!" % file_path
+        )
+
     def pylucid_admin_run(self, *args):
         args = ("boot_bootstrap_env.py", ) + args
         try:
