@@ -83,9 +83,9 @@ SELF_FILE_PATH=Path(__file__).resolve()               # .../src/bootstrap-env/bo
 ROOT_PATH=Path(SELF_FILE_PATH, "..", "..").resolve()  # .../src/bootstrap_env/
 OWN_FILE_NAME=SELF_FILE_PATH.name                     # boot_bootstrap_env.py
 
-print("SELF_FILE_PATH: %s" % SELF_FILE_PATH)
-print("ROOT_PATH: %s" % ROOT_PATH)
-print("OWN_FILE_NAME: %s" % OWN_FILE_NAME)
+# print("SELF_FILE_PATH: %s" % SELF_FILE_PATH)
+# print("ROOT_PATH: %s" % ROOT_PATH)
+# print("OWN_FILE_NAME: %s" % OWN_FILE_NAME)
 
 
 def in_virtualenv():

@@ -9,20 +9,20 @@
 
 
 import os  # isort:skip
+
 assert "VIRTUAL_ENV" in os.environ, "ERROR: Call me only in a activated virtualenv!"  # isort:skip
 
 import logging
 import re
 import subprocess
 import sys
-import time
 from pathlib import Path
 
 from pkg_resources import safe_name
 
 from bootstrap_env.boot_bootstrap_env import (PACKAGE_NAME, ROOT_PATH, Cmd2,
-                                              VerboseSubprocess, __version__)
-
+                                              VerboseSubprocess, __version__,
+                                              in_virtualenv)
 
 log = logging.getLogger(__name__)
 
@@ -35,18 +35,6 @@ OWN_FILE_NAME=SELF_FILE_PATH.name                                      # pylucid
 
 # print("SELF_FILE_PATH: %s" % SELF_FILE_PATH)
 # print("OWN_FILE_NAME: %s" % OWN_FILE_NAME)
-
-
-def in_virtualenv():
-    # Maybe this is not the best way?!?
-    return "VIRTUAL_ENV" in os.environ
-
-
-if in_virtualenv():
-    print("Activated virtualenv detected: %r (%s)" % (sys.prefix, sys.executable))
-else:
-    print("We are not in a virtualenv, ok.")
-
 
 
 class Requirements:
