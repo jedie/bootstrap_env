@@ -56,7 +56,7 @@ class Requirements:
     }
     def __init__(self):
         self.src_path = Path(sys.prefix, "src")
-        src_bootstrap_env_path = Path(self.src_path, "bootstrap_env")
+        src_bootstrap_env_path = Path(self.src_path, PACKAGE_NAME)
         if src_bootstrap_env_path.is_dir():
             print("bootstrap_env is installed as editable here: %s" % src_bootstrap_env_path)
             self.install_mode=self.DEVELOPER_INSTALL
@@ -72,7 +72,7 @@ class Requirements:
         """
         :return: Path(.../bootstrap_env/requirements/)
         """
-        requirement_path = Path(ROOT_PATH, "bootstrap_env", "requirements").resolve()
+        requirement_path = Path(ROOT_PATH, PACKAGE_NAME, "requirements").resolve()
         if not requirement_path.is_dir():
             raise RuntimeError("Requirements directory not found here: %s" % requirement_path)
         return requirement_path
