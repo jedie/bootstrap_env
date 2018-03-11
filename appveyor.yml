@@ -38,12 +38,12 @@ install:
 
     - ps: "ls"
     - "%PYTHON% --version"
-    - %PYTHON% bootstrap_env/boot_bootstrap_env.py $BOOT_MODE c:/Bootstrap-Env
+    - "%PYTHON% bootstrap_env/boot_bootstrap_env.py $BOOT_MODE c:/Bootstrap-Env"
 
 test_script:
     - cd c:/Bootstrap-Env/bin/
     - ps: "ls"
-    - %PYTHON% bootstrap_env_admin.py pytest
+    - "%PYTHON% bootstrap_env_admin.py pytest"
 
 after_test:
 #    - ps: "ls .coverage"
