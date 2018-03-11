@@ -1,0 +1,15 @@
+#
+# optional packages for running tests
+#
+# this file is include in developer_installation.in
+# and this file will be used in .travis.yml
+#
+
+pytest
+pytest-cov
+
+coveralls
+
+#flake8
+#pydocstyle
+#pylint

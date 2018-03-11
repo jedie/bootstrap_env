@@ -1,0 +1,8 @@
+#
+# Normal installation requirements, using all packages from pypi.
+# This is for all normal end users.
+#
+
+# include the basic requirements
+-r basic_requirements.in
+
