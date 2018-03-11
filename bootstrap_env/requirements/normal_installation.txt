@@ -4,5 +4,5 @@
 #
 
 # include the basic requirements
--r basic_requirements.in
+-r basic_requirements.txt
 

@@ -2,7 +2,7 @@
 # This is only for PyLucid developer, which has git write access!
 #
 
--r basic_requirements.in
+-r basic_requirements.txt
 -r test_requirements.txt
 
 # the wheel project provides a bdist_wheel command for setuptools
