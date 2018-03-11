@@ -1,7 +1,0 @@
-# external Python packages
-#-------------------------
-
-# https://pypi.python.org/pypi/virtualenv/
-virtualenv
-
-pip
