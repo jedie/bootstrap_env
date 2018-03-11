@@ -92,7 +92,7 @@ class Requirements:
 
 
 class AdminShell(Cmd2):
-    OWN_FILE_NAME = OWN_FILE_NAME
+    own_filename = OWN_FILE_NAME
     version = __version__
 
     #_________________________________________________________________________
