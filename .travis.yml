@@ -54,8 +54,9 @@ install:
 
 script:
   - cd ~/Bootstrap-Env/src/bootstrap_env
-  - bootstrap_env_admin pip_freeze
-  - bootstrap_env_admin pytest
+  - ls -la ~/Bootstrap-Env/bin
+  - bootstrap_env_admin.py pip_freeze
+  - bootstrap_env_admin.py pytest
 
 after_success:
     # https://github.com/codecov/codecov-bash
