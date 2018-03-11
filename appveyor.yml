@@ -38,7 +38,7 @@ install:
 
     - ps: "ls"
     - "%PYTHON% --version"
-    - "%PYTHON% bootstrap_env/boot_bootstrap_env.py $BOOT_MODE$ c:/Bootstrap-Env"
+    - "%PYTHON% bootstrap_env/boot_bootstrap_env.py %BOOT_MODE% c:/Bootstrap-Env"
 
 test_script:
     - cd c:/Bootstrap-Env/bin/
