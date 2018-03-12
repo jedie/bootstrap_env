@@ -38,6 +38,9 @@ before_install:
 
 install:
   - echo $BOOT_MODE
+  
+  # boot_bootstrap_env.py check if it's running in a activates venv:
+  - unset VIRTUAL_ENV
 
   # Work-a-round for #8589 (see above):
   # We use '/opt/python/3.6/bin/python' and not the python from PATH.
