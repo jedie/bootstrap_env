@@ -17,7 +17,7 @@ from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
 from bootstrap_env.bootstrap_env_admin import Requirements
 
 
-class TestPyLucidAdmin(unittest.TestCase):
+class TestBootstrapEnvAdmin(unittest.TestCase):
     """
     Tests for bootstrap_env/bootstrap_env_admin.py
     """
@@ -76,6 +76,8 @@ class TestPyLucidAdmin(unittest.TestCase):
         git_path = Path(bootstrap_env_src_path, ".git")
         print("git_path: %r" % git_path)
 
+        VerboseSubprocess("ls", "-la", str(bootstrap_env_src_path)).verbose_call(check=False)
+        
         self.assertTrue(git_path.is_dir(), "Directory not exists: %s" % git_path)
 
         # Needed while developing with github write access url ;)
