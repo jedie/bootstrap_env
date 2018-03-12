@@ -541,6 +541,16 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
         super().__init__(with_pip=True)
         self.requirements = requirements
 
+    def create(self, env_dir):
+        print(" * Create new virtualenv here: %r" % env_dir)
+
+        if "VIRTUAL_ENV" in os.environ:
+            print("\nERROR: Don't call me in a activated virtualenv!")
+            print("You are in VIRTUAL_ENV: %r" % os.environ["VIRTUAL_ENV"])
+            return
+
+        return super().create(env_dir)
+
     def ensure_directories(self, env_dir):
         print(" * Create the directories for the environment.")
         return super().ensure_directories(env_dir)
@@ -658,8 +668,6 @@ class BootBootstrapEnvShell(Cmd2):
         if destination.exists():
             self.stdout.write("\nERROR: Path '%s' already exists!\n" % destination)
             sys.exit(1)
-
-        self.stdout.write("Create virtualenv: '%s'...\n\n" % destination)
 
         builder = bootstrap_envEnvBuilder(requirements)
         builder.create(str(destination))

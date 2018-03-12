@@ -75,3 +75,23 @@ class TestBootstrapEnvBoot(unittest.TestCase):
             print(output)
 
             self.assertIn("ERROR: Path '%s' already exists!" % temp_path, output)
+
+    def test_boot_with_activated_venv(self):
+        with IsolatedFilesystem(prefix="test_boot_with_activated_venv"):
+            temp_path = Path().cwd() # isolated_filesystem does made a chdir to /tmp/...
+            destination = Path(temp_path, "test") # a not existing path
+
+            try:
+                output = VerboseSubprocess(
+                    "boot_bootstrap_env.py", "boot", str(destination)
+                ).verbose_output(check=False)
+            except subprocess.CalledProcessError as err:
+                print(err)
+                output = err.output
+                print(output)
+                self.assertIn("Don't call me in a activated virtualenv!", output)
+                self.assertIn("ERROR: Creating virtualenv!", output)
+            else:
+                self.fail("Doesn't abort!")
+
+
