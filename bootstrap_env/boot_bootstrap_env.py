@@ -571,13 +571,19 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
                 check=True # sys.exit(return_code) if return_code != 0
             )
 
-        call_new_python("pip", "install", "--upgrade", "pip")
+        if sys.platform == 'win32':
+            pip_filename = "pip.exe"
+        else:
+            pip_filename = "pip"
+        pip_bin=Path(context.bin_path, pip_filename)
+
+        assert pip_bin.is_file(), "Pip not found here: %s" % pip_bin
 
         # Install bootstrap_env
         #   in normal mode as package from PyPi
         #   in dev. mode as editable from github
         call_new_python(
-            "pip", "install",
+            str(pip_bin), "install",
             # "--verbose",
             *self.requirements
         )
@@ -590,7 +596,7 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
             sys.exit(-1)
 
         # Install all requirements
-        call_new_python(ADMIN_FILE_NAME, "update_env", timeout=240)  # extended timeout for slow Travis ;)
+        call_new_python(context.env_exe, ADMIN_FILE_NAME, "update_env", timeout=240)  # extended timeout for slow Travis ;)
 
 
 class BootBootstrapEnvShell(Cmd2):
