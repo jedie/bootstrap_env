@@ -158,12 +158,12 @@ class AdminShell(Cmd2):
             # ... git pull bootstrap_env sources
             return_code = VerboseSubprocess(
                 "git", "pull", "origin",
-                cwd=ROOT_PATH
+                cwd=str(ROOT_PATH)
             ).verbose_call(check=False)
 
             return_code = VerboseSubprocess(
                 pip3_path, "install", "--editable", ".",
-                cwd=ROOT_PATH
+                cwd=str(ROOT_PATH)
             ).verbose_call(check=False)
 
         requirement_file_path = str(req.get_requirement_file_path())
