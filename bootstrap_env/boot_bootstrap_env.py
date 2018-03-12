@@ -24,23 +24,21 @@
     :license: GNU General Public License v3 or later (GPLv3+), see LICENSE for more details.
 """
 
-import sys  # isort:skip
-
+import cmd
+import logging
+import os
 import pathlib
+import subprocess
+import sys
+import time
+import traceback
+from pathlib import Path
 
 if sys.version_info < (3, 5):  # isort:skip
     print("\nERROR: Python 3.5 or greater is required!")
     print("(Current Python Verison is %s)\n" % sys.version.split(" ",1)[0])
     sys.exit(101)
 
-import cmd
-import logging
-import os
-import re
-import subprocess
-import time
-import traceback
-from pathlib import Path
 
 try:
     import venv

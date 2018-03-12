@@ -24,8 +24,8 @@ from pkg_resources import safe_name
 
 # Bootstrap-Env
 from bootstrap_env.boot_bootstrap_env import (
-    PACKAGE_NAME, ROOT_PATH, Cmd2, VerboseSubprocess, __version__, in_virtualenv,
-    get_pip_file_name)
+    PACKAGE_NAME, ROOT_PATH, Cmd2, VerboseSubprocess, __version__, get_pip_file_name, in_virtualenv
+)
 
 log = logging.getLogger(__name__)
 
