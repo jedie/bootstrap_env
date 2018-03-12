@@ -17,7 +17,7 @@ from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
 from bootstrap_env_tests.utils import IsolatedFilesystem
 
 
-class TestPyLucidBoot(unittest.TestCase):
+class TestBootstrapEnvBoot(unittest.TestCase):
     """
     Tests for bootstrap_env/boot_bootstrap_env.py
 
