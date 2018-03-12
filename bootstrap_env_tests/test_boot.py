@@ -33,6 +33,12 @@ class TestBootstrapEnvBoot(unittest.TestCase):
             "File '%s' not executeable!" % file_path
         )
 
+    def test_subprocess_accept_pathlib_args(self):
+        self.assertRaises(AssertionError, VerboseSubprocess, Path("/foo/bar"))
+
+    def test_subprocess_accept_pathlib_kwargs(self):
+        self.assertRaises(AssertionError, VerboseSubprocess, foo=Path("/foo/bar"))
+
     def pylucid_admin_run(self, *args):
         args = ("boot_bootstrap_env.py", ) + args
         try:

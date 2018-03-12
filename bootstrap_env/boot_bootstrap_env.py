@@ -26,6 +26,8 @@
 
 import sys  # isort:skip
 
+import pathlib
+
 if sys.version_info < (3, 5):  # isort:skip
     print("\nERROR: Python 3.5 or greater is required!")
     print("(Current Python Verison is %s)\n" % sys.version.split(" ",1)[0])
@@ -213,6 +215,13 @@ class VerboseSubprocess:
         :param timeout: pass to subprocess.Popen()
         :param kwargs: pass to subprocess.Popen()
         """
+
+        # subprocess doesn't accept Path() objects
+        for arg in popenargs:
+            assert not isinstance(arg, pathlib.Path), "Arg %r not accepted!" % arg
+        for key, value in kwargs.items():
+            assert not isinstance(value, pathlib.Path), "Keyword argument %r: %r not accepted!" % (key, value)
+
         self.popenargs = popenargs
         self.kwargs = kwargs
 
