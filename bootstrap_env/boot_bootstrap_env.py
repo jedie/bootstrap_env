@@ -335,9 +335,9 @@ class VerboseSubprocess:
 
 def get_pip_file_name():
     if sys.platform == 'win32':
-        return "pip.exe"
+        return "pip3.exe"
     else:
-        return "pip"
+        return "pip3"
 
 
 def display_errors(func):
@@ -576,7 +576,7 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
                 check=True # sys.exit(return_code) if return_code != 0
             )
 
-        pip_bin=Path(context.bin_path, get_pip_file_name()) # e.g.: .../bin/pip
+        pip_bin=Path(context.bin_path, get_pip_file_name()) # e.g.: .../bin/pip3
         assert pip_bin.is_file(), "Pip not found here: %s" % pip_bin
 
         # Install bootstrap_env
