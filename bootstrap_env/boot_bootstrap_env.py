@@ -333,6 +333,11 @@ class VerboseSubprocess:
             print(line, flush=True)
 
 
+def get_pip_file_name():
+    if sys.platform == 'win32':
+        return "pip.exe"
+    else:
+        return "pip"
 
 
 def display_errors(func):
@@ -571,12 +576,7 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
                 check=True # sys.exit(return_code) if return_code != 0
             )
 
-        if sys.platform == 'win32':
-            pip_filename = "pip.exe"
-        else:
-            pip_filename = "pip"
-        pip_bin=Path(context.bin_path, pip_filename)
-
+        pip_bin=Path(context.bin_path, get_pip_file_name()) # e.g.: .../bin/pip
         assert pip_bin.is_file(), "Pip not found here: %s" % pip_bin
 
         # Install bootstrap_env
@@ -597,6 +597,8 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
 
         # Install all requirements
         call_new_python(context.env_exe, ADMIN_FILE_NAME, "update_env", timeout=240)  # extended timeout for slow Travis ;)
+
+
 
 
 class BootBootstrapEnvShell(Cmd2):
