@@ -134,7 +134,12 @@ class AdminShell(Cmd2):
             self.stdout.write("\nERROR: Only allowed in activated virtualenv!\n\n")
             return
 
-        pip3_path = Path(sys.prefix, "bin", get_pip_file_name()) # e.g.: .../bin/pip3
+        if sys.platform == 'win32':
+            bin_dir_name="Scripts"
+        else:
+            bin_dir_name = "bin"
+
+        pip3_path = Path(sys.prefix, bin_dir_name, get_pip_file_name()) # e.g.: .../bin/pip3
         if not pip3_path.is_file():
             print("ERROR: pip not found here: '%s'" % pip3_path)
             return
