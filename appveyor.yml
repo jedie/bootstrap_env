@@ -43,6 +43,7 @@ install:
 test_script:
     - cd c:/Bootstrap-Env/Scripts/
     - ps: "ls"
+    - "activate.bat"
     - "%PYTHON% bootstrap_env_admin.py pytest"
 
 after_test:
