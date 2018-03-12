@@ -21,6 +21,7 @@ class TestBootstrapEnvAdmin(unittest.TestCase):
     """
     Tests for bootstrap_env/bootstrap_env_admin.py
     """
+    @unittest.skipIf(Requirements().normal_mode, "Executeable is not set by PyPi installation")
     def test_executable(self):
         file_path = Path(bootstrap_env_admin.__file__).resolve()
         self.assertTrue(file_path.is_file())
@@ -77,7 +78,7 @@ class TestBootstrapEnvAdmin(unittest.TestCase):
         print("git_path: %r" % git_path)
 
         VerboseSubprocess("ls", "-la", str(bootstrap_env_src_path)).verbose_call(check=False)
-        
+
         self.assertTrue(git_path.is_dir(), "Directory not exists: %s" % git_path)
 
         # Needed while developing with github write access url ;)

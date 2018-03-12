@@ -14,6 +14,7 @@ from pathlib import Path
 # Bootstrap-Env
 from bootstrap_env import boot_bootstrap_env
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
+from bootstrap_env.bootstrap_env_admin import Requirements
 from bootstrap_env_tests.utils import IsolatedFilesystem
 
 
@@ -25,6 +26,7 @@ class TestBootstrapEnvBoot(unittest.TestCase):
         No need to test is here again ;)
         Unfortunately, however, the coverage for bootstrapping are missing.
     """
+    @unittest.skipIf(Requirements().normal_mode, "Executeable is not set by PyPi installation")
     def test_executable(self):
         file_path = Path(boot_bootstrap_env.__file__).resolve()
         self.assertTrue(file_path.is_file())
