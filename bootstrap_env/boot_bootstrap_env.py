@@ -571,7 +571,7 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
         """
         print(" * post-setup modification")
 
-        def call_new_python(*args, **kwargs):
+        def call_new_python(*args, check=True, **kwargs):
             """
             Do the same as bin/activate so that <args> runs in a "activated" virtualenv.
             """
@@ -582,16 +582,27 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
                 }
             })
             VerboseSubprocess(*args, **kwargs).verbose_call(
-                check=True # sys.exit(return_code) if return_code != 0
+                check=check # sys.exit(return_code) if return_code != 0
             )
 
         pip_bin=Path(context.bin_path, get_pip_file_name()) # e.g.: .../bin/pip3
         assert pip_bin.is_file(), "Pip not found here: %s" % pip_bin
 
         # Upgrade pip first (e.g.: running python 3.5)
-        call_new_python(
-            str(pip_bin), "install", "--upgrade", "pip"
-        )
+        if sys.platform == 'win32':
+            # Note: On windows it will crash with a PermissionError: [WinError 32]
+            # because pip can't replace himself while running ;)
+            # Work-a-round is "python -m pip install --upgrade pip"
+            # see also: https://github.com/pypa/pip/issues/3804
+            call_new_python(
+                context.env_exe, "-m", "pip", "install", "--upgrade", "pip",
+                check=False # Don't exit on errors
+            )
+        else:
+            call_new_python(
+                str(pip_bin), "install", "--upgrade", "pip",
+                check=False # Don't exit on errors
+            )
 
         # Install bootstrap_env
         #   in normal mode as package from PyPi
@@ -610,7 +621,7 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
             sys.exit(-1)
 
         # Install all requirements
-        call_new_python(context.env_exe, ADMIN_FILE_NAME, "update_env", timeout=240)  # extended timeout for slow Travis ;)
+        call_new_python(context.env_exe, str(bootstrap_env_admin_path), "update_env", timeout=240)  # extended timeout for slow Travis ;)
 
 
 
