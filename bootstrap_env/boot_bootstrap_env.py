@@ -588,6 +588,11 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
         pip_bin=Path(context.bin_path, get_pip_file_name()) # e.g.: .../bin/pip3
         assert pip_bin.is_file(), "Pip not found here: %s" % pip_bin
 
+        # Upgrade pip first (e.g.: running python 3.5)
+        call_new_python(
+            pip_bin, "install", "--upgrade", "pip"
+        )
+
         # Install bootstrap_env
         #   in normal mode as package from PyPi
         #   in dev. mode as editable from github
