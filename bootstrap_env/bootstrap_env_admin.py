@@ -182,13 +182,13 @@ class AdminShell(Cmd2):
             # Run pip-sync only in developer mode
             return_code = VerboseSubprocess(
                 "pip-sync", requirement_file_path,
-                cwd=ROOT_PATH
+                cwd=str(ROOT_PATH)
             ).verbose_call(check=False)
 
             # 'reinstall' bootstrap_env editable, because it's not in 'requirement_file_path':
             return_code = VerboseSubprocess(
                 pip3_path, "install", "--editable", ".",
-                cwd=ROOT_PATH
+                cwd=str(ROOT_PATH)
             ).verbose_call(check=False)
 
         self.stdout.write("Please restart %s\n" % self.own_filename)
