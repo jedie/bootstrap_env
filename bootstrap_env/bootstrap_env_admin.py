@@ -24,8 +24,8 @@ from pkg_resources import safe_name
 
 # Bootstrap-Env
 from bootstrap_env.boot_bootstrap_env import (
-    PACKAGE_NAME, ROOT_PATH, Cmd2, VerboseSubprocess, __version__, in_virtualenv
-)
+    PACKAGE_NAME, ROOT_PATH, Cmd2, VerboseSubprocess, __version__, in_virtualenv,
+    get_pip_file_name)
 
 log = logging.getLogger(__name__)
 
@@ -134,7 +134,7 @@ class AdminShell(Cmd2):
             self.stdout.write("\nERROR: Only allowed in activated virtualenv!\n\n")
             return
 
-        pip3_path = Path(sys.prefix, "bin", "pip3")
+        pip3_path = Path(sys.prefix, "bin", get_pip_file_name()) # e.g.: .../bin/pip3
         if not pip3_path.is_file():
             print("ERROR: pip not found here: '%s'" % pip3_path)
             return
@@ -171,7 +171,7 @@ class AdminShell(Cmd2):
         # Update with requirements files:
         self.stdout.write("Use: '%s'\n" % requirement_file_path)
         return_code = VerboseSubprocess(
-            "pip3", "install",
+            pip3_path, "install",
             "--exists-action", "b", # action when a path already exists: (b)ackup
             "--upgrade",
             "--requirement", requirement_file_path,
