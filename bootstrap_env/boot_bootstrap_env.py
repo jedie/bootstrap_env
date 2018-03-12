@@ -590,7 +590,7 @@ class bootstrap_envEnvBuilder(venv.EnvBuilder):
 
         # Upgrade pip first (e.g.: running python 3.5)
         call_new_python(
-            pip_bin, "install", "--upgrade", "pip"
+            str(pip_bin), "install", "--upgrade", "pip"
         )
 
         # Install bootstrap_env
