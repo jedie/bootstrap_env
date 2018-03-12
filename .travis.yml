@@ -51,11 +51,11 @@ install:
   - source bin/activate
 
   - mkdir -p ~/Bootstrap-Env/src/
-  - cp -Rfvp ${TRAVIS_BUILD_DIR} ~/Bootstrap-Env/src/
-  
+  - cp -Rfvp ${TRAVIS_BUILD_DIR} ~/Bootstrap-Env/src/  
+
   # The PyPi package and git repro named "bootstrap_env"
   # But pip will change the name to "bootstrap-env"
-  - mv ~/Bootstrap-Env/src/bootstrap_env ~/Bootstrap-Env/src/bootstrap-env
+  - if [ $BOOT_MODE == "boot" ]; then mv ~/Bootstrap-Env/src/bootstrap_env ~/Bootstrap-Env/src/bootstrap-env; fi
 
   - cd ~/Bootstrap-Env/src/bootstrap-env
   - pip install -e .
