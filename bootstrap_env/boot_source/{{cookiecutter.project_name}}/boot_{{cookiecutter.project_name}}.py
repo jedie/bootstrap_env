@@ -4,7 +4,7 @@
     Bootstrap
     ~~~~~~~~~
 
-    A interactive shell for booting the 'bootstrap_env' project.
+    A interactive shell for booting the '{{cookiecutter.project_name}}' project.
 
     Note:
         - This file is "self contained".
@@ -14,10 +14,10 @@
 
     usage, e.g.:
 
-        $ wget https://raw.githubusercontent.com/jedie/bootstrap_env/master/bootstrap_env/boot_bootstrap_env.py
-        $ python3 boot_bootstrap_env.py
+        $ wget {{cookiecutter.raw_url}}/{{cookiecutter.package_name}}/boot_{{cookiecutter.package_name}}.py
+        $ python3 boot_{{cookiecutter.package_name}}.py
 
-        boot_bootstrap_env.py> boot ~/bootstrap_env-env
+        boot_{{cookiecutter.package_name}}.py> boot ~/{{cookiecutter.project_name}}-env
 
     :created: 11.03.2018 by Jens Diemer, www.jensdiemer.de
     :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
@@ -53,13 +53,13 @@ except ImportError as err:
     print("\nERROR: 'ensurepip' not available: %s (Maybe 'python3-venv' package not installed?!?)" % err)
 
 
-__version__ = "1.0.0rc11"
+__version__ = "{{cookiecutter.version}}"
 
 
 log = logging.getLogger(__name__)
 
 
-PACKAGE_NAME="bootstrap_env" # PyPi package name
+PACKAGE_NAME="{{cookiecutter.package_name}}" # PyPi package name
 
 # admin shell console script entry point name ('setup.py
 # (used to call 'upgrade_requirements' after virtualenv creation)
@@ -67,15 +67,17 @@ PACKAGE_NAME="bootstrap_env" # PyPi package name
 # see:
 # https://python-packaging.readthedocs.io/en/latest/command-line-scripts.html#the-scripts-keyword-argument
 #
-ADMIN_FILE_NAME="bootstrap_env_admin.py" # File under .../<project>/foobar_admin.py
+ADMIN_FILE_NAME="{{cookiecutter.package_name}}_admin.py" # File under .../<project>/foobar_admin.py
 
 # Note:
 #   on 'master' branch: '--pre' flag must not be set: So the last release on PyPi will be installed.
 #   on 'develop' branch: set the '--pre' flag and publish 'preview' versions on PyPi.
 #
-DEVELOPER_INSTALL=["-e", "git+https://github.com/jedie/bootstrap_env.git@master#egg=%s" % PACKAGE_NAME]
+DEVELOPER_INSTALL=["-e", "{{cookiecutter.editable_url}}#egg=%s" % PACKAGE_NAME]
 NORMAL_INSTALL=[
+    {%- if "pre-release" in cookiecutter.release_type %}
     "--pre", # https://pip.pypa.io/en/stable/reference/pip_install/#pre-release-versions
+    {%- endif %}
     PACKAGE_NAME
 ]
 
