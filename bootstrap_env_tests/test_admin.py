@@ -14,14 +14,14 @@ from pathlib import Path
 # Bootstrap-Env
 from bootstrap_env import bootstrap_env_admin
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
-from bootstrap_env.admin_shell.requirements import Requirements
+from bootstrap_env_tests.utils import requirements
 
 
 class TestBootstrapEnvAdmin(unittest.TestCase):
     """
     Tests for bootstrap_env/bootstrap_env_admin.py
     """
-    @unittest.skipIf(Requirements().normal_mode, "Executeable is not set by PyPi installation")
+    @unittest.skipIf(requirements.normal_mode, "Executeable is not set by PyPi installation")
     def test_executable(self):
         file_path = Path(bootstrap_env_admin.__file__).resolve()
         self.assertTrue(file_path.is_file())
@@ -58,17 +58,15 @@ class TestBootstrapEnvAdmin(unittest.TestCase):
         self.assertIn("bootstrap_env_admin.py shell", output)
         self.assertIn("*** Unknown command: 'foo bar is unknown ;)' ***", output)
 
-    @unittest.skipIf(Requirements().normal_mode, "Only available in 'developer' mode.")
+    @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
     def test_change_editable_address(self):
         """
         All test runs on Travis-CI install PyLucid as editable!
         See .travis.yml
         """
-        req = Requirements()
+        self.assertFalse(requirements.normal_mode)
 
-        self.assertFalse(Requirements().normal_mode)
-
-        bootstrap_env_src_path = Path(req.src_path, "bootstrap-env")
+        bootstrap_env_src_path = Path(requirements.src_path, "bootstrap-env")
         print("bootstrap_env_src_path: %r" % bootstrap_env_src_path)
 
         self.assertTrue(bootstrap_env_src_path.is_dir(), "Directory not exists: %s" % bootstrap_env_src_path)

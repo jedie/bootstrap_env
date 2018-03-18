@@ -11,6 +11,13 @@ import shutil
 import tempfile
 from pathlib import Path
 
+# Bootstrap-Env
+from bootstrap_env.bootstrap_env_admin import REQUIREMENT_PATH, Requirements
+
+requirements = Requirements(
+    requirement_path=REQUIREMENT_PATH,
+    package_name="bootstrap_env",
+)
 
 class IsolatedFilesystem:
     """

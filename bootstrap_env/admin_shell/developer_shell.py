@@ -28,12 +28,30 @@ class DeveloperAdminShell(AdminShell):
 
     def do_upgrade_requirements(self, arg):
         """
+        Upgrade requirements files with pip-compile and piprot.
+
         1. Convert via 'pip-compile' *.in requirements files to *.txt
         2. Append 'piprot' informations to *.txt requirements.
         """
-        requirements_path = self.requirements.get_requirement_path()
+        if self.package_name == "bootstrap_env":
+            print("ERROR: command not allowed for 'bootstrap_env' !\n")
+            print(
+                "Because Bootstrap-env should be used as a tool in other projects"
+                " and the projects himself should pin requirements ;) "
+            )
+            return
 
-        for requirement_in in requirements_path.glob("*.in"):
+        requirements_path = self.requirements.requirement_path
+
+        print("compile *.in files in %s" % requirements_path)
+        requirement_in_files = tuple(requirements_path.glob("*.in"))
+        if not requirement_in_files:
+            print("ERROR: No *.in files found!")
+        else:
+            print("%i *.in files found" % len(requirement_in_files))
+
+
+        for requirement_in in requirement_in_files:
             requirement_in = Path(requirement_in).name
 
             if requirement_in.startswith("basic_"):
