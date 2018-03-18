@@ -367,7 +367,6 @@ class Cmd2(cmd.Cmd):
         - methods can be called directly from commandline: e.g.: ./foobar.py --help
         - Display
     """
-    own_filename = SELF_FILE_PATH.name  # Path(__file__).name ;)
     version = __version__
 
     command_alias = { # used in self.precmd()
@@ -382,11 +381,16 @@ class Cmd2(cmd.Cmd):
     complete_hint="\nUse <{key}> to command completion.\n"
     missing_complete="\n(Sorry, no command completion available.)\n" # if 'readline' not available
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, self_filename=None, **kwargs):
         super().__init__(*args, **kwargs)
 
+        if self_filename is None:
+            self.self_filename = SELF_FILE_PATH.name  # Path(__file__).name ;)
+        else:
+            self.self_filename = self_filename
+
         intro_line = '{filename} shell v{version}'.format(
-            filename=self.own_filename,
+            filename=self.self_filename,
             version=self.version
         )
         intro_line = colorizer.colorize(intro_line, foreground="blue", background="black", opts=("bold",))
@@ -396,7 +400,7 @@ class Cmd2(cmd.Cmd):
             'Type help or ? to list commands.\n'
         ).format(intro_line=intro_line)
 
-        self.prompt = colorizer.colorize(self.own_filename, foreground="cyan")
+        self.prompt = colorizer.colorize(self.self_filename, foreground="cyan")
         self.prompt += colorizer.colorize("> ", opts=("bold",))
 
         self.doc_header = "Available commands (type help <topic>):\n"
@@ -404,7 +408,7 @@ class Cmd2(cmd.Cmd):
             "\nHint: All commands can be called directly from commandline.\n"
             "e.g.: $ ./{filename} help\n"
         ).format(
-            filename=self.own_filename,
+            filename=self.self_filename,
         )
 
         # e.g.: $ bootstrap_env_admin.py boot /tmp/bootstrap_env-env -> run self.do_boot("/tmp/bootstrap_env-env") on startup

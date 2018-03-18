@@ -14,7 +14,7 @@ from pathlib import Path
 # Bootstrap-Env
 from bootstrap_env import bootstrap_env_admin
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
-from bootstrap_env.bootstrap_env_admin import Requirements
+from bootstrap_env.admin_shell.requirements import Requirements
 
 
 class TestBootstrapEnvAdmin(unittest.TestCase):
