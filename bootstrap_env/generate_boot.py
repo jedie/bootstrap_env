@@ -1,11 +1,13 @@
 from pathlib import Path
 
 from cookiecutter.main import cookiecutter
-from pip._vendor.packaging.version import parse as parse_version
+from packaging.version import parse
 
 # Bootstrap-Env
 from bootstrap_env.version import __version__ as bootstrap_env_version
 
+# https://packaging.pypa.io/en/latest/version/
+parsed_bootstrap_env_version = parse(bootstrap_env_version)
 
 CWD = Path().cwd()
 SELF_FILE_PATH=Path(__file__).resolve()                # .../src/bootstrap-env/bootstrap_env/generate_boot.py
@@ -20,8 +22,6 @@ if __name__ == '__main__':
     print("SELF_FILE_PATH: %s" % SELF_FILE_PATH)
     print("REPRO_PATH: %s" % REPRO_PATH)
     print("OUTPUT_PATH: %s" % OUTPUT_PATH)
-
-    parsed_bootstrap_env_version = parse_version(bootstrap_env_version)
 
     if parsed_bootstrap_env_version.is_prerelease:
         release_type = "pre-release and development version"

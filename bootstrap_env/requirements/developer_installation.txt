@@ -11,6 +11,10 @@ wheel
 # https://pypi.org/project/twine
 twine
 
+# https://github.com/pypa/packaging
+# https://packaging.pypa.io/en/latest/
+packaging
+
 # https://github.com/jazzband/pip-tools (pip-tools = pip-compile + pip-sync)
 pip-tools
 
