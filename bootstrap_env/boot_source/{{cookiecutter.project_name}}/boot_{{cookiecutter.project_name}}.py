@@ -534,7 +534,7 @@ class Cmd2(cmd.Cmd):
         return stop
 
 
-class bootstrap_envEnvBuilder(venv.EnvBuilder):
+class EnvBuilder(venv.EnvBuilder):
     verbose = True
 
     def __init__(self, requirements):
@@ -669,7 +669,7 @@ class BootBootstrapEnvShell(Cmd2):
             self.stdout.write("\nERROR: Path '%s' already exists!\n" % destination)
             sys.exit(1)
 
-        builder = bootstrap_envEnvBuilder(requirements)
+        builder = EnvBuilder(requirements)
         builder.create(str(destination))
 
         self.stdout.write("\n")
