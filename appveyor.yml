@@ -43,6 +43,9 @@ install:
 test_script:
     - cd c:/Bootstrap-Env/Scripts/
     - ps: "ls"
+    - ps: "type activate.bat"
+    - cmd: call activate.bat
+    - "%PYTHON% -c \"import bootstrap_env;print(bootstrap_env.__file__)\""
     - "%PYTHON% bootstrap_env_admin.py pytest"
 
 after_test:
