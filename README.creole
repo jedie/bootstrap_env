@@ -22,7 +22,7 @@ Compatible Python Versions (see also [[https://github.com/jedie/bootstrap_env/bl
 v1.0 is a rewrite and not useable, yet!
 
 
-=== boot bootstrap_env
+=== boot bootstrap_env - linux
 
 {{{
 # Download bootstrap file from github:
@@ -32,6 +32,53 @@ v1.0 is a rewrite and not useable, yet!
 /home/FooBar$ python3 boot_bootstrap_env.py boot ~/Bootstrap-env
 }}}
 
+=== boot bootstrap_env - windows
+
+# install Python 3: https://www.python.org/downloads/
+# Download bootstrap file from github: [[https://github.com/jedie/bootstrap_env/raw/master/bootstrap_env/boot_bootstrap_env.py|boot_bootstrap_env.py]] (right click and select 'save')
+# start **boot_bootstrap_env.py** and e.g.:
+
+{{{
+boot_bootstrap_env.py shell v1.0.0rc11
+Type help or ? to list commands.
+
+boot_bootstrap_env.py> boot ~/Bootstrap-Env
+...
+virtualenv created at: 'C:\Users\<YourUserName>\Bootstrap-Env'
+}}}
+
+usage:
+
+# Open cmd.exe and e.g.:
+{{{
+C:\> cd /d %USERPROFILE%
+
+C:\Users\foobar>cd Bootstrap-Env
+
+C:\Users\foobar\Bootstrap-Env>cd Scripts
+
+C:\Users\foobar\Bootstrap-Env\Scripts>call activate.bat
+(Bootstrap-Env) C:\Users\foobar\Bootstrap-Env\Scripts> bootstrap_env_admin.py
+Activated virtualenv detected: 'c:\\users\\foobar\\bootstrap-env' (c:\users\foobar\bootstrap-env\scripts\python.exe)
+
+bootstrap_env_admin.py shell v0.1.0
+Type help or ? to list commands.
+
+bootstrap_env_admin.py> ?
+
+Hint: All commands can be called directly from commandline.
+e.g.: $ ./bootstrap_env_admin.py help
+
+Available commands (type help <topic>):
+
+ change_editable_address    - Replace git remote url from github read-only 'https' to 'git@'
+ help                       - List available commands with "help" or detailed help with "help cmd".
+ pip_freeze                 - Just run 'pip freeze'
+ pytest                     - Run tests via pytest
+ quit                       - Exit this interactiv shell
+ update_env                 - Update all packages in virtualenv.
+ upgrade_requirements       - 1. Convert via 'pip-compile' *.in requirements files to *.txt
+}}}
 
 == how it works
 
