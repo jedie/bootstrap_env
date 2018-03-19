@@ -2,4 +2,11 @@
 # basic requirements
 #
 
+# https://pypi.org/project/cookiecutter/
+# https://github.com/audreyr/cookiecutter
 cookiecutter
+
+# https://pypi.org/project/packaging/
+# https://github.com/pypa/packaging
+# https://packaging.pypa.io/en/latest/
+packaging
