@@ -41,6 +41,8 @@ install:
     - "%PYTHON% bootstrap_env/boot_bootstrap_env.py %BOOT_MODE% c:/Bootstrap-Env"
 
 test_script:
+    - PYTHON: "c:/Bootstrap-Env/Scripts/python.exe"
+    - "%PYTHON% --version"
     - cd c:/Bootstrap-Env/Scripts/
     - ps: "ls"
     - ps: "type activate.bat"
