@@ -12,6 +12,7 @@ import unittest
 from pathlib import Path
 
 # Bootstrap-Env
+import bootstrap_env
 from bootstrap_env import bootstrap_env_admin
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
 from bootstrap_env_tests.utils import requirements
@@ -21,6 +22,14 @@ class TestBootstrapEnvAdmin(unittest.TestCase):
     """
     Tests for bootstrap_env/bootstrap_env_admin.py
     """
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.base_path = Path(bootstrap_env.__file__).resolve().parent
+
+    def test_setup(self):
+        self.assertTrue(self.base_path.is_dir())
+
     @unittest.skipIf(requirements.normal_mode, "Executeable is not set by PyPi installation")
     def test_executable(self):
         file_path = Path(bootstrap_env_admin.__file__).resolve()
@@ -35,7 +44,13 @@ class TestBootstrapEnvAdmin(unittest.TestCase):
         try:
             return VerboseSubprocess(*args).verbose_output(check=False)
         except subprocess.CalledProcessError as err:
-            self.fail("Subprocess error: %s" % err)
+            self.fail(
+                (
+                    "Subprocess error: %s"
+                    "\noutput:"
+                    "\n%s"
+                ) % (err, err.output)
+            )
 
     def test_help(self):
         output = self.bootstrap_env_admin_run("help")
@@ -99,3 +114,57 @@ class TestBootstrapEnvAdmin(unittest.TestCase):
         print(output)
 
         self.assertIn("git@github.com:jedie/bootstrap_env.git", output)
+
+    @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
+    def test_update_own_boot_file_nothing_changed(self):
+        """
+        own bootstrap file should be always up-to-date with the source file from.
+
+            bootstrap_env/boot_bootstrap_env.py
+        is generated from:
+            bootstrap_env/boot_source/{{cookiecutter.project_name}}/boot_{{cookiecutter.project_name}}.py
+        """
+        bootstrap_file = Path(self.base_path, "boot_bootstrap_env.py")
+        self.assertTrue(bootstrap_file.is_file())
+
+        with bootstrap_file.open("r") as f:
+            old_content = f.read()
+
+        output = self.bootstrap_env_admin_run("update_own_boot_file")
+        print(output)
+
+        self.assertIn("Update 'bootstrap_env/boot_bootstrap_env.py' via cookiecutter", output)
+        self.assertIn("bootstrap file created", output)
+
+        with bootstrap_file.open("r") as f:
+            content = f.read()
+
+        self.assertEqual(old_content, content)
+
+    @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
+    def test_update_own_boot_file_overwrite(self):
+        bootstrap_file = Path(self.base_path, "boot_bootstrap_env.py")
+        self.assertTrue(bootstrap_file.is_file())
+
+        with bootstrap_file.open("r") as f:
+            old_content = f.read()
+
+        try:
+            # replace current bootstrap file:
+            with bootstrap_file.open("a") as f:
+                f.write("# new line from: test_update_own_boot_file_overwrite()")
+
+            output = self.bootstrap_env_admin_run("update_own_boot_file")
+            print(output)
+
+            self.assertIn("Update 'bootstrap_env/boot_bootstrap_env.py' via cookiecutter", output)
+            self.assertIn("bootstrap file created", output)
+
+            with bootstrap_file.open("r") as f:
+                content = f.read()
+
+            self.assertEqual(old_content, content)
+        finally:
+            # revert any changes with the origin code:
+            with bootstrap_file.open("w") as f:
+                f.write(old_content)

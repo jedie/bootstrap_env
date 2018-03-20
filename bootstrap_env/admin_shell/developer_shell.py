@@ -136,9 +136,9 @@ class DeveloperAdminShell(AdminShell):
             VerboseSubprocess("git", "remote", "set-url", name, new_url, cwd=str(p)).verbose_call(check=False)
             VerboseSubprocess("git", "remote", "-v", cwd=str(p)).verbose_call(check=False)
 
-    def do_generate_boot_file(self, arg):
+    def do_update_own_boot_file(self, arg):
         """
-        Generate bootstrap file via cookiecutter
+        Update 'bootstrap_env/boot_bootstrap_env.py' via cookiecutter
         """
         # https://packaging.pypa.io/en/latest/version/
         parsed_bootstrap_env_version = parse(bootstrap_env_version)
@@ -149,6 +149,9 @@ class DeveloperAdminShell(AdminShell):
             use_pre_release = "n"
 
         repro_path = Path(self.package_path, "boot_source")
+
+        from cookiecutter.log import configure_logger
+        configure_logger(stream_level='DEBUG')
 
         result = cookiecutter(
             template=str(repro_path),
@@ -161,4 +164,4 @@ class DeveloperAdminShell(AdminShell):
                 "use_pre_release": use_pre_release,
             },
         )
-        print("bootstrap file created here: %s" % result)
+        print("\nbootstrap file created here: %s" % result)

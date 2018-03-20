@@ -2,10 +2,11 @@ import os
 import sys
 from pathlib import Path
 
+from cookiecutter.main import cookiecutter
+
 # Bootstrap-Env
-from bootstrap_env.boot_bootstrap_env import (
-    Cmd2, VerboseSubprocess, __version__, get_pip_file_name, in_virtualenv
-)
+from bootstrap_env.boot_bootstrap_env import Cmd2, VerboseSubprocess, __version__, get_pip_file_name, in_virtualenv
+from bootstrap_env.version import __version__ as bootstrap_env_version
 
 
 class AdminShell(Cmd2):
@@ -21,7 +22,7 @@ class AdminShell(Cmd2):
     #_________________________________________________________________________
     # Normal user commands:
 
-    def do_pytest(self, arg):
+    def do_pytest(self, arg=None):
         """
         Run tests via pytest
         """
@@ -39,13 +40,13 @@ class AdminShell(Cmd2):
             exit_code = pytest.main(args=args)
             sys.exit(exit_code)
 
-    def do_pip_freeze(self, arg):
+    def do_pip_freeze(self, arg=None):
         """
         Just run 'pip freeze'
         """
         return_code = VerboseSubprocess("pip3", "freeze").verbose_call(check=False)
 
-    def do_update_env(self, arg):
+    def do_update_env(self, arg=None):
         """
         Update all packages in virtualenv.
 
@@ -107,7 +108,7 @@ class AdminShell(Cmd2):
         self.stdout.write("Please restart %s\n" % self.self_filename)
         sys.exit(0)
 
-    def do_pip_sync(self):
+    def do_pip_sync(self, arg=None):
         """
         run pip-sync (use with care)
 
@@ -132,3 +133,46 @@ class AdminShell(Cmd2):
 
         self.stdout.write("Please restart %s\n" % self.self_filename)
         sys.exit(0)
+
+    def complete_generate_bootstrap(self, text, line, begidx, endidx):
+        # print("text: %r" % text)
+        # print("line: %r" % line)
+        return self._complete_path(text, line, begidx, endidx)
+
+    def confirm(self, txt, confirm_values=("y", "j")):
+        if input("\n%s" % txt).lower() in confirm_values:
+            return True
+        return False
+
+    def do_generate_bootstrap(self, arg=None):
+        """
+        Generate new bootstrap file via cookiecutter
+
+        direct call, e.g.:
+
+        bootstrap_env_admin.py generate_bootstrap ~/new_project
+        """
+        if not arg:
+            print("INFO: No output path given.")
+
+        output_dir = Path(arg).expanduser().resolve()
+
+        if output_dir.is_dir():
+            print("Create bootstrap file in: %s" % output_dir)
+            print("ERROR: output path already exists!")
+            return
+
+        txt = "Create bootstrap file in: %s ? [Y/N]" % output_dir
+        if not self.confirm(txt):
+            print("Abort.")
+            return
+
+        repro_path = Path(self.package_path, "boot_source")
+        result = cookiecutter(
+            template=str(repro_path),
+            output_dir=str(output_dir),
+            extra_context={
+                "_version": bootstrap_env_version,
+            }
+        )
+        print("bootstrap file created here: %s" % result)
