@@ -9,4 +9,4 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-__version__ = "1.0.0rc11"
+__version__ = "1.0.0rc12"
