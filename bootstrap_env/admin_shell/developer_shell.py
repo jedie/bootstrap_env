@@ -144,9 +144,9 @@ class DeveloperAdminShell(AdminShell):
         parsed_bootstrap_env_version = parse(bootstrap_env_version)
 
         if parsed_bootstrap_env_version.is_prerelease:
-            release_type = "pre-release and development version"
+            use_pre_release = "y"
         else:
-            release_type = "PyPi stable"
+            use_pre_release = "n"
 
         repro_path = Path(self.package_path, "boot_source")
 
@@ -156,9 +156,9 @@ class DeveloperAdminShell(AdminShell):
             overwrite_if_exists=True,
             output_dir=str(self.package_path.parent),
             extra_context={
-                "version": bootstrap_env_version,
+                "_version": bootstrap_env_version,
                 "package_name": "bootstrap_env",
-                "release_type": release_type,
-            }
+                "use_pre_release": use_pre_release,
+            },
         )
         print("bootstrap file created here: %s" % result)

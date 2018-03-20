@@ -53,7 +53,7 @@ except ImportError as err:
     print("\nERROR: 'ensurepip' not available: %s (Maybe 'python3-venv' package not installed?!?)" % err)
 
 
-__version__ = "{{cookiecutter.version}}"
+__version__ = "{{cookiecutter._version}}"
 
 
 log = logging.getLogger(__name__)
@@ -75,7 +75,7 @@ ADMIN_FILE_NAME="{{cookiecutter.package_name}}_admin.py" # File under .../<proje
 #
 DEVELOPER_INSTALL=["-e", "{{cookiecutter.editable_url}}#egg=%s" % PACKAGE_NAME]
 NORMAL_INSTALL=[
-    {%- if "pre-release" in cookiecutter.release_type %}
+    {%- if cookiecutter.use_pre_release == "y" %}
     "--pre", # https://pip.pypa.io/en/stable/reference/pip_install/#pre-release-versions
     {%- endif %}
     PACKAGE_NAME

@@ -3,6 +3,6 @@
     "package_name": "bootstrap_env",
     "editable_url": "git+https://github.com/jedie/bootstrap_env.git@master",
     "raw_url": "https://raw.githubusercontent.com/jedie/bootstrap_env/master",
-    "version": "0.0.1",
-    "release_type": ["PyPi stable", "pre-release and development version"]
+    "use_pre_release": "n",
+    "_version": ""
 }
