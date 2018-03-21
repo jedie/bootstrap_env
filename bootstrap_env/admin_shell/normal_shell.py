@@ -1,15 +1,41 @@
+
+"""
+    Admin Shell commands available in 'normal' install mode
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    IMPORTANT:
+        Every import from external packages must be made with LazyImportError!
+        Otherwise the bootstrap will fail, because no external package is
+        available in bootstrap process!
+
+    :created: 03.2018 by Jens Diemer, www.jensdiemer.de
+    :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
+    :license: GNU General Public License v3 or later (GPLv3+), see LICENSE for more details.
+"""
+
 import os
 import sys
 from pathlib import Path
 
-from cookiecutter.main import cookiecutter
-
 # Bootstrap-Env
 from bootstrap_env.boot_bootstrap_env import Cmd2, VerboseSubprocess, __version__, get_pip_file_name, in_virtualenv
+from bootstrap_env.utils.import_utils import LazyImportError
 from bootstrap_env.version import __version__ as bootstrap_env_version
+
+# External libs:
+try:
+    from cookiecutter.main import cookiecutter
+except ImportError as err:
+    # Re-Raise ImportError on first usage
+    cookiecutter = LazyImportError(err)
+
 
 
 class AdminShell(Cmd2):
+    """
+    Normal user commands.
+    Only this commands are available in 'normal' installation mode.
+    """
     version = __version__
 
     def __init__(self, package_path, package_name, requirements, *args, **kwargs):
@@ -18,9 +44,6 @@ class AdminShell(Cmd2):
         self.requirements = requirements # bootstrap_env.admin_shell.requirements.Requirements instance
 
         super().__init__(*args, **kwargs)
-
-    #_________________________________________________________________________
-    # Normal user commands:
 
     def do_pytest(self, arg=None):
         """

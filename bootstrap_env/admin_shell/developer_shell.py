@@ -1,15 +1,38 @@
+
+"""
+    Admin Shell commands available in 'developer' install mode
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    IMPORTANT:
+        Every import from external packages must be made with LazyImportError!
+        Otherwise the bootstrap will fail, because no external package is
+        available in bootstrap process!
+
+    :created: 03.2018 by Jens Diemer, www.jensdiemer.de
+    :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
+    :license: GNU General Public License v3 or later (GPLv3+), see LICENSE for more details.
+"""
+
 import re
 import subprocess
 from pathlib import Path
-
-from cookiecutter.main import cookiecutter
-from packaging.version import parse
 
 # Bootstrap-Env
 from bootstrap_env.admin_shell.normal_shell import AdminShell
 from bootstrap_env.admin_shell.requirements import Requirements
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
+from bootstrap_env.utils.import_utils import LazyImportError
 from bootstrap_env.version import __version__ as bootstrap_env_version
+
+# External libs:
+try:
+    from cookiecutter.main import cookiecutter
+    from packaging.version import parse
+except ImportError as err:
+    # Re-Raise ImportError on first usage
+    cookiecutter = LazyImportError(err)
+    parse = LazyImportError(err)
+
 
 
 class DeveloperAdminShell(AdminShell):
