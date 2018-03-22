@@ -12,12 +12,15 @@ import unittest
 from pathlib import Path
 
 # Bootstrap-Env
+import sys
+
 from bootstrap_env import boot_bootstrap_env
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
+from bootstrap_env_tests.base import BootstrapEnvTestCase
 from bootstrap_env_tests.utils import IsolatedFilesystem, requirements
 
 
-class TestBootstrapEnvBoot(unittest.TestCase):
+class TestBootstrapEnvBoot(BootstrapEnvTestCase):
     """
     Tests for bootstrap_env/boot_bootstrap_env.py
 
@@ -40,16 +43,17 @@ class TestBootstrapEnvBoot(unittest.TestCase):
     def test_subprocess_accept_pathlib_kwargs(self):
         self.assertRaises(AssertionError, VerboseSubprocess, foo=Path("/foo/bar"))
 
-    def pylucid_admin_run(self, *args):
-        args = ("boot_bootstrap_env.py", ) + args
-        try:
-            return VerboseSubprocess(*args).verbose_output(check=False)
-        except subprocess.CalledProcessError as err:
-            print(err.output)
-            self.fail("Subprocess error: %s" % err)
+    def boot_bootstrap_env_run(self, *args):
+        boot_file = Path(self.base_path, "boot_bootstrap_env.py")
+        args = (str(boot_file), ) + args
+
+        if sys.platform == 'win32':
+            args = ("python",) + args
+
+        return VerboseSubprocess(*args).verbose_output(check=False)
 
     def test_help(self):
-        output = self.pylucid_admin_run("help")
+        output = self.boot_bootstrap_env_run("help")
         print(output)
 
         self.assertIn("boot_bootstrap_env.py shell", output)
@@ -69,7 +73,8 @@ class TestBootstrapEnvBoot(unittest.TestCase):
             temp_path = Path().cwd() # isolated_filesystem does made a chdir to /tmp/...
 
             with self.assertRaises(subprocess.CalledProcessError) as cm:
-                VerboseSubprocess("boot_bootstrap_env.py", "boot", str(temp_path)).verbose_output(check=False)
+                output = self.boot_bootstrap_env_run("boot", str(temp_path))
+                print(output)
 
             caller_process_error = cm.exception
             output = caller_process_error.output
@@ -83,9 +88,8 @@ class TestBootstrapEnvBoot(unittest.TestCase):
             destination = Path(temp_path, "test") # a not existing path
 
             try:
-                output = VerboseSubprocess(
-                    "boot_bootstrap_env.py", "boot", str(destination)
-                ).verbose_output(check=False)
+                output = self.boot_bootstrap_env_run("boot", str(destination))
+                print(output)
             except subprocess.CalledProcessError as err:
                 print(err)
                 output = err.output

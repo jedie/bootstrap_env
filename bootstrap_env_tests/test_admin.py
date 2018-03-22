@@ -12,24 +12,19 @@ import unittest
 from pathlib import Path
 
 # Bootstrap-Env
+import sys
+
 import bootstrap_env
 from bootstrap_env import bootstrap_env_admin
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
+from bootstrap_env_tests.base import BootstrapEnvTestCase
 from bootstrap_env_tests.utils import requirements
 
 
-class TestBootstrapEnvAdmin(unittest.TestCase):
+class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
     """
     Tests for bootstrap_env/bootstrap_env_admin.py
     """
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.base_path = Path(bootstrap_env.__file__).resolve().parent
-
-    def test_setup(self):
-        self.assertTrue(self.base_path.is_dir())
-
     @unittest.skipIf(requirements.normal_mode, "Executeable is not set by PyPi installation")
     def test_executable(self):
         file_path = Path(bootstrap_env_admin.__file__).resolve()
@@ -40,7 +35,12 @@ class TestBootstrapEnvAdmin(unittest.TestCase):
         )
 
     def bootstrap_env_admin_run(self, *args):
-        args = ("bootstrap_env_admin.py", ) + args
+        admin_file = Path(self.base_path, "bootstrap_env_admin.py")
+        args = (str(admin_file), ) + args
+
+        if sys.platform == 'win32':
+            args = ("python",) + args
+
         try:
             return VerboseSubprocess(*args).verbose_output(check=False)
         except subprocess.CalledProcessError as err:
