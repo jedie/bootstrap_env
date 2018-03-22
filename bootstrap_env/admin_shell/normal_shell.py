@@ -92,9 +92,20 @@ class AdminShell(Cmd2):
         print("pip found here: '%s'" % pip3_path)
         pip3_path = str(pip3_path)
 
-        return_code = VerboseSubprocess(
-            pip3_path, "install", "--upgrade", "pip"
-        ).verbose_call(check=False)
+        # Upgrade pip first:
+        if sys.platform == 'win32':
+            # Note: On windows it will crash with a PermissionError: [WinError 32]
+            # because pip can't replace himself while running ;)
+            # Work-a-round is "python -m pip install --upgrade pip"
+            # see also: https://github.com/pypa/pip/issues/3804
+            return_code = VerboseSubprocess(
+                sys.executable or "python",
+                "-m", "pip", "install", "--upgrade", "pip",
+            ).verbose_call(check=False)
+        else:
+            return_code = VerboseSubprocess(
+                pip3_path, "install", "--upgrade", "pip"
+            ).verbose_call(check=False)
 
         root_path = self.package_path.parent
 
