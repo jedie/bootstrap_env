@@ -15,15 +15,16 @@ import os
 from pathlib import Path
 
 # Bootstrap-Env
+import bootstrap_env
 from bootstrap_env.admin_shell.normal_shell import AdminShell
 from bootstrap_env.admin_shell.requirements import Requirements
 
 log = logging.getLogger(__name__)
 
-SELF_FILE_PATH=Path(__file__).resolve()                         # /src/bootstrap-env/bootstrap_env/bootstrap_env_admin.py
-PACKAGE_PATH=SELF_FILE_PATH.parent                              # /src/bootstrap-env/bootstrap_env/
+SELF_FILE_PATH=Path(__file__).resolve()                         # /src/bootstrap-env/bin/bootstrap_env_admin.py
+PACKAGE_PATH=Path(bootstrap_env.__file__).parent                # /src/bootstrap-env/bootstrap_env/
 PACKAGE_NAME=PACKAGE_PATH.name                                  # bootstrap_env
-REQUIREMENT_PATH=Path(SELF_FILE_PATH.parent, "requirements")    # /src/bootstrap-env/bootstrap_env/requirements/
+REQUIREMENT_PATH=Path(PACKAGE_PATH, "requirements")             # /src/bootstrap-env/bootstrap_env/requirements/
 OWN_FILE_NAME=SELF_FILE_PATH.name                               # bootstrap_env_admin.py
 
 print("SELF_FILE_PATH: %s" % SELF_FILE_PATH)
