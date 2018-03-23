@@ -9,4 +9,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+# https://pypi.org/project/bootstrap_env/#history
+# https://github.com/jedie/bootstrap_env#history
 __version__ = "1.0.0rc13"
