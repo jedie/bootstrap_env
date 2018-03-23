@@ -108,7 +108,7 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         bootstrap_file = Path(self.base_path, "boot_bootstrap_env.py")
         self.assertTrue(bootstrap_file.is_file())
 
-        with bootstrap_file.open("r") as f:
+        with bootstrap_file.open("r", encoding="UTF-8") as f:
             old_content = f.read()
 
         output = self.bootstrap_env_admin_run("update_own_boot_file")
@@ -117,7 +117,7 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         self.assertIn("Update 'bootstrap_env/boot_bootstrap_env.py' via cookiecutter", output)
         self.assertIn("bootstrap file created", output)
 
-        with bootstrap_file.open("r") as f:
+        with bootstrap_file.open("r", encoding="UTF-8") as f:
             content = f.read()
 
         self.assert_equal_unified_diff(old_content, content)
@@ -127,12 +127,12 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         bootstrap_file = Path(self.base_path, "boot_bootstrap_env.py")
         self.assertTrue(bootstrap_file.is_file())
 
-        with bootstrap_file.open("r") as f:
+        with bootstrap_file.open("r", encoding="UTF-8") as f:
             old_content = f.read()
 
         try:
             # replace current bootstrap file:
-            with bootstrap_file.open("a") as f:
+            with bootstrap_file.open("a", encoding="UTF-8") as f:
                 f.write("# new line from: test_update_own_boot_file_overwrite()")
 
             output = self.bootstrap_env_admin_run("update_own_boot_file")
@@ -141,11 +141,11 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
             self.assertIn("Update 'bootstrap_env/boot_bootstrap_env.py' via cookiecutter", output)
             self.assertIn("bootstrap file created", output)
 
-            with bootstrap_file.open("r") as f:
+            with bootstrap_file.open("r", encoding="UTF-8") as f:
                 content = f.read()
 
             self.assert_equal_unified_diff(old_content, content)
         finally:
             # revert any changes with the origin code:
-            with bootstrap_file.open("w") as f:
+            with bootstrap_file.open("w", encoding="UTF-8") as f:
                 f.write(old_content)
