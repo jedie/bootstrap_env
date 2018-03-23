@@ -7,14 +7,10 @@
 
 
 import os
-import subprocess
 import unittest
 from pathlib import Path
 
 # Bootstrap-Env
-import sys
-
-import bootstrap_env
 from bootstrap_env import bootstrap_env_admin
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
 from bootstrap_env_tests.base import BootstrapEnvTestCase
@@ -124,7 +120,7 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         with bootstrap_file.open("r") as f:
             content = f.read()
 
-        self.assertEqual(old_content, content)
+        self.assert_equal_unified_diff(old_content, content)
 
     @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
     def test_update_own_boot_file_overwrite(self):
@@ -148,7 +144,7 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
             with bootstrap_file.open("r") as f:
                 content = f.read()
 
-            self.assertEqual(old_content, content)
+            self.assert_equal_unified_diff(old_content, content)
         finally:
             # revert any changes with the origin code:
             with bootstrap_file.open("w") as f:

@@ -8,6 +8,7 @@
 import subprocess
 import sys
 import unittest
+from difflib import unified_diff
 from pathlib import Path
 
 # Bootstrap-Env
@@ -41,3 +42,14 @@ class BootstrapEnvTestCase(unittest.TestCase):
             ) % (err, err.output)
             print(msg)
             raise
+
+    def assert_equal_unified_diff(self, first, second):
+        """
+        Same as self.assertEqual() but output a unified diff.
+        """
+        if first == second:
+            return
+
+        result = unified_diff(first, second, fromfile="first", tofile="second")
+        msg="Content is not equal, unified diff:\n%s" % "".join(result)
+        self.fail(msg)

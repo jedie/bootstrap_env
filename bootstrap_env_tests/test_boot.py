@@ -12,8 +12,6 @@ import unittest
 from pathlib import Path
 
 # Bootstrap-Env
-import sys
-
 from bootstrap_env import boot_bootstrap_env
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
 from bootstrap_env_tests.base import BootstrapEnvTestCase
