@@ -27,10 +27,12 @@ PACKAGE_NAME=PACKAGE_PATH.name                                  # bootstrap_env
 REQUIREMENT_PATH=Path(PACKAGE_PATH, "requirements")             # /src/bootstrap-env/bootstrap_env/requirements/
 OWN_FILE_NAME=SELF_FILE_PATH.name                               # bootstrap_env_admin.py
 
-print("SELF_FILE_PATH: %s" % SELF_FILE_PATH)
-print("PACKAGE_NAME: %s" % PACKAGE_NAME)
-print("REQUIREMENT_PATH: %s" % REQUIREMENT_PATH)
-print("OWN_FILE_NAME: %s" % OWN_FILE_NAME)
+TEST_REQ_FILE_NAME="test_requirements.txt"
+
+# print("SELF_FILE_PATH: %s" % SELF_FILE_PATH)
+# print("PACKAGE_NAME: %s" % PACKAGE_NAME)
+# print("REQUIREMENT_PATH: %s" % REQUIREMENT_PATH)
+# print("OWN_FILE_NAME: %s" % OWN_FILE_NAME)
 
 
 def main():
@@ -38,6 +40,7 @@ def main():
     requirements = Requirements(
         requirement_path=REQUIREMENT_PATH,
         package_name=PACKAGE_NAME,
+        test_req_file_name=TEST_REQ_FILE_NAME,
     )
     if requirements.normal_mode:
         # Installed in "normal" mode (as Package from PyPi)

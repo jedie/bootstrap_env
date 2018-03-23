@@ -38,7 +38,7 @@ before_install:
 
 install:
   - echo $BOOT_MODE
-  
+
   # boot_bootstrap_env.py check if it's running in a activates venv:
   - unset VIRTUAL_ENV
 
@@ -51,7 +51,7 @@ install:
   - source bin/activate
 
   - mkdir -p ~/Bootstrap-Env/src/
-  - cp -Rfvp ${TRAVIS_BUILD_DIR} ~/Bootstrap-Env/src/  
+  - cp -Rfvp ${TRAVIS_BUILD_DIR} ~/Bootstrap-Env/src/
 
   # The PyPi package and git repro named "bootstrap_env"
   # But pip will change the name to "bootstrap-env"
@@ -59,7 +59,9 @@ install:
 
   - cd ~/Bootstrap-Env/src/bootstrap-env
   - pip install -e .
-  - pip install -r bootstrap_env/requirements/test_requirements.txt
+
+  # install bootstrap_env/requirements/test_requirements.txt
+  - bootstrap_env_admin.py install_test_requirements
 
 script:
   - cd ~/Bootstrap-Env/src/bootstrap-env

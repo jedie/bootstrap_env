@@ -50,7 +50,7 @@ test_script:
     - "python --version"
     - "pip --version"
     - "pip freeze"
-    - "python -c \"import bootstrap_env;print(bootstrap_env.__file__)\""
+    - "python bootstrap_env_admin.py install_test_requirements"
     - "python bootstrap_env_admin.py pytest"
 
 after_test:

@@ -45,6 +45,33 @@ class AdminShell(Cmd2):
 
         super().__init__(*args, **kwargs)
 
+    def get_pip3_path(self):
+        if not in_virtualenv():
+            self.stdout.write("\nERROR: Only allowed in activated virtualenv!\n\n")
+            return
+
+        if sys.platform == 'win32':
+            bin_dir_name="Scripts"
+        else:
+            bin_dir_name = "bin"
+
+        pip3_path = Path(sys.prefix, bin_dir_name, get_pip_file_name()) # e.g.: .../bin/pip3
+        if not pip3_path.is_file():
+            print("ERROR: pip not found here: '%s'" % pip3_path)
+            return
+
+        print("pip found here: '%s'" % pip3_path)
+        return pip3_path
+
+    def do_install_test_requirements(self, arg=None):
+        """
+        Install packages to run tests
+        """
+        pip3_path = self.get_pip3_path()
+        VerboseSubprocess(
+            str(pip3_path), "install", "-r", str(self.requirements.test_req_path)
+        ).verbose_call(check=True) # Exit on error
+
     def do_pytest(self, arg=None):
         """
         Run tests via pytest
@@ -75,22 +102,7 @@ class AdminShell(Cmd2):
 
         (Call this command only in a activated virtualenv.)
         """
-        if not in_virtualenv():
-            self.stdout.write("\nERROR: Only allowed in activated virtualenv!\n\n")
-            return
-
-        if sys.platform == 'win32':
-            bin_dir_name="Scripts"
-        else:
-            bin_dir_name = "bin"
-
-        pip3_path = Path(sys.prefix, bin_dir_name, get_pip_file_name()) # e.g.: .../bin/pip3
-        if not pip3_path.is_file():
-            print("ERROR: pip not found here: '%s'" % pip3_path)
-            return
-
-        print("pip found here: '%s'" % pip3_path)
-        pip3_path = str(pip3_path)
+        pip3_path = str(self.get_pip3_path())
 
         # Upgrade pip first:
         if sys.platform == 'win32':

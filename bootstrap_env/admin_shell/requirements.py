@@ -11,7 +11,7 @@ class Requirements:
         DEVELOPER_INSTALL: "developer_installation.txt",
         NORMAL_INSTALL: "normal_installation.txt",
     }
-    def __init__(self, requirement_path, package_name):
+    def __init__(self, requirement_path, package_name, test_req_file_name):
         self.requirement_path = requirement_path
         if not requirement_path.is_dir():
             print("ERROR: Requirements directory not found here: %s" % requirement_path)
@@ -38,6 +38,10 @@ class Requirements:
         else:
             print("%s is installed as package." % package_name)
             self.install_mode=self.NORMAL_INSTALL
+
+        self.test_req_path = Path(self.requirement_path, test_req_file_name)
+        if not self.test_req_path.is_file():
+            print("ERROR: Requirement file not found here: %s" % self.test_req_path)
 
     @property
     def normal_mode(self):
