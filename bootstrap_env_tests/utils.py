@@ -17,6 +17,7 @@ from bootstrap_env.bootstrap_env_admin import REQUIREMENT_PATH, Requirements
 requirements = Requirements(
     requirement_path=REQUIREMENT_PATH,
     package_name="bootstrap_env",
+    test_req_file_name="test_requirements.txt"
 )
 
 class IsolatedFilesystem:
