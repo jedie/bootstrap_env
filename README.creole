@@ -114,7 +114,7 @@ See also combinations in:
 
 == History
 
-* [[https://github.com/jedie/PyLucid/compare/v0.6.4...master|compare v0.6.4...master]] **dev**
+* [[https://github.com/jedie/bootstrap_env/compare/v0.6.4...master|compare v0.6.4...master]] **dev**
 ** rewrite based on "PyLucid v3 boot" sources (by Jens Diemer)
 * [[https://github.com/jedie/bootstrap_env/compare/v0.6.3...v0.6.4|v0.6.4]] - 30.Nov.2016:
 ** Note: This pip version doesn't support pypy3. See notes above
