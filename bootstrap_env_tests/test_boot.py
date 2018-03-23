@@ -44,13 +44,7 @@ class TestBootstrapEnvBoot(BootstrapEnvTestCase):
         self.assertRaises(AssertionError, VerboseSubprocess, foo=Path("/foo/bar"))
 
     def boot_bootstrap_env_run(self, *args):
-        boot_file = Path(self.base_path, "boot_bootstrap_env.py")
-        args = (str(boot_file), ) + args
-
-        if sys.platform == 'win32':
-            args = ("python",) + args
-
-        return VerboseSubprocess(*args).verbose_output(check=False)
+        return self._call(*args, filename="boot_bootstrap_env.py")
 
     def test_help(self):
         output = self.boot_bootstrap_env_run("help")

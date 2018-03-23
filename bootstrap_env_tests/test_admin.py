@@ -35,22 +35,7 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         )
 
     def bootstrap_env_admin_run(self, *args):
-        admin_file = Path(self.base_path, "bootstrap_env_admin.py")
-        args = (str(admin_file), ) + args
-
-        if sys.platform == 'win32':
-            args = ("python",) + args
-
-        try:
-            return VerboseSubprocess(*args).verbose_output(check=False)
-        except subprocess.CalledProcessError as err:
-            self.fail(
-                (
-                    "Subprocess error: %s"
-                    "\noutput:"
-                    "\n%s"
-                ) % (err, err.output)
-            )
+        return self._call(*args, filename="bootstrap_env_admin.py")
 
     def test_help(self):
         output = self.bootstrap_env_admin_run("help")
