@@ -579,9 +579,47 @@ class EnvBuilder(venv.EnvBuilder):
         print(" * Set up a Python executable in the environment.")
         return super().setup_python(context)
 
+    def call_new_python(self, context, *args, check=True, **kwargs):
+        """
+        Do the same as bin/activate so that <args> runs in a "activated" virtualenv.
+        """
+        kwargs.update({
+            "env_updates": {
+                "VIRTUAL_ENV": context.env_dir,
+                "PATH": "%s:%s" % (context.bin_path, os.environ["PATH"]),
+            }
+        })
+        VerboseSubprocess(*args, **kwargs).verbose_call(
+            check=check # sys.exit(return_code) if return_code != 0
+        )
+
     def _setup_pip(self, context):
-        print(" * Installs or upgrades pip in a virtual environment.")
-        return super()._setup_pip(context)
+        print(" * Install pip in a virtual environment.")
+        # install pip with ensurepip:
+        super()._setup_pip(context)
+
+        print(" * Upgrades pip in a virtual environment.")
+        # Upgrade pip first (e.g.: running python 3.5)
+
+        context.pip_bin=Path(context.bin_path, get_pip_file_name()) # e.g.: .../bin/pip3
+        assert context.pip_bin.is_file(), "Pip not found here: %s" % context.pip_bin
+
+        if sys.platform == 'win32':
+            # Note: On windows it will crash with a PermissionError: [WinError 32]
+            # because pip can't replace himself while running ;)
+            # Work-a-round is "python -m pip install --upgrade pip"
+            # see also: https://github.com/pypa/pip/issues/3804
+            self.call_new_python(
+                context,
+                context.env_exe, "-m", "pip", "install", "--upgrade", "pip",
+                check=False # Don't exit on errors
+            )
+        else:
+            self.call_new_python(
+                context,
+                str(context.pip_bin), "install", "--upgrade", "pip",
+                check=False # Don't exit on errors
+            )
 
     def setup_scripts(self, context):
         print(" * Set up scripts into the created environment.")
@@ -597,44 +635,12 @@ class EnvBuilder(venv.EnvBuilder):
         """
         print(" * post-setup modification")
 
-        def call_new_python(*args, check=True, **kwargs):
-            """
-            Do the same as bin/activate so that <args> runs in a "activated" virtualenv.
-            """
-            kwargs.update({
-                "env_updates": {
-                    "VIRTUAL_ENV": context.env_dir,
-                    "PATH": "%s:%s" % (context.bin_path, os.environ["PATH"]),
-                }
-            })
-            VerboseSubprocess(*args, **kwargs).verbose_call(
-                check=check # sys.exit(return_code) if return_code != 0
-            )
-
-        pip_bin=Path(context.bin_path, get_pip_file_name()) # e.g.: .../bin/pip3
-        assert pip_bin.is_file(), "Pip not found here: %s" % pip_bin
-
-        # Upgrade pip first (e.g.: running python 3.5)
-        if sys.platform == 'win32':
-            # Note: On windows it will crash with a PermissionError: [WinError 32]
-            # because pip can't replace himself while running ;)
-            # Work-a-round is "python -m pip install --upgrade pip"
-            # see also: https://github.com/pypa/pip/issues/3804
-            call_new_python(
-                context.env_exe, "-m", "pip", "install", "--upgrade", "pip",
-                check=False # Don't exit on errors
-            )
-        else:
-            call_new_python(
-                str(pip_bin), "install", "--upgrade", "pip",
-                check=False # Don't exit on errors
-            )
-
         # Install bootstrap_env
         #   in normal mode as package from PyPi
         #   in dev. mode as editable from github
-        call_new_python(
-            str(pip_bin), "install",
+        self.call_new_python(
+            context,
+            str(context.pip_bin), "install",
             # "--verbose",
             *self.requirements
         )
@@ -647,7 +653,13 @@ class EnvBuilder(venv.EnvBuilder):
             sys.exit(-1)
 
         # Install all requirements
-        call_new_python(context.env_exe, str(bootstrap_env_admin_path), "update_env", timeout=240)  # extended timeout for slow Travis ;)
+        self.call_new_python(
+            context,
+            context.env_exe,
+            str(bootstrap_env_admin_path),
+            "update_env",
+            timeout=240
+        )  # extended timeout for slow Travis ;)
 
 
 
