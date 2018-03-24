@@ -36,7 +36,7 @@ class Requirements:
             print("%s is installed as editable here: %s" % (package_name, src_bootstrap_env_path))
             self.install_mode=self.DEVELOPER_INSTALL
         else:
-            print("%s is installed as package." % package_name)
+            print("%s is installed as package. (%s doesn't exists)" % (package_name, src_bootstrap_env_path))
             self.install_mode=self.NORMAL_INSTALL
 
         self.test_req_path = Path(self.requirement_path, test_req_file_name)
