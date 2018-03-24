@@ -23,6 +23,14 @@
         * This file is generated via cookiecutter!
         * Don't edit it directly!
 
+        * The source file can be found here:
+            https://github.com/jedie/bootstrap_env/blob/master/bootstrap_env/boot_source/
+
+        * Create issues about this file here:
+            https://github.com/jedie/bootstrap_env/issues
+
+        * Pull requests are welcome ;)
+
     :created: 11.03.2018 by Jens Diemer, www.jensdiemer.de
     :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
     :license: GNU General Public License v3 or later (GPLv3+), see LICENSE for more details.
@@ -57,7 +65,7 @@ except ImportError as err:
     print("\nERROR: 'ensurepip' not available: %s (Maybe 'python3-venv' package not installed?!?)" % err)
 
 
-__version__ = "{{cookiecutter._version}}"
+__version__ = "{{cookiecutter._version}}" # Version from used 'bootstrap_env' to generate this file.
 
 
 log = logging.getLogger(__name__)
