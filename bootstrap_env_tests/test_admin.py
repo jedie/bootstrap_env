@@ -96,7 +96,6 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
 
         self.assertIn("git@github.com:jedie/bootstrap_env.git", output)
 
-    @unittest.expectedFailure # FIXME!
     @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
     def test_update_own_boot_file_nothing_changed(self):
         """
@@ -125,6 +124,11 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
 
     @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
     def test_update_own_boot_file_overwrite(self):
+        """
+        1. Change own, generates bootfile
+        2. call "update_own_boot_file"
+        3. check if new, generated is ok
+        """
         bootstrap_file = Path(self.base_path, "boot_bootstrap_env.py")
         self.assertTrue(bootstrap_file.is_file())
 
@@ -134,19 +138,84 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         try:
             # replace current bootstrap file:
             with bootstrap_file.open("a", encoding="UTF-8") as f:
-                f.write("# new line from: test_update_own_boot_file_overwrite()")
+                f.write("\n# new line from: test_update_own_boot_file_overwrite()\n")
 
             output = self.bootstrap_env_admin_run("update_own_boot_file")
-            print(output)
-
-            self.assertIn("Update 'bootstrap_env/boot_bootstrap_env.py' via cookiecutter", output)
-            self.assertIn("bootstrap file created", output)
 
             with bootstrap_file.open("r", encoding="UTF-8") as f:
                 content = f.read()
-
-            self.assert_equal_unified_diff(old_content, content)
         finally:
             # revert any changes with the origin code:
             with bootstrap_file.open("w", encoding="UTF-8") as f:
                 f.write(old_content)
+
+        print(output)
+        self.assertIn("Update 'bootstrap_env/boot_bootstrap_env.py' via cookiecutter", output)
+        self.assertIn("bootstrap file created", output)
+
+        self.assert_equal_unified_diff(old_content, content)
+
+    @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
+    def test_newer_source_boot_file(self):
+        """
+        1. Change the source bootfile
+        2. call "update_own_boot_file"
+        3. check if new, generated is up-to-date
+        """
+        bootstrap_file = Path(self.base_path, "boot_bootstrap_env.py")
+        with bootstrap_file.open("r", encoding="UTF-8") as f:
+            old_content = f.read()
+
+        self.assertNotIn("test_newer_source_boot_file", old_content)
+
+        source_bootstrap_file = Path(
+            self.base_path, "boot_source", "{{cookiecutter.project_name}}", "{{cookiecutter.bootstrap_filename}}.py"
+        )
+        with source_bootstrap_file.open("r", encoding="UTF-8") as f:
+            origin_source_content = f.read()
+
+        try:
+            with source_bootstrap_file.open("a", encoding="UTF-8") as f:
+                f.write("\n# new line from: test_newer_source_boot_file()\n")
+
+            output = self.bootstrap_env_admin_run("update_own_boot_file")
+
+            with bootstrap_file.open("r", encoding="UTF-8") as f:
+                new_content = f.read()
+        finally:
+            # revert any changes with the origin code:
+            with source_bootstrap_file.open("w", encoding="UTF-8") as f:
+                f.write(origin_source_content)
+
+            with bootstrap_file.open("w", encoding="UTF-8") as f:
+                f.write(old_content)
+
+        print(output)
+
+        self.assertIn("Update 'bootstrap_env/boot_bootstrap_env.py' via cookiecutter", output)
+        self.assertIn("bootstrap file created", output)
+
+        result = self.unified_diff(
+            old_content, new_content,
+            fromfile="OLD: boot_bootstrap_env.py",
+            tofile="NEW: boot_bootstrap_env.py",
+        )
+        # print("".join(result))
+
+        result = [line for line in result if "@@" not in line] # evalate genrator and skip all line numbers
+        result = "".join(result)
+        print(repr(result))
+
+        self.assertEqual(
+            result,
+            (
+                "--- OLD: boot_bootstrap_env.py\n"
+                "+++ NEW: boot_bootstrap_env.py\n"
+                " \n "
+                "if __name__ == '__main__':\n"
+                "     main()\n"
+                "+\n"
+                "+# new line from: test_newer_source_boot_file()\n"
+            )
+        )
+

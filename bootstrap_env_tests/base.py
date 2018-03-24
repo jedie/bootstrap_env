@@ -4,11 +4,10 @@
     :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
     :license: GNU General Public License v3 or later (GPLv3+), see LICENSE for more details.
 """
-
+import difflib
 import subprocess
 import sys
 import unittest
-from difflib import unified_diff
 from pathlib import Path
 
 # Bootstrap-Env
@@ -43,13 +42,23 @@ class BootstrapEnvTestCase(unittest.TestCase):
             print(msg)
             raise
 
-    def assert_equal_unified_diff(self, first, second):
+    def unified_diff(self, first, second, fromfile="first", tofile="second"):
+        if isinstance(first, str):
+            first = first.splitlines(keepends=True)
+
+        if isinstance(second, str):
+            second = second.splitlines(keepends=True)
+
+        result = difflib.unified_diff(first, second, fromfile=fromfile, tofile=tofile)
+        return result
+
+    def assert_equal_unified_diff(self, first, second, fromfile="first", tofile="second"):
         """
         Same as self.assertEqual() but output a unified diff.
         """
         if first == second:
             return
 
-        result = unified_diff(first, second, fromfile="first", tofile="second")
+        result = self.unified_diff(first, second, fromfile=fromfile, tofile=tofile)
         msg="Content is not equal, unified diff:\n%s" % "".join(result)
         self.fail(msg)
