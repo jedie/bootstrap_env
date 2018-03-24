@@ -1,6 +1,7 @@
 {
     "project_name": "bootstrap_env",
     "package_name": "bootstrap_env",
+    "bootstrap_filename": "boot_bootstrap_env",
     "editable_url": "git+https://github.com/jedie/bootstrap_env.git@master",
     "raw_url": "https://raw.githubusercontent.com/jedie/bootstrap_env/master",
     "use_pre_release": "n",

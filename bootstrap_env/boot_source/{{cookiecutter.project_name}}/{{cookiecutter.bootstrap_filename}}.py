@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 """
-    Bootstrap
-    ~~~~~~~~~
+    {{cookiecutter.project_name}} bootstrap
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     A interactive shell for booting the '{{cookiecutter.project_name}}' project.
 
@@ -17,7 +17,11 @@
         $ wget {{cookiecutter.raw_url}}/{{cookiecutter.package_name}}/boot_{{cookiecutter.package_name}}.py
         $ python3 boot_{{cookiecutter.package_name}}.py
 
-        boot_{{cookiecutter.package_name}}.py> boot ~/{{cookiecutter.project_name}}-env
+        {{cookiecutter.bootstrap_filename}}> boot ~/{{cookiecutter.project_name}}-env
+
+    NOTE:
+        * This file is generated via cookiecutter!
+        * Don't edit it directly!
 
     :created: 11.03.2018 by Jens Diemer, www.jensdiemer.de
     :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
@@ -546,7 +550,7 @@ class EnvBuilder(venv.EnvBuilder):
         self.requirements = requirements
 
     def create(self, env_dir):
-        print(" * Create new virtualenv here: %r" % env_dir)
+        print(" * Create new {{cookiecutter.project_name}} virtualenv here: %r" % env_dir)
 
         if "VIRTUAL_ENV" in os.environ:
             print("\nERROR: Don't call me in a activated virtualenv!")
@@ -666,7 +670,7 @@ class BootBootstrapEnvShell(Cmd2):
 
     def _boot(self, destination, requirements):
         """
-        Create a bootstrap_env virtualenv and install requirements.
+        Create a {{cookiecutter.project_name}} virtualenv and install requirements.
         """
         destination = Path(destination).expanduser()
         if destination.exists():
@@ -686,12 +690,12 @@ class BootBootstrapEnvShell(Cmd2):
 
     def do_boot(self, destination):
         """
-        Bootstrap bootstrap_env virtualenv in "normal" mode.
+        Bootstrap {{cookiecutter.project_name}} virtualenv in "normal" mode.
 
         usage:
-            > boot [path]
+            {{cookiecutter.bootstrap_filename}}> boot [path]
 
-        Create a bootstrap_env virtualenv in the given [path].
+        Create a {{cookiecutter.project_name}} virtualenv in the given [path].
         Install packages via PyPi and read-only sources from github.
 
         The destination path must not exist yet!
@@ -703,15 +707,15 @@ class BootBootstrapEnvShell(Cmd2):
 
     def do_boot_developer(self, destination):
         """
-        Bootstrap bootstrap_env virtualenv in "developer" mode.
+        Bootstrap {{cookiecutter.project_name}} virtualenv in "developer" mode.
         All own projects installed as editables via github HTTPS (readonly)
 
         **Should be only used for developing/contributing. All others: Use normal 'boot' ;) **
 
         usage:
-            > boot_developer [path]
+            {{cookiecutter.bootstrap_filename}}> boot_developer [path]
 
-        Create a bootstrap_env virtualenv in the given [path].
+        Create a {{cookiecutter.project_name}} virtualenv in the given [path].
         Install packages via PyPi and read-only sources from github.
 
         The destination path must not exist yet!

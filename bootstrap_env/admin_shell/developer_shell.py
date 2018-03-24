@@ -21,6 +21,7 @@ from pathlib import Path
 from bootstrap_env.admin_shell.normal_shell import AdminShell
 from bootstrap_env.admin_shell.requirements import Requirements
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
+from bootstrap_env.utils.cookiecutter_utils import verbose_cookiecutter
 from bootstrap_env.utils.import_utils import LazyImportError
 from bootstrap_env.version import __version__ as bootstrap_env_version
 
@@ -173,17 +174,14 @@ class DeveloperAdminShell(AdminShell):
 
         repro_path = Path(self.package_path, "boot_source")
 
-        from cookiecutter.log import configure_logger
-        configure_logger(stream_level='DEBUG')
-
-        result = cookiecutter(
+        # https://cookiecutter.readthedocs.io
+        result = verbose_cookiecutter(
             template=str(repro_path),
             no_input=True,
             overwrite_if_exists=True,
             output_dir=str(self.package_path.parent),
             extra_context={
                 "_version": bootstrap_env_version,
-                "package_name": "bootstrap_env",
                 "use_pre_release": use_pre_release,
             },
         )
