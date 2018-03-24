@@ -111,6 +111,10 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         with bootstrap_file.open("r", encoding="UTF-8") as f:
             old_content = f.read()
 
+        with bootstrap_file.open("w", encoding="UTF-8") as f:
+            # FIXME
+            f.write(old_content)
+
         output = self.bootstrap_env_admin_run("update_own_boot_file")
         print(output)
 
