@@ -254,6 +254,11 @@ setup(
     maintainer_email="bootstrap_env@jensdiemer.de",
     url="https://github.com/jedie/bootstrap_env",
     python_requires='>=3.5',
+    install_requires=(
+        # same as bootstrap_env/requirements/basic_requirements.txt
+        "cookiecutter",
+        "packaging"
+    ),
     packages=find_packages(),
     include_package_data=True, # include package data under version control
 
