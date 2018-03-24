@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 """
-    Bootstrap
-    ~~~~~~~~~
+    bootstrap_env bootstrap
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     A interactive shell for booting the 'bootstrap_env' project.
 
@@ -17,7 +17,19 @@
         $ wget https://raw.githubusercontent.com/jedie/bootstrap_env/master/bootstrap_env/boot_bootstrap_env.py
         $ python3 boot_bootstrap_env.py
 
-        boot_bootstrap_env.py> boot ~/bootstrap_env-env
+        boot_bootstrap_env> boot ~/bootstrap_env-env
+
+    NOTE:
+        * This file is generated via cookiecutter!
+        * Don't edit it directly!
+
+        * The source file can be found here:
+            https://github.com/jedie/bootstrap_env/blob/master/bootstrap_env/boot_source/
+
+        * Create issues about this file here:
+            https://github.com/jedie/bootstrap_env/issues
+
+        * Pull requests are welcome ;)
 
     :created: 11.03.2018 by Jens Diemer, www.jensdiemer.de
     :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
@@ -53,7 +65,7 @@ except ImportError as err:
     print("\nERROR: 'ensurepip' not available: %s (Maybe 'python3-venv' package not installed?!?)" % err)
 
 
-__version__ = "1.0.0rc11"
+__version__ = "1.0.0rc14" # Version from used 'bootstrap_env' to generate this file.
 
 
 log = logging.getLogger(__name__)
@@ -544,7 +556,7 @@ class EnvBuilder(venv.EnvBuilder):
         self.requirements = requirements
 
     def create(self, env_dir):
-        print(" * Create new virtualenv here: %r" % env_dir)
+        print(" * Create new bootstrap_env virtualenv here: %r" % env_dir)
 
         if "VIRTUAL_ENV" in os.environ:
             print("\nERROR: Don't call me in a activated virtualenv!")
@@ -699,7 +711,7 @@ class BootBootstrapEnvShell(Cmd2):
         Bootstrap bootstrap_env virtualenv in "normal" mode.
 
         usage:
-            > boot [path]
+            boot_bootstrap_env> boot [path]
 
         Create a bootstrap_env virtualenv in the given [path].
         Install packages via PyPi and read-only sources from github.
@@ -719,7 +731,7 @@ class BootBootstrapEnvShell(Cmd2):
         **Should be only used for developing/contributing. All others: Use normal 'boot' ;) **
 
         usage:
-            > boot_developer [path]
+            boot_bootstrap_env> boot_developer [path]
 
         Create a bootstrap_env virtualenv in the given [path].
         Install packages via PyPi and read-only sources from github.
