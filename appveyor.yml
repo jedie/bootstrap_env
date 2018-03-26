@@ -50,6 +50,10 @@ test_script:
     - "python --version"
     - "pip --version"
     - "pip freeze"
+    - cmd: xcopy "%APPVEYOR_BUILD_FOLDER%\*.*" c:/Bootstrap-Env/src/bootstrap_env/ /E /I /H
+    - cd c:/Bootstrap-Env/src/bootstrap_env/
+    - "pip install -e ."
+    - cd c:/Bootstrap-Env/Scripts/
     - "python bootstrap_env_admin.py install_test_requirements"
     - "python bootstrap_env_admin.py pytest"
 
