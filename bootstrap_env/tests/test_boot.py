@@ -13,9 +13,9 @@ from pathlib import Path
 
 # Bootstrap-Env
 from bootstrap_env import boot_bootstrap_env
-from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
-from bootstrap_env_tests.base import BootstrapEnvTestCase
-from bootstrap_env_tests.utils import IsolatedFilesystem, requirements
+from bootstrap_env.boot_bootstrap_env import VerboseSubprocess, DisplayErrors
+from bootstrap_env.tests.base import BootstrapEnvTestCase
+from bootstrap_env.tests.utils import IsolatedFilesystem, path_helper
 
 
 class TestBootstrapEnvBoot(BootstrapEnvTestCase):
@@ -26,7 +26,7 @@ class TestBootstrapEnvBoot(BootstrapEnvTestCase):
         No need to test is here again ;)
         Unfortunately, however, the coverage for bootstrapping are missing.
     """
-    @unittest.skipIf(requirements.normal_mode, "Executeable is not set by PyPi installation")
+    @unittest.skipIf(path_helper.normal_mode, "Executeable is not set by PyPi installation")
     def test_executable(self):
         file_path = Path(boot_bootstrap_env.__file__).resolve()
         self.assertTrue(file_path.is_file())
@@ -90,3 +90,22 @@ class TestBootstrapEnvBoot(BootstrapEnvTestCase):
                 self.assertIn("ERROR: Creating virtualenv!", output)
             else:
                 self.fail("Doesn't abort!")
+
+    # def test_display_errors(self):
+    #
+    #     @DisplayErrors
+    #     def test(foo):
+    #         print("foo==%r" % foo)
+    #         if not foo=="bar":
+    #             raise AssertionError("Whoop...")
+    #         else:
+    #             print("OK")
+    #
+    #     test(foo="bar")
+    #     with self.assertRaises(AssertionError) as cm:
+    #         test(foo="foo")
+    #
+    #     output = "\n".join(cm.exception.args)
+    #     print(output)
+
+

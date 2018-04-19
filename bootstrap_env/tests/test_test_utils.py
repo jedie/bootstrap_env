@@ -8,7 +8,7 @@
 # Bootstrap-Env
 import sys
 
-from bootstrap_env_tests.base import BootstrapEnvTestCase
+from bootstrap_env.tests.base import BootstrapEnvTestCase
 
 
 class TestUtilsTestCase(BootstrapEnvTestCase):

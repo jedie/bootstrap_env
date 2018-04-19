@@ -38,10 +38,8 @@ class AdminShell(Cmd2):
     """
     version = __version__
 
-    def __init__(self, package_path, package_name, requirements, *args, **kwargs):
-        self.package_path = package_path # /src/bootstrap-env/bootstrap_env/
-        self.package_name = package_name # bootstrap_env
-        self.requirements = requirements # bootstrap_env.admin_shell.requirements.Requirements instance
+    def __init__(self, path_helper, *args, **kwargs):
+        self.path_helper = path_helper # bootstrap_env.admin_shell.path_helper.PathHelper instance
 
         super().__init__(*args, **kwargs)
 
@@ -81,7 +79,7 @@ class AdminShell(Cmd2):
         except ImportError as err:
             print("ERROR: Can't import pytest: %s (pytest not installed, in normal installation!)" % err)
         else:
-            root_path = str(self.package_path.parent)
+            root_path = str(self.path_helper.base)
             print("chdir %r" % root_path)
             os.chdir(root_path)
 
@@ -122,7 +120,7 @@ class AdminShell(Cmd2):
         root_path = self.package_path.parent
 
         # Update the requirements files by...
-        if self.requirements.normal_mode:
+        if self.path_helper.normal_mode:
             # ... update 'bootstrap_env' PyPi package
             return_code = VerboseSubprocess(
                 pip3_path, "install", "--upgrade", self.package_name

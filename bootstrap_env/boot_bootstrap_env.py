@@ -46,7 +46,7 @@ import time
 import traceback
 from pathlib import Path
 
-if sys.version_info < (3, 5):  # isort:skip
+if sys.version_info < (3, 5):
     print("\nERROR: Python 3.5 or greater is required!")
     print("(Current Python Verison is %s)\n" % sys.version.split(" ",1)[0])
     sys.exit(101)
@@ -57,6 +57,7 @@ try:
 except ImportError as err:
     # e.g.: debian / ubuntu doesn't have venv installed, isn't it?!?
     print("\nERROR: 'venv' not available: %s (Maybe 'python3-venv' package not installed?!?)" % err)
+
 
 try:
     import ensurepip
@@ -121,7 +122,7 @@ class Colorizer:
     https://github.com/django/django/blob/master/django/utils/termcolors.py
 
     >>> c = Colorizer()
-    >>> c.supports_colors()
+    >>> c._supports_colors()
     True
     >>> c.color_support = True
     >>> c.colorize('no color')
@@ -359,15 +360,22 @@ def get_pip_file_name():
         return "pip3"
 
 
-def display_errors(func):
-    def wrapped(*args, **kwargs):
+
+class DisplayErrors:
+    """
+    Decorator to print traceback on exceptions.
+    Used in e.g.: Cmd class
+    """
+    def __init__(self, func):
+        self.func = func
+
+    def __call__(self, *args, **kwargs):
         try:
-            return func(*args, **kwargs)
+            self.func(*args, **kwargs)
         except Exception as err:
             traceback.print_exc(file=sys.stderr)
             return "%s: %s" % (err.__class__.__name__, err)
 
-    return wrapped
 
 
 class Cmd2(cmd.Cmd):
@@ -430,14 +438,14 @@ class Cmd2(cmd.Cmd):
         """ Called on an input line when the command prefix is not recognized. """
         colorizer.err(self.unknown_command % line, foreground="red")
 
-    @display_errors
+    @DisplayErrors
     def _complete_list(self, items, text, line, begidx, endidx):
         if text:
             return [x for x in items if x.startswith(text)]
         else:
             return items
 
-    @display_errors
+    @DisplayErrors
     def _complete_path(self, text, line, begidx, endidx):
         """
         complete a command argument with a existing path
@@ -549,6 +557,12 @@ class Cmd2(cmd.Cmd):
 
 
 class EnvBuilder(venv.EnvBuilder):
+    """
+    * Create new virtualenv
+    * install and update pip
+    * install "bootstrap_env"
+    * call "bootstrap_env_admin.py update_env" to install all requirements
+    """
     verbose = True
 
     def __init__(self, requirements):
@@ -633,7 +647,7 @@ class EnvBuilder(venv.EnvBuilder):
         """
         print(" * post-setup modification")
 
-        # Install bootstrap_env
+        # Install "bootstrap_env"
         #   in normal mode as package from PyPi
         #   in dev. mode as editable from github
         self.call_new_python(
@@ -650,19 +664,24 @@ class EnvBuilder(venv.EnvBuilder):
             VerboseSubprocess("ls", "-la", str(context.bin_path)).verbose_call()
             sys.exit(-1)
 
-        # Install all requirements
+        # Install all requirements by call: "bootstrap_env_admin.py update_env"
         self.call_new_python(
             context,
             context.env_exe,
             str(bootstrap_env_admin_path),
             "update_env",
-            timeout=240
+            timeout=4*60
         )  # extended timeout for slow Travis ;)
 
 
 
-
 class BootBootstrapEnvShell(Cmd2):
+    """
+    The bootstrap shell to start the virtualenv creation.
+    It's implement only two commands:
+     * boot
+     * boot_developer
+    """
     def _resolve_path(self, path):
         return Path(path).expanduser().resolve()
 
@@ -744,9 +763,6 @@ class BootBootstrapEnvShell(Cmd2):
     complete_boot_developer = complete_boot
 
 
-def main():
-    BootBootstrapEnvShell().cmdloop()
-
-
 if __name__ == '__main__':
-    main()
+    # Start the shell
+    BootBootstrapEnvShell().cmdloop()

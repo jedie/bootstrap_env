@@ -13,15 +13,16 @@ from pathlib import Path
 # Bootstrap-Env
 from bootstrap_env import bootstrap_env_admin
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
-from bootstrap_env_tests.base import BootstrapEnvTestCase
-from bootstrap_env_tests.utils import requirements
-
+from bootstrap_env.tests.base import BootstrapEnvTestCase
+from bootstrap_env.tests.utils import path_helper
 
 class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
     """
     Tests for bootstrap_env/bootstrap_env_admin.py
     """
-    @unittest.skipIf(requirements.normal_mode, "Executeable is not set by PyPi installation")
+    maxDiff=None
+
+    @unittest.skipIf(path_helper.normal_mode, "Executeable is not set by PyPi installation")
     def test_executable(self):
         file_path = Path(bootstrap_env_admin.__file__).resolve()
         self.assertTrue(file_path.is_file())
@@ -54,15 +55,15 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         self.assertIn("bootstrap_env_admin.py shell", output)
         self.assertIn("*** Unknown command: 'foo bar is unknown ;)' ***", output)
 
-    @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
+    @unittest.skipIf(path_helper.normal_mode, "Only available in 'developer' mode.")
     def test_change_editable_address(self):
         """
         All test runs on Travis-CI install PyLucid as editable!
         See .travis.yml
         """
-        self.assertFalse(requirements.normal_mode)
+        self.assertFalse(path_helper.normal_mode)
 
-        bootstrap_env_src_path = Path(requirements.src_path, "bootstrap-env")
+        bootstrap_env_src_path = path_helper.base.parent
         print("bootstrap_env_src_path: %r" % bootstrap_env_src_path)
 
         self.assertTrue(bootstrap_env_src_path.is_dir(), "Directory not exists: %s" % bootstrap_env_src_path)
@@ -96,7 +97,7 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
 
         self.assertIn("git@github.com:jedie/bootstrap_env.git", output)
 
-    @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
+    @unittest.skipIf(path_helper.normal_mode, "Only available in 'developer' mode.")
     def test_update_own_boot_file_nothing_changed(self):
         """
         own bootstrap file should be always up-to-date with the source file from.
@@ -122,7 +123,7 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
 
         self.assert_equal_unified_diff(old_content, content)
 
-    @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
+    @unittest.skipIf(path_helper.normal_mode, "Only available in 'developer' mode.")
     def test_update_own_boot_file_overwrite(self):
         """
         1. Change own, generates bootfile
@@ -155,7 +156,7 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
 
         self.assert_equal_unified_diff(old_content, content)
 
-    @unittest.skipIf(requirements.normal_mode, "Only available in 'developer' mode.")
+    @unittest.skipIf(path_helper.normal_mode, "Only available in 'developer' mode.")
     def test_newer_source_boot_file(self):
         """
         1. Change the source bootfile
@@ -211,9 +212,9 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
             (
                 "--- OLD: boot_bootstrap_env.py\n"
                 "+++ NEW: boot_bootstrap_env.py\n"
-                " \n "
-                "if __name__ == '__main__':\n"
-                "     main()\n"
+                " if __name__ == '__main__':\n"
+                "     # Start the shell\n"
+                "     BootBootstrapEnvShell().cmdloop()\n"
                 "+\n"
                 "+# new line from: test_newer_source_boot_file()\n"
             )

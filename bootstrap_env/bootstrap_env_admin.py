@@ -17,32 +17,27 @@ from pathlib import Path
 # Bootstrap-Env
 import bootstrap_env
 from bootstrap_env.admin_shell.normal_shell import AdminShell
-from bootstrap_env.admin_shell.requirements import Requirements
+from bootstrap_env.admin_shell.path_helper import PathHelper
 
 log = logging.getLogger(__name__)
-
-SELF_FILE_PATH=Path(__file__).resolve()                         # /src/bootstrap-env/bin/bootstrap_env_admin.py
-PACKAGE_PATH=Path(bootstrap_env.__file__).parent                # /src/bootstrap-env/bootstrap_env/
-PACKAGE_NAME=PACKAGE_PATH.name                                  # bootstrap_env
-REQUIREMENT_PATH=Path(PACKAGE_PATH, "requirements")             # /src/bootstrap-env/bootstrap_env/requirements/
-OWN_FILE_NAME=SELF_FILE_PATH.name                               # bootstrap_env_admin.py
-
-TEST_REQ_FILE_NAME="test_requirements.txt"
-
-# print("SELF_FILE_PATH: %s" % SELF_FILE_PATH)
-# print("PACKAGE_NAME: %s" % PACKAGE_NAME)
-# print("REQUIREMENT_PATH: %s" % REQUIREMENT_PATH)
-# print("OWN_FILE_NAME: %s" % OWN_FILE_NAME)
 
 
 def main():
     assert "VIRTUAL_ENV" in os.environ, "ERROR: Call me only in a activated virtualenv!"
-    requirements = Requirements(
-        requirement_path=REQUIREMENT_PATH,
-        package_name=PACKAGE_NAME,
-        test_req_file_name=TEST_REQ_FILE_NAME,
+
+    base_file = bootstrap_env.__file__
+    print("\nbootstrap_env.__file__: %r\n" % base_file)
+
+    path_helper = PathHelper(
+        base_file=base_file,
+        boot_filename="boot_bootstrap_env.py",
+        admin_filename="bootstrap_env_admin.py",
     )
-    if requirements.normal_mode:
+    path_helper.print_path()
+    path_helper.assert_all_path()
+
+
+    if path_helper.normal_mode:
         # Installed in "normal" mode (as Package from PyPi)
         ShellClass = AdminShell
     else:
@@ -53,10 +48,8 @@ def main():
         ShellClass = DeveloperAdminShell
 
     ShellClass(
-        package_path=PACKAGE_PATH,
-        package_name=PACKAGE_NAME,
-        requirements=requirements,
-        self_filename=OWN_FILE_NAME,
+        path_helper,
+        self_filename=Path(__file__).name
     ).cmdloop()
 
 

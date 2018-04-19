@@ -12,13 +12,21 @@ import tempfile
 from pathlib import Path
 
 # Bootstrap-Env
-from bootstrap_env.bootstrap_env_admin import REQUIREMENT_PATH, Requirements
+import bootstrap_env
+from bootstrap_env.admin_shell.path_helper import PathHelper
 
-requirements = Requirements(
-    requirement_path=REQUIREMENT_PATH,
-    package_name="bootstrap_env",
-    test_req_file_name="test_requirements.txt"
+
+base_file = bootstrap_env.__file__
+print("\nbootstrap_env.__file__: %r\n" % base_file)
+
+path_helper = PathHelper(
+    base_file=base_file,
+    boot_filename="boot_bootstrap_env.py",
+    admin_filename="bootstrap_env_admin.py",
 )
+path_helper.print_path()
+path_helper.assert_all_path()
+
 
 class IsolatedFilesystem:
     """

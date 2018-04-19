@@ -19,7 +19,6 @@ from pathlib import Path
 
 # Bootstrap-Env
 from bootstrap_env.admin_shell.normal_shell import AdminShell
-from bootstrap_env.admin_shell.requirements import Requirements
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
 from bootstrap_env.utils.cookiecutter_utils import verbose_cookiecutter
 from bootstrap_env.utils.import_utils import LazyImportError
@@ -47,7 +46,7 @@ class DeveloperAdminShell(AdminShell):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if self.requirements.normal_mode:
+        if self.path_helper.normal_mode:
             raise RuntimeError("ERROR: Only available in 'developer' mode!")
 
     def do_upgrade_requirements(self, arg):
@@ -128,7 +127,7 @@ class DeveloperAdminShell(AdminShell):
 
         git remote set-url origin git@github.com:<user>/<project>.git
         """
-        src_path = self.requirements.src_path  # Path instance pointed to 'src' directory
+        src_path = self.path_helper.src_path  # Path instance pointed to 'src' directory
         for p in src_path.iterdir():
             if not p.is_dir():
                 continue
@@ -172,14 +171,14 @@ class DeveloperAdminShell(AdminShell):
         else:
             use_pre_release = "n"
 
-        repro_path = Path(self.package_path, "boot_source")
+        repro_path = Path(self.path_helper.base, "boot_source")
 
         # https://cookiecutter.readthedocs.io
         result = verbose_cookiecutter(
             template=str(repro_path),
             no_input=True,
             overwrite_if_exists=True,
-            output_dir=str(self.package_path.parent),
+            output_dir=str(self.path_helper.base.parent),
             extra_context={
                 "_version": bootstrap_env_version,
                 "use_pre_release": use_pre_release,
