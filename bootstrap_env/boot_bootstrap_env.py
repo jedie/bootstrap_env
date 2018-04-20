@@ -66,7 +66,7 @@ except ImportError as err:
     print("\nERROR: 'ensurepip' not available: %s (Maybe 'python3-venv' package not installed?!?)" % err)
 
 
-__version__ = "1.0.0rc14" # Version from used 'bootstrap_env' to generate this file.
+__version__ = "1.0.0rc16" # Version from used 'bootstrap_env' to generate this file.
 
 
 log = logging.getLogger(__name__)

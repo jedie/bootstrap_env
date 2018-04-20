@@ -161,6 +161,14 @@ if "publish" in sys.argv:
     else:
         confirm("\nNOTE: It seems you are not on 'master':\n%s" % output)
 
+    ##########################################################################
+    # bootstrap_env check if boot file is up-to-date
+    # Just update own boot file and the "prero is clean" check will faile, on changes ;)
+    #
+    verbose_check_call("bootstrap_env_admin.py", "update_own_boot_file")
+    #
+    ##########################################################################
+
     print("\ncheck if if git repro is clean:")
     call_info, output = verbose_check_output("git", "status", "--porcelain")
     print("\t%s" % call_info)
