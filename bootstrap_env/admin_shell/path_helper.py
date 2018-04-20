@@ -20,25 +20,26 @@ class PathHelper:
     It's a little bit tricky to get all needed file path.
     So we're boxing all this path stuff here.
 
-    This
-
     Path in dev.mode, e.g.:
 
-       egg name .......: 'bootstrap_env'
-           base dir....: ...env/src/bootstrap-env/bootstrap_env
-            src dir....: ...env/src
-           boot file...: ...env/src/bootstrap-env/bootstrap_env/boot_bootstrap_env.py
-          admin file...: ...env/src/bootstrap-env/bootstrap_env/bootstrap_env_admin.py
-    Requirement file...: ...env/src/bootstrap-env/bootstrap_env/requirements/developer_installation.txt
+            egg name .......: 'bootstrap_env'
+                base dir....: ...env/src/bootstrap-env/bootstrap_env
+                 src dir....: ...env/src
+                boot file...: ...env/src/bootstrap-env/bootstrap_env/boot_bootstrap_env.py
+               admin file...: ...env/src/bootstrap-env/bootstrap_env/bootstrap_env_admin.py
+         Requirement file...: ...env/src/bootstrap-env/bootstrap_env/requirements/developer_installation.txt
+    Test Requirement file...: ...env/src/bootstrap-env/bootstrap_env/requirements/test_requirements.txt
+
 
     Path in package modes are, e.g.:
 
-       egg name .......: 'bootstrap_env'
-           base dir....: ...env/lib/python3.6/site-packages/bootstrap_env
-            src .......: None
-           boot file...: ...env/lib/python3.6/site-packages/bootstrap_env/boot_bootstrap_env.py
-          admin file...: ...env/lib/python3.6/site-packages/bootstrap_env/bootstrap_env_admin.py
-    Requirement file...: ...env/lib/python3.6/site-packages/bootstrap_env/requirements/normal_installation.txt
+            egg name .......: 'bootstrap_env'
+                base dir....: .../site-packages/bootstrap_env
+                 src .......: None
+                boot file...: .../site-packages/bootstrap_env/boot_bootstrap_env.py
+               admin file...: .../site-packages/bootstrap_env/bootstrap_env_admin.py
+         Requirement file...: .../site-packages/bootstrap_env/requirements/normal_installation.txt
+    Test Requirement file...: .../site-packages/bootstrap_env/requirements/test_requirements.txt
     """
     DEVELOPER_INSTALL="developer"
     NORMAL_INSTALL="normal"
@@ -46,6 +47,7 @@ class PathHelper:
         DEVELOPER_INSTALL: "developer_installation.txt",
         NORMAL_INSTALL: "normal_installation.txt",
     }
+    TEST_REQUIREMENT = "test_requirements.txt"
 
     def __init__(self, base_file, boot_filename, admin_filename):
         """
@@ -61,7 +63,7 @@ class PathHelper:
         self.boot_path = Path(self.base, boot_filename)
         self.admin_path = Path(self.base, admin_filename)
         self.req_path = Path(self.base, "requirements")
-
+        self.test_req_path = Path(self.req_path, self.TEST_REQUIREMENT)
 
         # FIXME: There must exist a better way to detect if the package is
         #        installed as "editable" or a normal package!
@@ -85,14 +87,6 @@ class PathHelper:
     def normal_mode(self):
         return self.install_mode == self.NORMAL_INSTALL
 
-    def get_requirement_file_path(self):
-        """
-        :return: Path(.../bootstrap_env/requirements/<mode>_installation.txt)
-        """
-        filename = self.REQUIREMENTS[self.install_mode]
-        requirement_file_path = Path(self.requirement_path, filename).resolve()
-        return requirement_file_path
-
     def assert_all_path(self):
         """
         Check if all path exists. Raise AssertionError if not.
@@ -100,6 +94,7 @@ class PathHelper:
         assert self.boot_path.is_file(), "Boot file not found here: %s" % self.boot_path
         assert self.admin_path.is_file(), "Admin file not found here: %s" % self.admin_path
         assert self.req_path.is_dir(), "Requirements directory not found here: %s" % self.req_path
+        assert self.test_req_path.is_file(), "Test requirement not found here: %s" % self.test_req_path
 
         assert self.req_filepath.is_file(), "Requirement %r not found here: %s" % (self.install_mode, self.req_filepath)
 
@@ -114,6 +109,7 @@ class PathHelper:
             ("boot", self.boot_path),
             ("admin", self.admin_path),
             ("Requirement", self.req_filepath),
+            ("Test Requirement", self.test_req_path),
         ]
 
         width = max([len(info) for info,path in path_info])
@@ -140,7 +136,7 @@ class PathHelper:
 if __name__ == '__main__':
     import bootstrap_env
     base_file = bootstrap_env.__file__
-    base_file = "...env/lib/python3.6/site-packages/bootstrap_env/__init__.py"
+    # base_file = ".../site-packages/bootstrap_env/__init__.py"
 
     print("\nbootstrap_env.__file__: %r\n" % base_file)
 

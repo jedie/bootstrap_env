@@ -240,6 +240,16 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
     def test_path_helper_assert_all_path(self):
         path_helper.assert_all_path()
 
+    def test_install_test_requirements(self):
+        output = self.bootstrap_env_admin_run("install_test_requirements")
+        print(output)
+
+        self.assertIn("Requirement already satisfied:", output)
+        self.assertIn("/requirements/test_requirements.txt", output)
+        self.assertIn("Exit code 0 from ", output)
+
+        self.assertNotIn("Error", output)
+
     def test_update_env(self):
         output = self.bootstrap_env_admin_run("update_env")
         print(output)

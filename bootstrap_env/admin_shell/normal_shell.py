@@ -67,7 +67,7 @@ class AdminShell(Cmd2):
         """
         pip3_path = self.get_pip3_path()
         VerboseSubprocess(
-            str(pip3_path), "install", "-r", str(self.requirements.test_req_path)
+            str(pip3_path), "install", "-r", str(self.path_helper.test_req_path)
         ).verbose_call(check=True) # Exit on error
 
     def do_pytest(self, arg=None):
