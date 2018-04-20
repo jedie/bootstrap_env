@@ -4,8 +4,8 @@
     :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
     :license: GNU General Public License v3 or later (GPLv3+), see LICENSE for more details.
 """
-
-
+import contextlib
+import io
 import os
 import unittest
 from pathlib import Path
@@ -15,6 +15,7 @@ from bootstrap_env import bootstrap_env_admin
 from bootstrap_env.boot_bootstrap_env import VerboseSubprocess
 from bootstrap_env.tests.base import BootstrapEnvTestCase
 from bootstrap_env.tests.utils import path_helper
+
 
 class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
     """
@@ -220,3 +221,36 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
             )
         )
 
+    def test_path_helper_print_path(self):
+        f = io.StringIO()
+        with contextlib.redirect_stdout(f):
+            path_helper.print_path()
+
+        output = f.getvalue()
+        print(output)
+
+        self.assertIn("egg name .......: 'bootstrap_env'", output)
+
+        if path_helper.normal_mode:
+            self.assertIn("/site-packages/bootstrap_env/requirements/normal_installation.txt", output)
+        else:
+            # dev.mode
+            self.assertIn("src/bootstrap-env/bootstrap_env/requirements/developer_installation.txt", output)
+
+    def test_path_helper_assert_all_path(self):
+        path_helper.assert_all_path()
+
+    def test_update_env(self):
+        output = self.bootstrap_env_admin_run("update_env")
+        print(output)
+
+        if path_helper.normal_mode:
+            self.assertIn("/site-packages/bootstrap_env/requirements/normal_installation.txt", output)
+        else:
+            # dev.mode
+            self.assertIn("src/bootstrap-env/bootstrap_env/requirements/developer_installation.txt", output)
+
+        self.assertIn("Successfully installed bootstrap-env", output)
+        self.assertIn("Please restart bootstrap_env_admin.py", output)
+
+        self.assertNotIn("Error", output)

@@ -64,7 +64,7 @@ class DeveloperAdminShell(AdminShell):
             )
             return
 
-        requirements_path = self.requirements.requirement_path
+        requirements_path = self.path_helper.req_filepath
 
         print("compile *.in files in %s" % requirements_path)
         requirement_in_files = tuple(requirements_path.glob("*.in"))
