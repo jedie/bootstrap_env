@@ -26,16 +26,15 @@ def main():
     assert "VIRTUAL_ENV" in os.environ, "ERROR: Call me only in a activated virtualenv!"
 
     base_file = bootstrap_env.__file__
-    print("\nbootstrap_env.__file__: %r\n" % base_file)
+    # print("\nbootstrap_env.__file__: %r\n" % base_file)
 
     path_helper = PathHelper(
         base_file=base_file,
         boot_filename="boot_bootstrap_env.py",
         admin_filename="bootstrap_env_admin.py",
     )
-    path_helper.print_path()
-    path_helper.assert_all_path()
-
+    # path_helper.print_path()
+    # path_helper.assert_all_path()
 
     if path_helper.normal_mode:
         # Installed in "normal" mode (as Package from PyPi)
