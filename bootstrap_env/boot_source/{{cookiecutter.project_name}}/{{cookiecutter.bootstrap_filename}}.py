@@ -765,6 +765,17 @@ class BootBootstrapEnvShell(Cmd2):
     complete_boot_developer = complete_boot
 
 
-if __name__ == '__main__':
-    # Start the shell
+def main():
+    """
+    Start the shell.
+
+    This may also used in setup.py, e.g.:
+        entry_points={'console_scripts': [
+            "{{cookiecutter.project_name}}_boot = {{cookiecutter.project_name}}.{{cookiecutter.project_name}}_boot:main",
+        ]},
+    """
     BootBootstrapEnvShell().cmdloop()
+
+
+if __name__ == '__main__':
+    main()
