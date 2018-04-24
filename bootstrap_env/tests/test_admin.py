@@ -209,16 +209,16 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         print(repr(result))
 
         self.assertEqual(
-            result,
             (
                 "--- OLD: boot_bootstrap_env.py\n"
                 "+++ NEW: boot_bootstrap_env.py\n"
+                " \n"
                 " if __name__ == '__main__':\n"
-                "     # Start the shell\n"
-                "     BootBootstrapEnvShell().cmdloop()\n"
+                "     main()\n"
                 "+\n"
                 "+# new line from: test_newer_source_boot_file()\n"
-            )
+            ),
+            result
         )
 
     def test_path_helper_print_path(self):
