@@ -229,7 +229,7 @@ class TestBootstrapEnvAdmin(BootstrapEnvTestCase):
         output = f.getvalue()
         print(output)
 
-        self.assertIn("egg name .......: 'bootstrap_env'", output)
+        self.assertIn("self.egg_name.......: 'bootstrap_env'", output)
 
         if path_helper.normal_mode:
             self.assertIn("/site-packages/bootstrap_env/requirements/normal_installation.txt", output)

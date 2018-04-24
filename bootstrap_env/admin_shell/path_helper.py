@@ -20,26 +20,31 @@ class PathHelper:
     It's a little bit tricky to get all needed file path.
     So we're boxing all this path stuff here.
 
-    Path in dev.mode, e.g.:
+    Path in dev.mode (installed as editable):
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-            egg name .......: 'bootstrap_env'
-                base dir....: ...env/src/bootstrap-env/bootstrap_env
-                 src dir....: ...env/src
-                boot file...: ...env/src/bootstrap-env/bootstrap_env/boot_bootstrap_env.py
-               admin file...: ...env/src/bootstrap-env/bootstrap_env/bootstrap_env_admin.py
-         Requirement file...: ...env/src/bootstrap-env/bootstrap_env/requirements/developer_installation.txt
-    Test Requirement file...: ...env/src/bootstrap-env/bootstrap_env/requirements/test_requirements.txt
+            self.egg_name.......: 'bootstrap_env'
+    dir     self.base...........: /...env/src/bootstrap-env/bootstrap_env
+    dir     self.pkg_path.......: /...env/src/bootstrap-env
+    dir     self.src_path.......: /...env/src
+    file    self.boot_path......: /...env/src/bootstrap-env/bootstrap_env/boot_bootstrap_env.py
+    file    self.admin_path.....: /...env/src/bootstrap-env/bootstrap_env/bootstrap_env_admin.py
+    file    self.req_filepath...: /...env/src/bootstrap-env/bootstrap_env/requirements/developer_installation.txt
+    file    self.test_req_path..: /...env/src/bootstrap-env/bootstrap_env/requirements/test_requirements.txt
 
 
-    Path in package modes are, e.g.:
+    Path in normal mode (installed as package):
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-            egg name .......: 'bootstrap_env'
-                base dir....: .../site-packages/bootstrap_env
-                 src .......: None
-                boot file...: .../site-packages/bootstrap_env/boot_bootstrap_env.py
-               admin file...: .../site-packages/bootstrap_env/bootstrap_env_admin.py
-         Requirement file...: .../site-packages/bootstrap_env/requirements/normal_installation.txt
-    Test Requirement file...: .../site-packages/bootstrap_env/requirements/test_requirements.txt
+            self.egg_name.......: 'bootstrap_env'
+    dir     self.base...........: /...env/lib/python3.6/site-packages/bootstrap_env
+            self.pkg_path.......: None
+            self.src_path.......: None
+    file    self.boot_path......: /...env/lib/python3.6/site-packages/bootstrap_env/boot_bootstrap_env.py
+    file    self.admin_path.....: /...env/lib/python3.6/site-packages/bootstrap_env/bootstrap_env_admin.py
+    file    self.req_filepath...: /...env/lib/python3.6/site-packages/bootstrap_env/requirements/normal_installation.txt
+    file    self.test_req_path..: /...env/lib/python3.6/site-packages/bootstrap_env/requirements/test_requirements.txt
+
     """
     DEVELOPER_INSTALL="developer"
     NORMAL_INSTALL="normal"
@@ -55,7 +60,12 @@ class PathHelper:
         :param boot_filename: e.g.: foobar_boot.py
         :param admin_filename: e.g.: foobar_admin.py
         """
-        self.base = Path(base_file).parent
+        base_file = Path(base_file)
+        assert base_file.is_file(), "ERROR: base file not found here: '%s'" % base_file
+
+        self.base = base_file.parent
+        assert self.base.is_dir(), "ERROR: base directory not found here: '%s'" % self.base
+
         self.egg_name = self.base.name
 
         # Construct all needed file path with self.base:
@@ -73,12 +83,13 @@ class PathHelper:
             # ValueError: '...env/lib/python3.6/site-packages/foobar' does not start with '...env/src'
             log.debug("%s installed as package (%s)", self.egg_name, err)
             self.install_mode=self.NORMAL_INSTALL
+            self.pkg_path = None
             self.src_path = None
         else:
             log.debug("%s installed as editable", self.egg_name)
             self.install_mode=self.DEVELOPER_INSTALL
-            self.src_path = self.base.parent.parent
-
+            self.pkg_path = self.base.parent
+            self.src_path = self.pkg_path.parent
 
         self.req_filename = self.REQUIREMENTS[self.install_mode]
         self.req_filepath = Path(self.req_path, self.req_filename)
@@ -91,25 +102,33 @@ class PathHelper:
         """
         Check if all path exists. Raise AssertionError if not.
         """
-        assert self.boot_path.is_file(), "Boot file not found here: %s" % self.boot_path
-        assert self.admin_path.is_file(), "Admin file not found here: %s" % self.admin_path
-        assert self.req_path.is_dir(), "Requirements directory not found here: %s" % self.req_path
-        assert self.test_req_path.is_file(), "Test requirement not found here: %s" % self.test_req_path
+        assert self.boot_path.is_file(), "Boot file not found here: '%s'" % self.boot_path
+        assert self.admin_path.is_file(), "Admin file not found here: '%s'" % self.admin_path
+        assert self.req_path.is_dir(), "Requirements directory not found here: '%s'" % self.req_path
+        assert self.test_req_path.is_file(), "Test requirement not found here: '%s'" % self.test_req_path
 
-        assert self.req_filepath.is_file(), "Requirement %r not found here: %s" % (self.install_mode, self.req_filepath)
+        assert self.req_filepath.is_file(), "Requirement %r not found here: '%s'" % (self.install_mode, self.req_filepath)
+
+        if not self.normal_mode:
+            # installed as editable:
+            assert self.pkg_path.is_dir(), "pkg_path not found here: '%s'" % self.pkg_path
+
+            setup_path = Path(self.pkg_path, "setup.py")
+            assert setup_path.is_file(), "setup.py not found here: '%s'" % setup_path
 
     def print_path(self):
         """
         Just print all paths.
         """
         path_info = [
-            ("egg name", self.egg_name),
-            ("base", self.base),
-            ("src", self.src_path),
-            ("boot", self.boot_path),
-            ("admin", self.admin_path),
-            ("Requirement", self.req_filepath),
-            ("Test Requirement", self.test_req_path),
+            ("self.egg_name", self.egg_name),
+            ("self.base", self.base),
+            ("self.pkg_path", self.pkg_path),
+            ("self.src_path", self.src_path),
+            ("self.boot_path", self.boot_path),
+            ("self.admin_path", self.admin_path),
+            ("self.req_filepath", self.req_filepath),
+            ("self.test_req_path", self.test_req_path),
         ]
 
         width = max([len(info) for info,path in path_info])
@@ -125,7 +144,7 @@ class PathHelper:
                 else:
                     path_type="<unknown>"
 
-            print("{info:>{width}} {type:.<7}: {path} ".format(
+            print("{type:<7} {info:.<{width}}..: {path} ".format(
                 width=width,
                 info=info,
                 path=path,
