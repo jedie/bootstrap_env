@@ -32,7 +32,7 @@
         * Pull requests are welcome ;)
 
     :created: 11.03.2018 by Jens Diemer, www.jensdiemer.de
-    :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
+    :copyleft: 2018-2019 by the bootstrap_env team, see AUTHORS for more details.
     :license: GNU General Public License v3 or later (GPLv3+), see LICENSE for more details.
 """
 
@@ -716,8 +716,9 @@ class BootBootstrapEnvShell(Cmd2):
             self.stdout.write("\n(Hint call 'boot' with a path as argument, e.g.: '~/foo/bar')\n\n")
             sys.exit(1)
 
+        destination = Path(destination).expanduser().resolve()
         if destination.exists():
-            self.stdout.write("\nERROR: Path '%s' already exists!\n" % destination)
+            self.stdout.write("\nERROR: Path '%s' already exists!\n\n" % destination)
             sys.exit(1)
 
         builder = EnvBuilder(requirements)
