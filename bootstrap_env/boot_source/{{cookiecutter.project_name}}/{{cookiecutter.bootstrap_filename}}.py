@@ -711,7 +711,11 @@ class BootBootstrapEnvShell(Cmd2):
         """
         Create a {{cookiecutter.project_name}} virtualenv and install requirements.
         """
-        destination = Path(destination).expanduser()
+        if not destination:
+            self.stdout.write("\nERROR: No destination path given!\n")
+            self.stdout.write("\n(Hint call 'boot' with a path as argument, e.g.: '~/foo/bar')\n\n")
+            sys.exit(1)
+
         if destination.exists():
             self.stdout.write("\nERROR: Path '%s' already exists!\n" % destination)
             sys.exit(1)
