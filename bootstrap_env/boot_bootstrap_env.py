@@ -32,7 +32,7 @@
         * Pull requests are welcome ;)
 
     :created: 11.03.2018 by Jens Diemer, www.jensdiemer.de
-    :copyleft: 2018 by the bootstrap_env team, see AUTHORS for more details.
+    :copyleft: 2018-2019 by the bootstrap_env team, see AUTHORS for more details.
     :license: GNU General Public License v3 or later (GPLv3+), see LICENSE for more details.
 """
 
@@ -66,7 +66,7 @@ except ImportError as err:
     print("\nERROR: 'ensurepip' not available: %s (Maybe 'python3-venv' package not installed?!?)" % err)
 
 
-__version__ = "1.0.0rc18" # Version from used 'bootstrap_env' to generate this file.
+__version__ = "1.0.1" # Version from used 'bootstrap_env' to generate this file.
 
 
 log = logging.getLogger(__name__)
@@ -88,7 +88,6 @@ ADMIN_FILE_NAME="bootstrap_env_admin.py" # File under .../<project>/foobar_admin
 #
 DEVELOPER_INSTALL=["-e", "git+https://github.com/jedie/bootstrap_env.git@master#egg=%s" % PACKAGE_NAME]
 NORMAL_INSTALL=[
-    "--pre", # https://pip.pypa.io/en/stable/reference/pip_install/#pre-release-versions
     PACKAGE_NAME
 ]
 
@@ -709,9 +708,14 @@ class BootBootstrapEnvShell(Cmd2):
         """
         Create a bootstrap_env virtualenv and install requirements.
         """
-        destination = Path(destination).expanduser()
+        if not destination:
+            self.stdout.write("\nERROR: No destination path given!\n")
+            self.stdout.write("\n(Hint call 'boot' with a path as argument, e.g.: '~/foo/bar')\n\n")
+            sys.exit(1)
+
+        destination = Path(destination).expanduser().resolve()
         if destination.exists():
-            self.stdout.write("\nERROR: Path '%s' already exists!\n" % destination)
+            self.stdout.write("\nERROR: Path '%s' already exists!\n\n" % destination)
             sys.exit(1)
 
         builder = EnvBuilder(requirements)
