@@ -14,43 +14,50 @@ from __future__ import print_function
 
 import distutils
 import os
-import sys
-import subprocess
 import shutil
+import subprocess
+import sys
 
+from setuptools import find_packages, setup
 
 if sys.version_info < (3, 5):  # isort:skip
     print("\nERROR: Python 3.5 or greater is required!")
-    print("(Current Python Verison is %s)\n" % sys.version.split(" ",1)[0])
+    print("(Current Python Verison is %s)\n" % sys.version.split(" ", 1)[0])
     sys.exit(101)
 
 
-from setuptools import setup, find_packages
 
 
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-__version__="<unknown>"
+__version__ = "<unknown>"
+
 
 def read(*args):
     return open(os.path.join(PACKAGE_ROOT, *args)).read()
 
-exec(read('bootstrap_env', 'version.py'))
+
+exec(read("bootstrap_env", "version.py"))
 
 
 class BaseCommand(distutils.cmd.Command):
     user_options = []
-    def initialize_options(self): pass
-    def finalize_options(self): pass
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
 
 
 class TestCommand(BaseCommand):
     """Distutils command to run tests via py.test: 'python setup.py test'."""
+
     description = "Run tests via 'py.test'."
 
     def run(self):
         self.announce("Running tests...", level=distutils.log.INFO)
-        returncode = subprocess.call(['pytest'])
+        returncode = subprocess.call(["pytest"])
         sys.exit(returncode)
 
 
@@ -63,7 +70,7 @@ def get_authors():
     return authors
 
 
-#_____________________________________________________________________________
+# _____________________________________________________________________________
 # convert creole to ReSt on-the-fly, see also:
 # https://github.com/jedie/python-creole/wiki/Use-In-Setup
 long_description = None
@@ -76,7 +83,7 @@ for arg in ("test", "check", "register", "sdist", "--long-description"):
         else:
             long_description = get_long_description(PACKAGE_ROOT)
         break
-#----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 
 
 if "publish" in sys.argv:
@@ -201,27 +208,28 @@ if "publish" in sys.argv:
     verbose_check_call("git", "push")
 
     print("\nCleanup old builds:")
+
     def rmtree(path):
         path = os.path.abspath(path)
         if os.path.isdir(path):
             print("\tremove tree:", path)
             shutil.rmtree(path)
+
     rmtree("./dist")
     rmtree("./build")
 
     print("\nbuild but don't upload...")
-    log_filename="build.log"
+    log_filename = "build.log"
     with open(log_filename, "a") as log:
         call_info, output = verbose_check_output(
-            sys.executable or "python",
-            "setup.py", "sdist", "bdist_wheel", "bdist_egg"
+            sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "bdist_egg"
         )
         print("\t%s" % call_info)
         log.write(call_info)
         log.write(output)
     print("Build output is in log file: %r" % log_filename)
 
-    git_tag="v%s" % __version__
+    git_tag = "v%s" % __version__
 
     print("\ncheck git tag")
     call_info, output = verbose_check_output("git", "log", "HEAD..origin/master", "--oneline")
@@ -238,6 +246,7 @@ if "publish" in sys.argv:
     twine_args.insert(1, "dist/*")
     print("\ttwine upload command args: %r" % " ".join(twine_args))
     from twine.commands.upload import main as twine_upload
+
     twine_upload(twine_args)
 
     print("\ngit tag version")
@@ -254,7 +263,6 @@ setup(
     version=__version__,
     py_modules=["bootstrap_env"],
     provides=["bootstrap_env"],
-
     description="Create a complete self contained virtualenv bootstrap file",
     long_description=long_description,
     author=get_authors(),
@@ -262,21 +270,16 @@ setup(
     maintainer="Jens Diemer",
     maintainer_email="bootstrap_env@jensdiemer.de",
     url="https://github.com/jedie/bootstrap_env",
-    python_requires='>=3.5',
+    python_requires=">=3.5",
     install_requires=(
         # same as bootstrap_env/requirements/basic_requirements.txt
         "cookiecutter",
-        "packaging"
+        "packaging",
     ),
     packages=find_packages(),
-    include_package_data=True, # include package data under version control
-
+    include_package_data=True,  # include package data under version control
     # https://python-packaging.readthedocs.io/en/latest/command-line-scripts.html#the-scripts-keyword-argument
-    scripts=[
-        'bootstrap_env/boot_bootstrap_env.py',
-        'bootstrap_env/bootstrap_env_admin.py',
-    ],
-
+    scripts=["bootstrap_env/boot_bootstrap_env.py", "bootstrap_env/bootstrap_env_admin.py"],
     #
     # We don"t set "install_requires", because the requirements.txt files should be used!
     # Bootstrap works in this way:
@@ -285,7 +288,7 @@ setup(
     #   - <project>_admin update_env
     #
     zip_safe=False,
-    classifiers=[ # https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[  # https://pypi.python.org/pypi?%3Aaction=list_classifiers
         "Development Status :: 2 - Pre-Alpha",
         # "Development Status :: 3 - Alpha",
         # "Development Status :: 4 - Beta",
@@ -304,7 +307,5 @@ setup(
         "Topic :: Software Development :: Code Generators",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    cmdclass={
-        "test": TestCommand,
-    }
+    cmdclass={"test": TestCommand},
 )
