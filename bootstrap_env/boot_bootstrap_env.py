@@ -66,7 +66,7 @@ except ImportError as err:
     print("\nERROR: 'ensurepip' not available: %s (Maybe 'python3-venv' package not installed?!?)" % err)
 
 
-__version__ = "1.0.1" # Version from used 'bootstrap_env' to generate this file.
+__version__ = "1.0.2" # Version from used 'bootstrap_env' to generate this file.
 
 
 log = logging.getLogger(__name__)
@@ -401,37 +401,42 @@ class Cmd2(cmd.Cmd):
     def __init__(self, *args, self_filename=None, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if self_filename is None:
-            self.self_filename = SELF_FILE_PATH.name  # Path(__file__).name ;)
-        else:
-            self.self_filename = self_filename
-
-        intro_line = '{filename} shell v{version}'.format(
-            filename=self.self_filename,
-            version=self.version
-        )
-        intro_line = colorizer.colorize(intro_line, foreground="blue", background="black", opts=("bold",))
-
-        self.intro = (
-            '\n{intro_line}\n'
-            'Type help or ? to list commands.\n'
-        ).format(intro_line=intro_line)
-
-        self.prompt = colorizer.colorize(self.self_filename, foreground="cyan")
-        self.prompt += colorizer.colorize("> ", opts=("bold",))
-
-        self.doc_header = "Available commands (type help <topic>):\n"
-        self.doc_leader = (
-            "\nHint: All commands can be called directly from commandline.\n"
-            "e.g.: $ ./{filename} help\n"
-        ).format(
-            filename=self.self_filename,
-        )
+        self.self_filename = self.get_self_filename(self_filename=self_filename)
+        self.intro = self.get_intro()
+        self.prompt = self.get_prompt()
+        self.doc_header = self.get_doc_header()
 
         # e.g.: $ bootstrap_env_admin.py boot /tmp/bootstrap_env-env -> run self.do_boot("/tmp/bootstrap_env-env") on startup
         args = sys.argv[1:]
         if args:
             self.cmdqueue = [" ".join(args)]
+
+    def get_self_filename(self, self_filename):
+        if self_filename is None:
+            self_filename = SELF_FILE_PATH.name  # Path(__file__).name ;)
+
+        self_filename = self_filename.split(".")[0]  # remove file extension
+        return self_filename
+
+    def get_intro(self):
+        intro = "{filename} shell v{version}".format(filename=self.self_filename, version=self.version)
+        intro = "\n{intro}\nType help or ? to list commands.\n".format(
+            intro=colorizer.colorize(intro, foreground="blue", background="black", opts=("bold",))
+        )
+        return intro
+
+    def get_prompt(self):
+        prompt = "%s." % colorizer.colorize(os.uname().nodename, foreground="green")
+        prompt += colorizer.colorize(self.self_filename, foreground="cyan")
+        prompt += colorizer.colorize("> ", opts=("bold",))
+        return prompt
+
+    def get_doc_header(self):
+        doc_header = "Available commands (type help <topic>):\n"
+        doc_leader = (
+            "\nHint: All commands can be called directly from commandline.\n" "e.g.: $ ./{filename} help\n"
+        ).format(filename=self.self_filename)
+        return doc_header
 
     def default(self, line):
         """ Called on an input line when the command prefix is not recognized. """
