@@ -11,4 +11,4 @@
 
 # https://pypi.org/project/bootstrap_env/#history
 # https://github.com/jedie/bootstrap_env#history
-__version__ = "1.0.1"
+__version__ = "1.0.2"

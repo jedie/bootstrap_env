@@ -96,7 +96,7 @@ Bootstrap works in this way:
 
 === v0.6.4 -> v1.0.0
 
-tbd
+v1 was a complete rewrite
 
 
 == Compatible Matrix
@@ -114,7 +114,9 @@ See also combinations in:
 
 == History
 
-* [[https://github.com/jedie/bootstrap_env/compare/v0.6.4...master|compare v0.6.4...master]] **dev**
+* [[https://github.com/jedie/bootstrap_env/compare/v1.0.1...v1.0.2|compare v1.0.1...v1.0.2]] - 08.01.2019:
+** little change in appearance
+* [[https://github.com/jedie/bootstrap_env/compare/v0.6.4...v1.0.1|compare v0.6.4...v1.0.1]] - 08.01.2019:
 ** rewrite based on "PyLucid v3 boot" sources (by Jens Diemer)
 * [[https://github.com/jedie/bootstrap_env/compare/v0.6.3...v0.6.4|v0.6.4]] - 30.Nov.2016:
 ** Note: This pip version doesn't support pypy3. See notes above
